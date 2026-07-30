@@ -1,5 +1,11 @@
 """Explicit circuit-region synthesis by deterministic region intersection."""
 
+from .compiler import (
+    CircuitConstraintCompiler,
+    CompiledIntersection,
+    ConstraintCompilationDiagnostic,
+    RegionBinding,
+)
 from .constraints import (
     AllowedValuesConstraint,
     CircuitConstraint,
@@ -25,6 +31,10 @@ from .model import (
 
 __all__ = [
     "AllowedValuesConstraint",
+    "RegionBinding",
+    "ConstraintCompilationDiagnostic",
+    "CompiledIntersection",
+    "CircuitConstraintCompiler",
     "CircuitConstraint",
     "CircuitRegion",
     "CircuitRow",
