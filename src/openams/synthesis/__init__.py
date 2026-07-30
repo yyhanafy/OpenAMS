@@ -1,5 +1,11 @@
 """Explicit circuit-region synthesis by deterministic region intersection."""
 
+from .assignments import (
+    CircuitRegionAssignmentEmitter,
+    FixedAssignmentBatch,
+    FixedAssignmentPolicy,
+    FixedAssignmentRecord,
+)
 from .compiler import (
     CircuitConstraintCompiler,
     CompiledIntersection,
@@ -31,6 +37,10 @@ from .model import (
 
 __all__ = [
     "AllowedValuesConstraint",
+    "FixedAssignmentRecord",
+    "FixedAssignmentPolicy",
+    "FixedAssignmentBatch",
+    "CircuitRegionAssignmentEmitter",
     "RegionBinding",
     "ConstraintCompilationDiagnostic",
     "CompiledIntersection",
@@ -55,6 +65,11 @@ __all__ = [
     "RejectedCombination",
     "SumConstraint",
     "SynthesisError",
+    "SynthesisWorkflowResult",
+    "SynthesisStage",
+    "StageResult",
+    "HierarchicalSynthesisWorkflow",
+    "CanonicalConstraintRecord",
 ]
 
 from .workflow import (
