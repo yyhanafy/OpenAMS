@@ -12,7 +12,9 @@ from .errors import (
     MissingFieldError,
     SynthesisError,
 )
+from .indexed import PlannedIntersectionPolicy, PlannedRegionIntersection
 from .intersection import IntersectionPolicy, RegionIntersection
+from .planning import IntersectionPlanner, JoinKey, JoinPlan, JoinStep
 from .model import (
     CircuitRegion,
     CircuitRow,
@@ -29,9 +31,15 @@ __all__ = [
     "CombinationBudgetExceededError",
     "ConstraintDecision",
     "FieldRelationConstraint",
+    "IntersectionPlanner",
     "IntersectionPolicy",
+    "JoinKey",
+    "JoinPlan",
+    "JoinStep",
     "InvalidRegionError",
     "MissingFieldError",
+    "PlannedIntersectionPolicy",
+    "PlannedRegionIntersection",
     "RegionInput",
     "RegionIntersection",
     "RejectedCombination",
