@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+.venv-*/
+
+# Build outputs
+build/
+dist/
+
+# OpenAMS generated artifacts
+runtime/
+generated/
+*.raw
+*.log
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
