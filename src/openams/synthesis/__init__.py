@@ -56,3 +56,11 @@ __all__ = [
     "SumConstraint",
     "SynthesisError",
 ]
+
+from .workflow import (
+    CanonicalConstraintRecord,
+    HierarchicalSynthesisWorkflow,
+    StageResult,
+    SynthesisStage,
+    SynthesisWorkflowResult,
+)
