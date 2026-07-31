@@ -7,7 +7,7 @@ import importlib
 import json
 import os
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import Any, Callable, Mapping, Sequence
 
 from .launch_service import OptimizationLaunchService
 from .persisted_plan_executor import (
@@ -23,10 +23,15 @@ class OptimizationCompositionError(RuntimeError):
 
 @dataclass(frozen=True)
 class ComponentFactorySpec:
-    """Reference and keyword arguments for an infrastructure factory."""
+    """Reference and keyword arguments for an infrastructure factory.
+
+    ``path_kwargs`` identifies keyword arguments whose relative string values
+    must be resolved against the composition file directory.
+    """
 
     factory: str
     kwargs: Mapping[str, Any]
+    path_kwargs: tuple[str, ...] = ()
 
     @classmethod
     def parse(
@@ -34,13 +39,14 @@ class ComponentFactorySpec:
         value: str | Mapping[str, Any],
         *,
         field_name: str,
+        base_directory: str | Path | None = None,
     ) -> "ComponentFactorySpec":
         if isinstance(value, str):
             if not value:
                 raise OptimizationCompositionError(
                     f"{field_name} must be a non-empty string"
                 )
-            return cls(factory=value, kwargs={})
+            return cls(factory=value, kwargs={}, path_kwargs=())
 
         if not isinstance(value, Mapping):
             raise OptimizationCompositionError(
@@ -59,9 +65,58 @@ class ComponentFactorySpec:
                 f"{field_name}.kwargs must be an object"
             )
 
+        path_kwargs = value.get("path_kwargs", ())
+        if not isinstance(path_kwargs, Sequence) or isinstance(
+            path_kwargs,
+            (str, bytes),
+        ):
+            raise OptimizationCompositionError(
+                f"{field_name}.path_kwargs must be a list of strings"
+            )
+
+        normalized_path_kwargs: list[str] = []
+        for index, name in enumerate(path_kwargs):
+            if not isinstance(name, str) or not name:
+                raise OptimizationCompositionError(
+                    f"{field_name}.path_kwargs[{index}] must be "
+                    "a non-empty string"
+                )
+            if name in normalized_path_kwargs:
+                raise OptimizationCompositionError(
+                    f"{field_name}.path_kwargs contains duplicate "
+                    f"entry {name!r}"
+                )
+            normalized_path_kwargs.append(name)
+
+        unknown = [
+            name
+            for name in normalized_path_kwargs
+            if name not in kwargs
+        ]
+        if unknown:
+            raise OptimizationCompositionError(
+                f"{field_name}.path_kwargs references missing kwargs: "
+                + ", ".join(sorted(unknown))
+            )
+
+        resolved_kwargs = dict(kwargs)
+        if base_directory is not None:
+            base = Path(base_directory)
+            for name in normalized_path_kwargs:
+                raw_value = resolved_kwargs[name]
+                if not isinstance(raw_value, (str, os.PathLike)):
+                    raise OptimizationCompositionError(
+                        f"{field_name}.kwargs.{name} must be a path string"
+                    )
+                candidate = Path(raw_value)
+                if not candidate.is_absolute():
+                    candidate = base / candidate
+                resolved_kwargs[name] = str(candidate.resolve(strict=False))
+
         return cls(
             factory=factory,
-            kwargs=dict(kwargs),
+            kwargs=resolved_kwargs,
+            path_kwargs=tuple(normalized_path_kwargs),
         )
 
 
@@ -84,6 +139,8 @@ class OptimizationCompositionSpec:
     def from_mapping(
         cls,
         payload: Mapping[str, Any],
+        *,
+        base_directory: str | Path | None = None,
     ) -> "OptimizationCompositionSpec":
         if "run_plan_executor_factory" not in payload:
             raise OptimizationCompositionError(
@@ -93,6 +150,7 @@ class OptimizationCompositionSpec:
         reference = ComponentFactorySpec.parse(
             payload["run_plan_executor_factory"],
             field_name="run_plan_executor_factory",
+            base_directory=base_directory,
         )
 
         plan_subdirectory = payload.get(
@@ -150,7 +208,7 @@ class OptimizationCompositionRoot:
         cls,
         path: str | Path,
     ) -> OptimizationLaunchService:
-        config_path = Path(path)
+        config_path = Path(path).resolve(strict=False)
         try:
             payload = json.loads(
                 config_path.read_text(encoding="utf-8")
@@ -174,7 +232,10 @@ class OptimizationCompositionRoot:
             )
 
         return cls().build(
-            OptimizationCompositionSpec.from_mapping(composition)
+            OptimizationCompositionSpec.from_mapping(
+                composition,
+                base_directory=config_path.parent,
+            )
         )
 
     @staticmethod
