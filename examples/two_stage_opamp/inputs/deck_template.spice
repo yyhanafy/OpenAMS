@@ -1,0 +1,44 @@
+* Auto-rendered SKY130 candidate deck
+.lib "{pdk_library}" {pdk_corner}
+
+.temp {temperature_c}
+.option savecurrents
+.param VDD={vdd}
+.param VSS={vss}
+.param VCM={input_common_mode}
+.param VBIAS={vbias}
+.param W_INPUT={w_input}
+.param W_LOAD={w_load}
+.param W_TAIL={w_tail}
+.param W_STAGE2={w_stage2}
+.param W_SINK={w_sink}
+.param C_MILLER={c_miller}
+.param L_DEFAULT={l_default}
+.param W_M1={w_m1}
+.param W_M2={w_m2}
+.param W_M3={w_m3}
+.param W_M4={w_m4}
+.param W_M5={w_m5}
+.param W_M6={w_m6}
+.param W_M7={w_m7}
+.param L_DEFAULT_UM={l_default_um}
+.param W_M1_UM={w_m1_um}
+.param W_M2_UM={w_m2_um}
+.param W_M3_UM={w_m3_um}
+.param W_M4_UM={w_m4_um}
+.param W_M5_UM={w_m5_um}
+.param W_M6_UM={w_m6_um}
+.param W_M7_UM={w_m7_um}
+
+.include "{source_netlist}"
+
+VDD_SRC vdd 0 {vdd}
+VSS_SRC vss 0 {vss}
+VBIAS_SRC vbias 0 {vbias}
+VINP inp 0 dc {input_common_mode} ac 0.5
+VINN inn 0 dc {input_common_mode} ac -0.5
+XU1 inp inn out vdd vss vbias two_stage_opamp
+CL out 0 {load_capacitance}
+
+{analysis_block}
+.end

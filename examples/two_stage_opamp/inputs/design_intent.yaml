@@ -1,0 +1,108 @@
+schema_version: 3
+circuit_intent:
+  topology: two_stage_cmos_operational_amplifier
+  device_roles:
+    M1: input_transconductance_left
+    M2: input_transconductance_right
+    M3: diode_connected_active_load
+    M4: mirror_active_load
+    M5: differential_pair_tail_source
+    M6: second_stage_pullup_transconductance
+    M7: second_stage_current_sink
+  confirmed_patterns:
+    differential_pairs:
+    - - M1
+      - M2
+    current_mirrors:
+    - - M3
+      - M4
+    matched_width_groups:
+    - - M1
+      - M2
+    - - M3
+      - M4
+  current_relations:
+  - id: balanced_input_left
+    equation: i_m1 = i_m5 / 2.0
+  - id: balanced_input_right
+    equation: i_m2 = i_m5 / 2.0
+  - id: active_load_left
+    equation: i_m3 = i_m1
+  - id: active_load_right
+    equation: i_m4 = i_m2
+  - id: output_node_kcl
+    equation: i_m6 = i_m7
+  size_relations:
+  - id: second_stage_size_relation
+    equation: s_m6 / s_m4 = 2.0 * s_m7 / s_m5
+    fixed_length_equivalent: w_m6 / w_m4 = 2.0 * w_m7 / w_m5
+synthesis_parameterization:
+  independent_variables:
+    i_m5_a:
+      kind: current
+      minimum: 1.0e-05
+      maximum: 0.0001
+      sampling: characterized_current_grid
+      role: tail_branch_current
+    w_m1_um:
+      kind: width
+      minimum: 1.0
+      maximum: 50.0
+      sampling: characterized_width_grid
+      role: input_pair_width
+    vout_v:
+      kind: node_voltage
+      minimum: 0.5
+      maximum: 1.8
+      sampling: characterized_voltage_grid
+      role: output_dc_voltage
+  dependent_quantities:
+  - i_m1_a
+  - i_m2_a
+  - i_m3_a
+  - i_m4_a
+  - i_m6_a
+  - i_m7_a
+  - w_m2_um
+  - w_m3_um
+  - w_m4_um
+  - w_m5_um
+  - w_m6_um
+  - w_m7_um
+  - vtail_v
+  - n1_v
+  - vbias_v
+assignment_synthesis:
+  strategy: intent_declared_dependency_groups
+  groups:
+  - id: input_bias_network
+    devices:
+    - M1
+    - M2
+    - M3
+    - M4
+    - M5
+    solver: two_stage_input_bias_adapter
+    synthesis_variables:
+    - i_m5_a
+    - w_m1_um
+    constraints:
+    - balanced_input_left
+    - balanced_input_right
+    - active_load_left
+    - active_load_right
+  - id: output_stage
+    devices:
+    - M6
+    - M7
+    depends_on:
+    - input_bias_network
+    solver: two_stage_output_stage_adapter
+    synthesis_variables:
+    - vout_v
+    constraints:
+    - output_node_kcl
+    - second_stage_size_relation
+  classification:
+    fixed_assignments: direct_simulation
+    ranged_assignments: extract_optimization_variables_and_build_contract
