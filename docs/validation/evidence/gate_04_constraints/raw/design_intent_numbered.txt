@@ -1,0 +1,108 @@
+     1	schema_version: 3
+     2	circuit_intent:
+     3	  topology: two_stage_cmos_operational_amplifier
+     4	  device_roles:
+     5	    M1: input_transconductance_left
+     6	    M2: input_transconductance_right
+     7	    M3: diode_connected_active_load
+     8	    M4: mirror_active_load
+     9	    M5: differential_pair_tail_source
+    10	    M6: second_stage_pullup_transconductance
+    11	    M7: second_stage_current_sink
+    12	  confirmed_patterns:
+    13	    differential_pairs:
+    14	    - - M1
+    15	      - M2
+    16	    current_mirrors:
+    17	    - - M3
+    18	      - M4
+    19	    matched_width_groups:
+    20	    - - M1
+    21	      - M2
+    22	    - - M3
+    23	      - M4
+    24	  current_relations:
+    25	  - id: balanced_input_left
+    26	    equation: i_m1 = i_m5 / 2.0
+    27	  - id: balanced_input_right
+    28	    equation: i_m2 = i_m5 / 2.0
+    29	  - id: active_load_left
+    30	    equation: i_m3 = i_m1
+    31	  - id: active_load_right
+    32	    equation: i_m4 = i_m2
+    33	  - id: output_node_kcl
+    34	    equation: i_m6 = i_m7
+    35	  size_relations:
+    36	  - id: second_stage_size_relation
+    37	    equation: s_m6 / s_m4 = 2.0 * s_m7 / s_m5
+    38	    fixed_length_equivalent: w_m6 / w_m4 = 2.0 * w_m7 / w_m5
+    39	synthesis_parameterization:
+    40	  independent_variables:
+    41	    i_m5_a:
+    42	      kind: current
+    43	      minimum: 1.0e-05
+    44	      maximum: 0.0001
+    45	      sampling: characterized_current_grid
+    46	      role: tail_branch_current
+    47	    w_m1_um:
+    48	      kind: width
+    49	      minimum: 1.0
+    50	      maximum: 50.0
+    51	      sampling: characterized_width_grid
+    52	      role: input_pair_width
+    53	    vout_v:
+    54	      kind: node_voltage
+    55	      minimum: 0.5
+    56	      maximum: 1.8
+    57	      sampling: characterized_voltage_grid
+    58	      role: output_dc_voltage
+    59	  dependent_quantities:
+    60	  - i_m1_a
+    61	  - i_m2_a
+    62	  - i_m3_a
+    63	  - i_m4_a
+    64	  - i_m6_a
+    65	  - i_m7_a
+    66	  - w_m2_um
+    67	  - w_m3_um
+    68	  - w_m4_um
+    69	  - w_m5_um
+    70	  - w_m6_um
+    71	  - w_m7_um
+    72	  - vtail_v
+    73	  - n1_v
+    74	  - vbias_v
+    75	assignment_synthesis:
+    76	  strategy: intent_declared_dependency_groups
+    77	  groups:
+    78	  - id: input_bias_network
+    79	    devices:
+    80	    - M1
+    81	    - M2
+    82	    - M3
+    83	    - M4
+    84	    - M5
+    85	    solver: two_stage_input_bias_adapter
+    86	    synthesis_variables:
+    87	    - i_m5_a
+    88	    - w_m1_um
+    89	    constraints:
+    90	    - balanced_input_left
+    91	    - balanced_input_right
+    92	    - active_load_left
+    93	    - active_load_right
+    94	  - id: output_stage
+    95	    devices:
+    96	    - M6
+    97	    - M7
+    98	    depends_on:
+    99	    - input_bias_network
+   100	    solver: two_stage_output_stage_adapter
+   101	    synthesis_variables:
+   102	    - vout_v
+   103	    constraints:
+   104	    - output_node_kcl
+   105	    - second_stage_size_relation
+   106	  classification:
+   107	    fixed_assignments: direct_simulation
+   108	    ranged_assignments: extract_optimization_variables_and_build_contract
