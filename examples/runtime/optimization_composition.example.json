@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "composition": {
+    "run_plan_executor_factory": {
+      "factory": "openams.optimization.ngspice_runtime:create_run_plan_executor",
+      "kwargs": {
+        "config_path": "ngspice_optimization.example.json"
+      },
+      "path_kwargs": [
+        "config_path"
+      ]
+    },
+    "plan_subdirectory": "plan",
+    "require_session_artifact": true
+  }
+}

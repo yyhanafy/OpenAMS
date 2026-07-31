@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "ngspice_optimization": {
+    "assignment_workflow_factory": "project_runtime:create_assignment_workflow",
+    "objectives_factory": "project_runtime:create_objectives",
+    "proposer": "grid",
+    "points_per_dimension": 3,
+    "include_candidate_id": true,
+    "candidate_id_field": "candidate_id"
+  }
+}

@@ -8,6 +8,9 @@ import json
 from pathlib import Path
 from typing import Callable, Sequence
 
+from openams.optimization.composition import (
+    create_optimization_launch_service,
+)
 from openams.optimization.launch_input import (
     OptimizationLaunchInputParser,
 )
@@ -63,11 +66,19 @@ def build_parser() -> argparse.ArgumentParser:
         help="Normalized optimization launch JSON",
     )
     parser.add_argument(
-        "--factory",
-        required=True,
+        "--runtime-config",
+        type=Path,
         help=(
-            "Zero-argument service factory using "
-            "module:function syntax"
+            "Repository runtime composition JSON. When omitted, "
+            "OPENAMS_OPTIMIZATION_RUNTIME_CONFIG is used."
+        ),
+    )
+    parser.add_argument(
+        "--factory",
+        help=(
+            "Optional zero-argument service factory using "
+            "module:function syntax. Overrides the repository "
+            "composition root."
         ),
     )
     return parser
@@ -77,7 +88,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 
     request = OptimizationLaunchInputParser().load(args.input)
-    service = _load_factory(args.factory)()
+
+    if args.factory:
+        service = _load_factory(args.factory)()
+    else:
+        service = create_optimization_launch_service(
+            args.runtime_config
+        )
 
     if not isinstance(service, OptimizationLaunchService):
         raise OptimizationLaunchCliError(
