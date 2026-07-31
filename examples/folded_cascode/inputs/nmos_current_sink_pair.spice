@@ -1,0 +1,5 @@
+* M10-M11 matched NMOS bottom sink pair; vbias is connected to node x by the top level
+.subckt nmos_current_sink_pair drainp drainn vbias vss w_nsink=10u l_nsink=1u nf_nsink=1
+XM10 drainp vbias vss vss sky130_fd_pr__nfet_01v8 w={w_nsink} l={l_nsink} nf={nf_nsink}
+XM11 drainn vbias vss vss sky130_fd_pr__nfet_01v8 w={w_nsink} l={l_nsink} nf={nf_nsink}
+.ends nmos_current_sink_pair

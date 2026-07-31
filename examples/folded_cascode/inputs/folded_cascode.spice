@@ -1,0 +1,79 @@
+* OpenAMS Phase-4 folded-cascode OTA — broad DC functionality search
+* Independent variables: vpb1, vpb2, vnb1, vnb2, w_m5_um, w_m7_um, w_m8_um
+* Dependencies: W4=W5; W3=W5/2; W6=W7; W8=W9=W10=W11
+
+.lib "$PDK_ROOT/sky130/sky130A/libs.tech/ngspice/sky130.lib.spice" tt
+.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/diff_input.spice"
+.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/nmos_tail_current_source.spice"
+.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/pmos_current_source_pair.spice"
+.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/pmos_cascode_pair.spice"
+.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/nmos_cascode_pair.spice"
+.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/nmos_current_sink_pair.spice"
+.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/load_capacitor.spice"
+* Environment and fixed values
+.param vdd=1.8
+.param vss=0
+.param vicm=0.9
+.param c_load=10p
+.param l_default=1.0
+.param nf_default=1
+.param w_input_um=33.0
+
+* Seven independent Phase-4 bias variables
+.param vpb1=1.20
+.param vpb2=0.75
+.param vnb1=0.55
+.param vnb2=0.90
+.param w_m5_um=80.0
+.param w_m7_um=80.0
+.param w_m8_um=20.0
+
+* Rule-derived dimensions; optimizer must not vary these directly
+.param w_m1={w_m1_um}
+.param w_m2={w_m2_um}
+.param w_m5={w_m5_um}
+.param w_m4={w_m4_um}
+.param w_m3={w_m3_um}
+.param w_m7={w_m7_um}
+.param w_m6={w_m6_um}
+.param w_m8={w_m8_um}
+.param w_m9={w_m9_um}
+.param w_m10={w_m10_um}
+.param w_m11={w_m11_um}
+
+.subckt folded_cascode_ota vip vin vout vdd vss
+VNB1BIAS vnb1_node vss {vnb1}
+VPB1BIAS vpb1_node vss {vpb1}
+VPB2BIAS vpb2_node vss {vpb2}
+VNB2BIAS vnb2_node vss {vnb2}
+
+XINPUT vip vin psrc_left psrc_right tail vss nmos_differential_pair
++ w_in={w_m1_um} l_in={l_default_um} nf_in=1
+
+XTAIL tail vnb1_node vss nmos_tail_current_source
++ w_tail={w_m3_um} l_tail={l_default_um} nf_tail=1
+
+XPCS psrc_left psrc_right vpb1_node vdd pmos_current_source_pair
++ w_pcs={w_m5_um} l_pcs={l_default_um} nf_pcs={nf_m4}
+
+XPFOLD psrc_left psrc_right x vout vpb2_node vdd pmos_folded_cascode_pair
++ w_pfold={w_m7_um} l_pfold={l_default_um} nf_pfold=1
+
+XNCAS nsink_left nsink_right x vout vnb2_node vss nmos_cascode_pair
++ w_ncas={w_m8_um} l_ncas={l_default_um} nf_ncas=1
+
+XNSINK nsink_left nsink_right x vss nmos_current_sink_pair
++ w_nsink={w_m10_um} l_nsink={l_default_um} nf_nsink=1
+
+XCL vout vss load_capacitor c_load=10p
+.ends folded_cascode_ota
+
+* Balanced-input DC smoke test
+VDD_SUPPLY vdd 0 {vdd}
+VSS_SUPPLY vss 0 {vss}
+VIP_SOURCE vip 0 0.9
+VIN_SOURCE vin 0 0.9
+XOTA vip vin vout vdd vss folded_cascode_ota
+
+{analysis_block}
+.end

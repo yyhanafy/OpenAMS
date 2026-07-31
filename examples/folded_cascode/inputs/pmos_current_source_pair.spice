@@ -1,0 +1,5 @@
+* M4-M5 matched PMOS upper current-source pair
+.subckt pmos_current_source_pair outp outn vbias vdd w_pcs=20u l_pcs=1u nf_pcs=1
+XM4 outp vbias vdd vdd sky130_fd_pr__pfet_01v8 w={w_pcs} l={l_pcs} nf={nf_pcs}
+XM5 outn vbias vdd vdd sky130_fd_pr__pfet_01v8 w={w_pcs} l={l_pcs} nf={nf_pcs}
+.ends pmos_current_source_pair

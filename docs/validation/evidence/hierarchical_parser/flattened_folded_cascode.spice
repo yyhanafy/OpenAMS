@@ -1,0 +1,16 @@
+VNB1BIAS vnb1_node vss {vnb1}
+VPB1BIAS vpb1_node vss {vpb1}
+VPB2BIAS vpb2_node vss {vpb2}
+VNB2BIAS vnb2_node vss {vnb2}
+XXINPUT.M1 psrc_left vip tail vss sky130_fd_pr__nfet_01v8 w={w_in} l={l_in} nf={nf_in}
+XXINPUT.M2 psrc_right vin tail vss sky130_fd_pr__nfet_01v8 w={w_in} l={l_in} nf={nf_in}
+XXTAIL.M3 tail vnb1_node vss vss sky130_fd_pr__nfet_01v8 w={w_tail} l={l_tail} nf={nf_tail}
+XXPCS.M4 psrc_left vpb1_node vdd vdd sky130_fd_pr__pfet_01v8 w={w_pcs} l={l_pcs} nf={nf_pcs}
+XXPCS.M5 psrc_right vpb1_node vdd vdd sky130_fd_pr__pfet_01v8 w={w_pcs} l={l_pcs} nf={nf_pcs}
+XXPFOLD.M6 x vpb2_node psrc_left vdd sky130_fd_pr__pfet_01v8 w={w_pfold} l={l_pfold} nf={nf_pfold}
+XXPFOLD.M7 vout vpb2_node psrc_right vdd sky130_fd_pr__pfet_01v8 w={w_pfold} l={l_pfold} nf={nf_pfold}
+XXNCAS.M8 x vnb2_node nsink_left vss sky130_fd_pr__nfet_01v8 w={w_ncas} l={l_ncas} nf={nf_ncas}
+XXNCAS.M9 vout vnb2_node nsink_right vss sky130_fd_pr__nfet_01v8 w={w_ncas} l={l_ncas} nf={nf_ncas}
+XXNSINK.M10 nsink_left x vss vss sky130_fd_pr__nfet_01v8 w={w_nsink} l={l_nsink} nf={nf_nsink}
+XXNSINK.M11 nsink_right x vss vss sky130_fd_pr__nfet_01v8 w={w_nsink} l={l_nsink} nf={nf_nsink}
+CXCL.LOAD vout vss {c_load}

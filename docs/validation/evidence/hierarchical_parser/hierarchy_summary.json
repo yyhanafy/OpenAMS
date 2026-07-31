@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "source_files": [
+    "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/folded_cascode.spice",
+    "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/diff_input.spice",
+    "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/nmos_tail_current_source.spice",
+    "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/pmos_current_source_pair.spice",
+    "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/pmos_cascode_pair.spice",
+    "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/nmos_cascode_pair.spice",
+    "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/nmos_current_sink_pair.spice",
+    "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/load_capacitor.spice"
+  ],
+  "subcircuits": [
+    "folded_cascode_ota",
+    "load_capacitor",
+    "nmos_cascode_pair",
+    "nmos_current_sink_pair",
+    "nmos_differential_pair",
+    "nmos_tail_current_source",
+    "pmos_current_source_pair",
+    "pmos_folded_cascode_pair"
+  ],
+  "expanded_instance_count": 7,
+  "primitive_device_count": 16,
+  "canonical_device_count": 16,
+  "node_count": 15,
+  "mos_count": 11,
+  "device_kind_counts": {
+    "capacitor": 1,
+    "mos": 11,
+    "voltage_source": 4
+  },
+  "checks": {
+    "source_file_count_is_8": true,
+    "subcircuit_count_is_8": true,
+    "expanded_child_instance_count_is_7": true,
+    "primitive_device_count_is_16": true,
+    "canonical_device_count_is_16": true,
+    "mos_count_is_11": true
+  }
+}

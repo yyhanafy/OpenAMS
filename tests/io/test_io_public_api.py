@@ -3,8 +3,10 @@ def test_io_public_api() -> None:
 
     expected = {
         "InputError",
+        "LoadedSpiceHierarchy",
         "ProjectPaths",
         "SerializationDependencyError",
+        "load_spice_hierarchy",
         "load_yaml_mapping",
         "validate_project_paths",
     }

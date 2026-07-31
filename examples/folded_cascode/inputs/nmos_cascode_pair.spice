@@ -1,0 +1,5 @@
+* M8-M9 matched NMOS cascode pair, gates at VNB2
+.subckt nmos_cascode_pair srcp srcn drainp drainn vbias vss w_ncas=10u l_ncas=1u nf_ncas=1
+XM8 drainp vbias srcp vss sky130_fd_pr__nfet_01v8 w={w_ncas} l={l_ncas} nf={nf_ncas}
+XM9 drainn vbias srcn vss sky130_fd_pr__nfet_01v8 w={w_ncas} l={l_ncas} nf={nf_ncas}
+.ends nmos_cascode_pair

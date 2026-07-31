@@ -1,0 +1,5 @@
+* M1-M2 matched NMOS differential input pair
+.subckt nmos_differential_pair vip vin outp outn tail vss w_in=2u l_in=1u nf_in=1
+XM1 outp vip tail vss sky130_fd_pr__nfet_01v8 w={w_in} l={l_in} nf={nf_in}
+XM2 outn vin tail vss sky130_fd_pr__nfet_01v8 w={w_in} l={l_in} nf={nf_in}
+.ends nmos_differential_pair

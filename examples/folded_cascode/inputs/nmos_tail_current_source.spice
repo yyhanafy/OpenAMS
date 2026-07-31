@@ -1,0 +1,4 @@
+* M3 NMOS tail current source
+.subckt nmos_tail_current_source drain vbias vss w_tail=2u l_tail=1u nf_tail=1
+XM3 drain vbias vss vss sky130_fd_pr__nfet_01v8 w={w_tail} l={l_tail} nf={nf_tail}
+.ends nmos_tail_current_source

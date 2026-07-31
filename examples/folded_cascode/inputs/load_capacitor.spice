@@ -1,0 +1,4 @@
+* Output load capacitor
+.subckt load_capacitor out vss c_load=1p
+CLOAD out vss {c_load}
+.ends load_capacitor

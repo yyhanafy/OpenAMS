@@ -1,0 +1,5 @@
+* M6-M7 matched PMOS folded-cascode pair
+.subckt pmos_folded_cascode_pair srcp srcn drainp drainn vbias vdd w_pfold=20u l_pfold=1u nf_pfold=1
+XM6 drainp vbias srcp vdd sky130_fd_pr__pfet_01v8 w={w_pfold} l={l_pfold} nf={nf_pfold}
+XM7 drainn vbias srcn vdd sky130_fd_pr__pfet_01v8 w={w_pfold} l={l_pfold} nf={nf_pfold}
+.ends pmos_folded_cascode_pair
