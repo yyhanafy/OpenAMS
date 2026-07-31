@@ -1,0 +1,23 @@
+{
+  "gate": 0,
+  "proof": "Baseline frozen",
+  "captured_at_utc": "2026-07-31T19:08:03.210554+00:00",
+  "git": {
+    "commit": "0c9d575681b74f308b45049561811a205c1c3a59",
+    "branch": "main",
+    "remote": "origin\thttps://github.com/yyhanafy/OpenAMS.git (fetch)\norigin\thttps://github.com/yyhanafy/OpenAMS.git (push)",
+    "status": "?? config/\n?? docs/architecture/45_VALIDATED_OPTIMIZATION_LAUNCH.md\n?? examples/two_stage_opamp/inputs/\n?? scripts/\n?? src/openams/cli/launch_validated_optimization.py\n?? tests/cli/test_launch_validated_optimization.py\n?? tests/cli/test_launch_validated_optimization_argv.py\n?? tests/cli/test_launch_validated_optimization_real_preflight.py\n?? tools/",
+    "recent_commits": "0c9d575 Add end-to-end validation plan documentation\n182d248 Add optimization runtime preflight validation\n0519a10 Complete optimization composition and ngspice runtime wiring\n6d95580 Resolve optimization factory paths relative to config\nf3e36e7 Add configured optimization component factories\n45921ec Add optimization launch CLI adapter\naa7c0c0 Add atomic optimization launch service\n9ee1858 Add optimization launch manifest\ndd3d99c Integrate run plan persistence with execution\n2f6155d Persist optimization run plans"
+  },
+  "environment": {
+    "python": "Python 3.12.3",
+    "pytest": "pytest 9.1.1",
+    "ngspice": "******\n** ngspice-43 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2024, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Tue Sep 24 15:15:15 UTC 2024\n******"
+  },
+  "repository": {
+    "cli_modules": "src/openams/cli/launch_optimization.py\nsrc/openams/cli/launch_validated_optimization.py\nsrc/openams/cli/validate_optimization_runtime.py",
+    "two_stage_inputs": "examples/two_stage_opamp/inputs/deck_template.spice\nexamples/two_stage_opamp/inputs/design_intent.yaml\nexamples/two_stage_opamp/inputs/design_rules.yaml\nexamples/two_stage_opamp/inputs/design_rules.yaml.before_mlp_run\nexamples/two_stage_opamp/inputs/netlist.spice\nexamples/two_stage_opamp/inputs/simulation.yaml\nexamples/two_stage_opamp/inputs/specs.yaml",
+    "generated_artifacts": "",
+    "runtime_artifacts": ""
+  }
+}
