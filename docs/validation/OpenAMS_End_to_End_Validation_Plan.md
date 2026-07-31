@@ -1,345 +1,629 @@
 # OpenAMS End-to-End Validation Plan
+**Version 2.0**
 
-## Purpose
+---
 
-This document defines the canonical validation strategy for OpenAMS. The
-objective is to validate the system incrementally through objective
-evidence, preventing development from drifting into low-level debugging
-before the overall architecture has been proven.
+# Purpose
 
-Each stage has: - A single objective - A measurable exit criterion -
-Persistent artifacts - A clear gate before moving to the next stage
+This document defines the official validation methodology for the OpenAMS project.
 
-------------------------------------------------------------------------
+The objective is **not** simply to verify that individual classes or functions work.
 
-# Stage 0 --- Freeze the Starting Point
+The objective is to demonstrate, using objective evidence, that every architectural layer integrates correctly with the next until a complete end-to-end OpenAMS execution has been proven.
 
-Record:
+Every validation step must produce persistent artifacts that can be inspected by developers, researchers, reviewers, or future LLM assistants.
 
-``` bash
-git status
-git rev-parse HEAD
-pytest -q
+Validation always proceeds from architecture to implementation—not the other way around.
+
+---
+
+# Validation Philosophy
+
+OpenAMS validation follows five fundamental principles.
+
+## 1. Evidence before assumptions
+
+Never assume that a subsystem works because source code exists.
+
+Every conclusion must be supported by one or more of:
+
+- source inspection
+- unit tests
+- integration tests
+- executable validation
+- generated artifacts
+
+---
+
+## 2. Validate architecture before implementation
+
+The first objective is to understand the architecture that actually exists.
+
+Only after the architecture has been mapped should individual execution paths be validated.
+
+---
+
+## 3. Validate one architectural layer at a time
+
+Each validation gate proves one integration boundary.
+
+The next gate may not begin until the current gate has passed.
+
+---
+
+## 4. Preserve validation evidence
+
+Every validation gate produces permanent evidence stored in the repository.
+
+```
+docs/
+    validation/
+        evidence/
+            gate_00_baseline/
+            gate_01_api_map/
+            gate_02_topology/
+            ...
+            gate_15_orchestration/
 ```
 
-Create a baseline report containing: - Commit hash - Test summary -
-Input examples present - Generated artifacts present/absent - Legacy
-scripts status
+Each directory should contain
 
-**Exit criterion:** The repository baseline is frozen and reproducible.
+- raw evidence
+- generated reports
+- validation artifacts
+- summary
 
-------------------------------------------------------------------------
+---
 
-# Stage 1 --- Identify the Real Public APIs
+## 5. Small commits
 
-Audit the implementation and tests to identify the actual callable APIs
-for:
+Every completed gate should be committed independently.
 
--   Topology parsing
--   Constraint compilation
--   Technology-region construction
--   Region intersection
--   Assignment emission
--   Simulation manifest creation
--   ngspice execution
--   Specification screening
--   Run planning
+Example:
 
-Build an API inventory:
+```
+Record Gate 0 validation baseline
 
-  Subsystem     Entry API   Inputs   Outputs   Test Reference
-  ------------- ----------- -------- --------- ----------------
-  Topology                                     
-  Constraints                                  
-  Technology                                   
-  Synthesis                                    
-  Simulation                                   
-  Screening                                    
+Map Gate 1 public APIs
 
-**Exit criterion:** The public execution path is known from code and
-tests---not assumptions.
+Validate topology parser
 
-------------------------------------------------------------------------
+Validate metadata loader
 
-# Stage 2 --- Validate Topology Ingestion
+...
+```
 
-Input: - `examples/two_stage_opamp/inputs/netlist.spice`
+This creates an auditable validation history.
 
-Validate: - Device extraction - Connectivity - Supplies - Input/output
-nodes
+---
 
-Artifacts: - `generated/topology.json` -
-`generated/validation/topology_report.json`
+# Validation Gates
 
-**Exit criterion:** The netlist is represented correctly.
+---
 
-------------------------------------------------------------------------
+# Gate 0 — Freeze the Baseline
 
-# Stage 3 --- Validate Metadata Ingestion
+## Objective
 
-Load:
+Capture the exact repository state before beginning validation.
 
--   specs.yaml
--   design_rules.yaml
--   design_intent.yaml
--   simulation.yaml
+## Validate
 
-Validate: - Parsing - Schema compatibility - Units - Technology
-references
+- Git commit
+- Repository status
+- Test status
+- Runtime environment
+- Available CLI modules
+- Example inputs
+- Existing generated artifacts
 
-Artifact:
+## Artifacts
 
-`generated/validation/metadata_report.json`
+```
+baseline.json
+pytest.txt
+BASELINE_REPORT.md
+```
 
-Classify each field as: - accepted - translated - unused - invalid -
-missing
+## Exit Criterion
 
-**Exit criterion:** Metadata compatibility is completely understood.
+The repository baseline is reproducible and committed.
 
-------------------------------------------------------------------------
+---
 
-# Stage 4 --- Validate Canonical Constraint Compilation
+# Gate 1 — Map the Public APIs
 
-Compile:
+## Objective
 
--   topology
--   design intent
--   design rules
--   operating conditions
+Document the actual architecture exposed by the repository.
 
-Verify: - symmetry - mirrors - KCL - KVL - width limits - saturation -
-independent/dependent variables
+The purpose is **not** to list every class.
 
-Artifacts:
+The purpose is to document the contracts between architectural layers.
 
--   `generated/canonical_constraints.json`
--   `generated/validation/constraint_report.json`
+For every subsystem determine
 
-**Exit criterion:** Constraints become explicit machine-executable
-rules.
+- Who calls it
+- Public entry API
+- Accepted inputs
+- Returned outputs
+- Downstream dependencies
 
-------------------------------------------------------------------------
+Subsystems include
 
-# Stage 5 --- Validate the Technology Backend
+- topology
+- metadata
+- constraints
+- technology
+- synthesis
+- planning
+- simulation
+- optimization
 
-Independently verify:
+## Artifacts
 
--   table lookup
--   interpolation
--   saturation classification
--   width/current solving
--   NMOS/PMOS handling
+```
+API_MAP.md
 
-Artifacts:
+api_inventory.json
 
--   `generated/validation/technology_probe_results.csv`
--   `generated/validation/technology_report.json`
+raw/
+```
 
-**Exit criterion:** Device queries behave correctly.
+## Exit Criterion
 
-------------------------------------------------------------------------
+The architectural wiring of OpenAMS is documented.
 
-# Stage 6 --- Generate One Operating Point
+---
 
-Generate one complete assignment from one independent-variable
-selection.
+# Gate 2 — Validate Topology Parsing
 
-Validate:
+## Objective
 
--   KCL
--   KVL
--   symmetry
--   mirror rules
--   widths
--   saturation
--   technology provenance
+Demonstrate that the topology parser correctly converts the SPICE netlist into the canonical circuit representation.
 
-Artifact:
+## Validate
 
-`generated/assignment_synthesis/assignment_0000.json`
+- device extraction
+- node extraction
+- connectivity
+- supplies
+- I/O nodes
 
-**Exit criterion:** One internally consistent operating point is
-synthesized.
+## Artifacts
 
-------------------------------------------------------------------------
+```
+topology.json
 
-# Stage 7 --- Generate a Small Assignment Set
+topology_report.json
+```
 
-Generate a small set (5--20 assignments).
+## Exit Criterion
 
-Artifacts:
+The parsed topology matches the reference circuit.
 
--   `complete_assignments.csv`
--   `synthesis_report.json`
+---
 
-Validate: - classification - failure counts - route recommendation
+# Gate 3 — Validate Metadata
 
-Run Layer 3 assignment validation.
+## Objective
 
-**Exit criterion:** Multiple assignments are generated and validated.
+Verify that every metadata file is accepted by the current architecture.
 
-------------------------------------------------------------------------
+Validate
 
-# Stage 8 --- Validate SPICE Deck Generation
+- specs
+- design rules
+- design intent
+- simulation
 
-Render one assignment into a SPICE deck.
+Confirm
 
-Verify: - model library - widths/lengths - supplies - bias values -
-analysis commands
+- schema compatibility
+- units
+- technology references
+- required fields
 
-Artifact:
+## Artifacts
 
-`rendered_dc.spice`
+```
+metadata_report.json
+```
 
-**Exit criterion:** Assignment translation into SPICE is correct.
+## Exit Criterion
 
-------------------------------------------------------------------------
+All metadata is accepted or incompatibilities are documented.
 
-# Stage 9 --- Validate ngspice Execution
+---
 
-Execute one generated deck.
+# Gate 4 — Validate Constraint Compilation
 
-Capture: - return code - logs - node voltages - branch currents -
-operating point
+## Objective
 
-Artifacts: - `raw_result.json` - `ngspice.log`
+Verify that metadata is transformed into executable circuit constraints.
 
-**Exit criterion:** ngspice executes successfully.
+Examples
 
-------------------------------------------------------------------------
+- symmetry
+- current mirrors
+- KCL
+- KVL
+- saturation
+- width limits
+- independent variables
+- dependent variables
 
-# Stage 10 --- Compare Synthesis vs. ngspice
+## Artifacts
 
-Compare:
+```
+compiled_constraints.json
 
--   node voltages
--   currents
--   device regions
+constraint_report.json
+```
 
-Generate comparison report.
+## Exit Criterion
 
-**Exit criterion:** Synthesized and simulated operating points agree
-within tolerance.
+Circuit intent has become executable constraints.
 
-------------------------------------------------------------------------
+---
 
-# Stage 11 --- Validate a Small Assignment Set
+# Gate 5 — Validate Hierarchical Synthesis
 
-Run DC validation on all synthesized assignments.
+## Objective
 
-Classify failures:
+Verify the hierarchical synthesis workflow.
 
--   synthesis
--   technology
--   rendering
--   convergence
--   current mismatch
--   voltage mismatch
--   saturation
--   parsing
+Validate
 
-**Exit criterion:** Failure modes are understood.
+- region construction
+- region intersection
+- hierarchy joins
+- feasibility propagation
 
-------------------------------------------------------------------------
+## Artifacts
 
-# Stage 12 --- Validate AC Extraction
+```
+hierarchical_synthesis_report.json
+```
 
-Extract:
+## Exit Criterion
 
--   Gain
--   UGB
--   Phase Margin
+Hierarchical synthesis produces valid circuit regions.
 
-Validate extraction independently.
+---
 
-Artifacts:
+# Gate 6 — Validate Assignment Emission
 
--   `ac_results.csv`
--   `ac_validation_report.json`
+## Objective
 
-**Exit criterion:** AC metrics are reproducible.
+Generate complete circuit assignments.
 
-------------------------------------------------------------------------
+Validate
 
-# Stage 13 --- Validate Specification Screening
+- fixed assignments
+- ranged assignments
+- serialization
+- completeness
+- consistency
 
-Verify PASS/FAIL decisions independently.
+## Artifacts
 
-Record:
+```
+complete_assignments.csv
 
--   measured value
--   threshold
--   operator
--   result
+assignment.json
 
-**Exit criterion:** Screening decisions are correct.
+assignment_report.json
+```
 
-------------------------------------------------------------------------
+## Exit Criterion
 
-# Stage 14 --- Validate Route Selection
+Assignments are internally consistent.
 
-Verify:
+---
 
-## Direct Simulation
+# Gate 7 — Validate Planning
 
-Fully resolved assignments must bypass optimization.
+## Objective
 
-## Optimization
+Verify execution planning.
 
-Assignments containing unresolved ranges must invoke optimization.
+Validate
 
-**Exit criterion:** Correct execution path is selected automatically.
+- execution plan
+- route selection
+- simulation path
+- optimization path
 
-------------------------------------------------------------------------
+## Artifacts
 
-# Stage 15 --- Build the Application Orchestrator
+```
+execution_plan.json
+```
 
-Only after every subsystem has been validated should a top-level
-application flow be created.
+## Exit Criterion
 
-Execution sequence:
+Correct execution route is selected.
 
-1.  Load inputs
-2.  Parse topology
-3.  Compile constraints
-4.  Load technology
-5.  Synthesize assignments
-6.  Classify assignments
-7.  Select execution route
-8.  Simulate or optimize
-9.  Screen specifications
-10. Persist reports
+---
 
-The CLI should remain a thin adapter over validated library APIs.
+# Gate 8 — Validate Simulation Manifest
 
-**Exit criterion:** One command reproduces the fully validated flow.
+## Objective
 
-------------------------------------------------------------------------
+Verify SPICE deck generation.
+
+Validate
+
+- supplies
+- models
+- widths
+- lengths
+- analyses
+- outputs
+
+## Artifacts
+
+```
+rendered.spice
+
+manifest_report.json
+```
+
+## Exit Criterion
+
+SPICE deck matches assignment.
+
+---
+
+# Gate 9 — Validate ngspice Adapter
+
+## Objective
+
+Execute generated decks.
+
+Validate
+
+- invocation
+- convergence
+- logs
+- return codes
+
+## Artifacts
+
+```
+ngspice.log
+
+raw_result.json
+```
+
+## Exit Criterion
+
+ngspice executes correctly.
+
+---
+
+# Gate 10 — Validate Raw Result Parsing
+
+## Objective
+
+Verify parsing of simulator outputs.
+
+Validate extraction of
+
+- voltages
+- currents
+- operating point
+- device regions
+
+## Artifacts
+
+```
+parsed_results.json
+```
+
+## Exit Criterion
+
+Simulator output becomes structured data.
+
+---
+
+# Gate 11 — Validate Specification Screening
+
+## Objective
+
+Verify specification evaluation.
+
+Examples
+
+- gain
+- bandwidth
+- phase margin
+- slew rate
+- power
+
+## Artifacts
+
+```
+screening_report.json
+```
+
+## Exit Criterion
+
+PASS/FAIL decisions are correct.
+
+---
+
+# Gate 12 — Validate Complete Simulation Workflow
+
+## Objective
+
+Validate the complete simulation subsystem.
+
+```
+Assignment
+
+↓
+
+Manifest
+
+↓
+
+ngspice
+
+↓
+
+Parser
+
+↓
+
+Screening
+```
+
+## Artifacts
+
+```
+simulation_workflow_report.json
+```
+
+## Exit Criterion
+
+Simulation pipeline executes successfully.
+
+---
+
+# Gate 13 — Validate End-to-End Pipeline
+
+## Objective
+
+Validate the complete OpenAMS execution flow.
+
+```
+Netlist
+
+↓
+
+Metadata
+
+↓
+
+Topology
+
+↓
+
+Constraints
+
+↓
+
+Technology
+
+↓
+
+Hierarchical Synthesis
+
+↓
+
+Assignments
+
+↓
+
+Planning
+
+↓
+
+Simulation
+
+↓
+
+Screening
+```
+
+## Artifacts
+
+```
+end_to_end_report.json
+```
+
+## Exit Criterion
+
+One complete design execution succeeds.
+
+---
+
+# Gate 14 — Validate Route Selection
+
+## Objective
+
+Verify automatic route selection.
+
+Cases
+
+- direct simulation
+- optimization
+
+## Artifacts
+
+```
+route_report.json
+```
+
+## Exit Criterion
+
+Correct route is always selected.
+
+---
+
+# Gate 15 — Validate One-Command Orchestration
+
+## Objective
+
+Validate the final public application entry point.
+
+Example
+
+```
+python -m openams.cli.run_design ...
+```
+
+The CLI should only orchestrate already validated library APIs.
+
+## Artifacts
+
+```
+orchestration_report.json
+```
+
+## Exit Criterion
+
+One command executes the complete validated architecture.
+
+---
 
 # Validation Dashboard
 
-  Gate   Proof                      Status    Artifact
-  ------ -------------------------- --------- -------------------------
-  0      Baseline frozen            Pending   Baseline report
-  1      API map                    Pending   API inventory
-  2      Topology                   Pending   Topology report
-  3      Metadata                   Pending   Metadata report
-  4      Constraints                Pending   Constraint report
-  5      Technology                 Pending   Technology report
-  6      One assignment             Pending   Assignment JSON
-  7      Assignment set             Pending   CSV + report
-  8      SPICE deck                 Pending   Rendered deck
-  9      ngspice                    Pending   Raw result
-  10     DC comparison              Pending   Comparison report
-  11     Multi-point DC             Pending   Validation summary
-  12     AC                         Pending   AC report
-  13     Screening                  Pending   Screening report
-  14     Route selection            Pending   Route report
-  15     End-to-end orchestration   Pending   Final validation report
+| Gate | Validation | Status | Evidence |
+|------|------------|--------|----------|
+| 0 | Baseline | PASS | gate_00_baseline |
+| 1 | Public API map | Pending | gate_01_api_map |
+| 2 | Topology parser | Pending | gate_02_topology |
+| 3 | Metadata | Pending | gate_03_metadata |
+| 4 | Constraint compiler | Pending | gate_04_constraints |
+| 5 | Hierarchical synthesis | Pending | gate_05_hierarchical_synthesis |
+| 6 | Assignment emission | Pending | gate_06_assignments |
+| 7 | Planning | Pending | gate_07_planning |
+| 8 | Simulation manifest | Pending | gate_08_manifest |
+| 9 | ngspice adapter | Pending | gate_09_ngspice |
+| 10 | Result parser | Pending | gate_10_parser |
+| 11 | Specification screening | Pending | gate_11_screening |
+| 12 | Simulation workflow | Pending | gate_12_simulation |
+| 13 | End-to-end pipeline | Pending | gate_13_end_to_end |
+| 14 | Route validation | Pending | gate_14_routes |
+| 15 | One-command orchestration | Pending | gate_15_orchestration |
 
-## Guiding Principle
+---
 
-Never proceed to the next stage until the current stage has objective
-evidence and persistent artifacts. The validation campaign should always
-be driven by facts collected from the implementation rather than
-assumptions about the architecture.
+# Guiding Principle
+
+Validation is complete only when every architectural boundary has been demonstrated with objective evidence and the complete OpenAMS execution path has been reproduced from the official public APIs.
+
+The goal is not merely to show that individual components work in isolation, but to prove that the architecture functions as a coherent, integrated system.
