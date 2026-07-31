@@ -255,9 +255,12 @@ class ProposalRequest:
     def __post_init__(self) -> None:
         if self.batch_size <= 0:
             raise ValueError("batch_size must be positive")
-        if not self.parameter_bounds and not self.fixed_parameters:
+        if (
+            self.session.route is OptimizationRoute.CONTRACT_SEARCH
+            and not self.parameter_bounds
+        ):
             raise ValueError(
-                "proposal request requires bounds or fixed parameters"
+                "contract-search route requires unresolved parameter ranges"
             )
 
         overlap = set(self.parameter_bounds) & set(self.fixed_parameters)
@@ -294,13 +297,6 @@ class ProposalRequest:
                 "direct-simulation route must not contain unresolved ranges"
             )
 
-        if (
-            self.session.route is OptimizationRoute.CONTRACT_SEARCH
-            and not self.parameter_bounds
-        ):
-            raise ValueError(
-                "contract-search route requires unresolved parameter ranges"
-            )
 
     def to_dict(self) -> dict[str, Any]:
         return {

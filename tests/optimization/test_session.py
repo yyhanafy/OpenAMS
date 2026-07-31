@@ -260,3 +260,20 @@ def test_proposer_protocol_remains_optimizer_neutral():
         updated.iterations[0].records[1].proposal.parameters["bias"]
         == 0.7
     )
+
+def test_direct_simulation_request_allows_assignment_only_proposer():
+    state = OptimizationSessionState(
+        session_id="direct_assignment_only",
+        route=OptimizationRoute.DIRECT_SIMULATION,
+    )
+
+    request = ProposalRequest(
+        session=state,
+        batch_size=1,
+        parameter_bounds={},
+        fixed_parameters={},
+    )
+
+    assert request.parameter_bounds == {}
+    assert request.fixed_parameters == {}
+
