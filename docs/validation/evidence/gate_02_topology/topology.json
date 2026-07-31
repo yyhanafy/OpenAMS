@@ -1,0 +1,179 @@
+{
+  "circuit_name": "two_stage_opamp",
+  "subcircuit_ports": [
+    "inp",
+    "inn",
+    "out",
+    "vdd",
+    "vss",
+    "vbias"
+  ],
+  "source_lines": {
+    "start": 3,
+    "end": 12
+  },
+  "device_count": 8,
+  "node_count": 9,
+  "devices": [
+    {
+      "name": "XM1",
+      "kind": "mos",
+      "model": "sky130_fd_pr__nfet_01v8",
+      "terminals": {
+        "drain": "n1",
+        "gate": "inp",
+        "source": "ntail",
+        "bulk": "vss"
+      },
+      "parameters": {
+        "l": "{l_default_um}",
+        "w": "{w_m1_um}",
+        "nf": 1.0,
+        "mult": 1.0
+      }
+    },
+    {
+      "name": "XM2",
+      "kind": "mos",
+      "model": "sky130_fd_pr__nfet_01v8",
+      "terminals": {
+        "drain": "n2",
+        "gate": "inn",
+        "source": "ntail",
+        "bulk": "vss"
+      },
+      "parameters": {
+        "l": "{l_default_um}",
+        "w": "{w_m2_um}",
+        "nf": 1.0,
+        "mult": 1.0
+      }
+    },
+    {
+      "name": "XM3",
+      "kind": "mos",
+      "model": "sky130_fd_pr__pfet_01v8",
+      "terminals": {
+        "drain": "n1",
+        "gate": "n1",
+        "source": "vdd",
+        "bulk": "vdd"
+      },
+      "parameters": {
+        "l": "{l_default_um}",
+        "w": "{w_m3_um}",
+        "nf": 1.0,
+        "mult": 1.0
+      }
+    },
+    {
+      "name": "XM4",
+      "kind": "mos",
+      "model": "sky130_fd_pr__pfet_01v8",
+      "terminals": {
+        "drain": "n2",
+        "gate": "n1",
+        "source": "vdd",
+        "bulk": "vdd"
+      },
+      "parameters": {
+        "l": "{l_default_um}",
+        "w": "{w_m4_um}",
+        "nf": 1.0,
+        "mult": 1.0
+      }
+    },
+    {
+      "name": "XM5",
+      "kind": "mos",
+      "model": "sky130_fd_pr__nfet_01v8",
+      "terminals": {
+        "drain": "ntail",
+        "gate": "vbias",
+        "source": "vss",
+        "bulk": "vss"
+      },
+      "parameters": {
+        "l": "{l_default_um}",
+        "w": "{w_m5_um}",
+        "nf": 1.0,
+        "mult": 1.0
+      }
+    },
+    {
+      "name": "XM6",
+      "kind": "mos",
+      "model": "sky130_fd_pr__pfet_01v8",
+      "terminals": {
+        "drain": "out",
+        "gate": "n2",
+        "source": "vdd",
+        "bulk": "vdd"
+      },
+      "parameters": {
+        "l": "{l_default_um}",
+        "w": "{w_m6_um}",
+        "nf": 1.0,
+        "mult": 1.0
+      }
+    },
+    {
+      "name": "XM7",
+      "kind": "mos",
+      "model": "sky130_fd_pr__nfet_01v8",
+      "terminals": {
+        "drain": "out",
+        "gate": "vbias",
+        "source": "vss",
+        "bulk": "vss"
+      },
+      "parameters": {
+        "l": "{l_default_um}",
+        "w": "{w_m7_um}",
+        "nf": 1.0,
+        "mult": 1.0
+      }
+    },
+    {
+      "name": "Cc",
+      "kind": "capacitor",
+      "model": null,
+      "terminals": {
+        "positive": "n2",
+        "negative": "out"
+      },
+      "parameters": {
+        "value": "{c_miller}"
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "name": "inn"
+    },
+    {
+      "name": "inp"
+    },
+    {
+      "name": "n1"
+    },
+    {
+      "name": "n2"
+    },
+    {
+      "name": "ntail"
+    },
+    {
+      "name": "out"
+    },
+    {
+      "name": "vbias"
+    },
+    {
+      "name": "vdd"
+    },
+    {
+      "name": "vss"
+    }
+  ]
+}

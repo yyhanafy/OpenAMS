@@ -1,0 +1,34 @@
+{
+  "gate": 2,
+  "proof": "Official netlist subcircuit parsed into canonical Circuit",
+  "status": "PASS",
+  "source_netlist": "examples/two_stage_opamp/inputs/netlist.spice",
+  "subcircuit": "two_stage_opamp",
+  "ports": [
+    "inp",
+    "inn",
+    "out",
+    "vdd",
+    "vss",
+    "vbias"
+  ],
+  "device_count": 8,
+  "node_count": 9,
+  "device_kind_counts": {
+    "capacitor": 1,
+    "mos": 7
+  },
+  "missing_devices": [],
+  "unexpected_devices": [],
+  "checks": {
+    "parser_succeeded": true,
+    "subcircuit_name_matches": true,
+    "ports_match": true,
+    "expected_devices_present": true,
+    "no_unexpected_devices": true,
+    "all_devices_have_terminals": true,
+    "m1_connectivity": true,
+    "m6_connectivity": true,
+    "compensation_capacitor_connectivity": true
+  }
+}
