@@ -1,0 +1,301 @@
+tests/topology/test_topology_public_api.py:14:        "parse_spice_circuit",
+tests/topology/test_topology_queries.py:9:    parse_spice_circuit,
+tests/topology/test_topology_queries.py:14:    circuit = parse_spice_circuit(
+tests/topology/test_topology_queries.py:37:    circuit = parse_spice_circuit("R1 a b 1k")
+tests/topology/test_topology_spice_parser.py:9:    parse_spice_circuit,
+tests/topology/test_topology_spice_parser.py:13:def test_parse_flat_mos_and_passives() -> None:
+tests/topology/test_topology_spice_parser.py:14:    circuit = parse_spice_circuit(
+tests/topology/test_topology_spice_parser.py:46:    circuit = parse_spice_circuit("R1 a b 1k $ load resistor")
+tests/topology/test_topology_spice_parser.py:52:        parse_spice_circuit("Rload a b 1k\nrLOAD b 0 2k")
+tests/topology/test_topology_spice_parser.py:57:        parse_spice_circuit(".subckt block a b\nR1 a b 1k\n.ends")
+tests/topology/test_topology_spice_parser.py:62:        parse_spice_circuit("X1 a b arbitrary_block")
+tests/topology/test_topology_spice_parser.py:67:        parse_spice_circuit("D1 a b diode_model")
+tests/technology/test_technology_public_api.py:13:        "TechnologyBackend",
+tests/technology/test_technology_interface.py:9:    TechnologyBackend,
+tests/technology/test_technology_interface.py:18:class FakeBackend:
+tests/technology/test_technology_interface.py:45:    backend = FakeBackend()
+tests/technology/test_technology_interface.py:46:    assert isinstance(backend, TechnologyBackend)
+tests/technology/table/test_table_public_api.py:10:        "TableTechnologyBackend",
+tests/technology/table/test_table_backend.py:5:    TechnologyBackend,
+tests/technology/table/test_table_backend.py:11:    TableTechnologyBackend,
+tests/technology/table/test_table_backend.py:16:    backend = TableTechnologyBackend(characterization_table)
+tests/technology/table/test_table_backend.py:17:    assert isinstance(backend, TechnologyBackend)
+tests/technology/table/test_table_backend.py:22:    backend = TableTechnologyBackend(characterization_table)
+tests/technology/table/test_table_backend.py:35:    backend = TableTechnologyBackend(characterization_table)
+tests/technology/table/interpolation/test_interpolation_backend.py:4:    TechnologyBackend,
+tests/technology/table/interpolation/test_interpolation_backend.py:9:    InterpolatingTableTechnologyBackend,
+tests/technology/table/interpolation/test_interpolation_backend.py:16:    backend = InterpolatingTableTechnologyBackend(grid_table)
+tests/technology/table/interpolation/test_interpolation_backend.py:18:    assert isinstance(backend, TechnologyBackend)
+tests/technology/table/interpolation/test_interpolation_backend.py:23:    backend = InterpolatingTableTechnologyBackend(grid_table)
+tests/technology/table/interpolation/test_interpolation_backend.py:35:    backend = InterpolatingTableTechnologyBackend(grid_table)
+tests/technology/table/interpolation/test_interpolation_queries.py:76:def test_sparse_grid_is_rejected(grid_table) -> None:
+tests/technology/table/interpolation/test_interpolation_queries.py:77:    sparse = CharacterizationTable(
+tests/technology/table/interpolation/test_interpolation_queries.py:84:            sparse.points[0],
+tests/technology/table/interpolation/test_interpolation_queries.py:91:        interpolate_request(sparse, request)
+tests/technology/table/interpolation/test_interpolation_public_api.py:7:        "InterpolatingTableTechnologyBackend",
+tests/synthesis/test_constraint_compiler.py:6:    CircuitConstraintCompiler,
+tests/synthesis/test_constraint_compiler.py:27:def test_compiles_exact_device_equality_and_builds_indexed_region():
+tests/synthesis/test_constraint_compiler.py:28:    compiler = CircuitConstraintCompiler()
+tests/synthesis/test_constraint_compiler.py:29:    compiled = compiler.compile(
+tests/synthesis/test_constraint_compiler.py:36:    assert isinstance(compiled.constraints[0], FieldRelationConstraint)
+tests/synthesis/test_constraint_compiler.py:37:    result = compiled.build()
+tests/synthesis/test_constraint_compiler.py:43:def test_compiles_scaled_relation():
+tests/synthesis/test_constraint_compiler.py:44:    compiled = CircuitConstraintCompiler().compile(
+tests/synthesis/test_constraint_compiler.py:51:    relation = compiled.constraints[0]
+tests/synthesis/test_constraint_compiler.py:54:    assert compiled.build().retained_count == 1
+tests/synthesis/test_constraint_compiler.py:57:def test_compiles_kcl_sum():
+tests/synthesis/test_constraint_compiler.py:58:    compiled = CircuitConstraintCompiler().compile(
+tests/synthesis/test_constraint_compiler.py:66:    assert isinstance(compiled.constraints[0], SumConstraint)
+tests/synthesis/test_constraint_compiler.py:67:    assert compiled.build().retained_count == 1
+tests/synthesis/test_constraint_compiler.py:71:    compiled = CircuitConstraintCompiler().compile(
+tests/synthesis/test_constraint_compiler.py:78:    assert compiled.diagnostics[0].status == "compiled"
+tests/synthesis/test_constraint_compiler.py:79:    assert compiled.diagnostics[0].source == "design_rules"
+tests/synthesis/test_constraint_compiler.py:84:        CircuitConstraintCompiler().compile(
+tests/synthesis/test_constraint_compiler.py:91:    compiled = CircuitConstraintCompiler().compile(
+tests/synthesis/test_constraint_compiler.py:96:    assert compiled.constraints == ()
+tests/synthesis/test_constraint_compiler.py:97:    assert compiled.diagnostics[0].status == "unsupported"
+tests/synthesis/test_constraint_compiler.py:102:        CircuitConstraintCompiler().compile(
+tests/synthesis/test_constraint_compiler.py:113:        CircuitConstraintCompiler().compile(
+tests/synthesis/test_assignment_emission.py:28:def test_emits_simulation_ready_assignments_and_direct_plans() -> None:
+tests/synthesis/test_assignment_emission.py:35:    batch = CircuitRegionAssignmentEmitter().emit(
+tests/synthesis/test_assignment_emission.py:58:    emitter = CircuitRegionAssignmentEmitter(
+tests/synthesis/test_assignment_emission.py:61:    batch = emitter.emit(region, {"device.M1.width": "x"})
+tests/synthesis/test_assignment_emission.py:68:    record = CircuitRegionAssignmentEmitter().emit(
+tests/synthesis/test_assignment_emission.py:78:    batch = CircuitRegionAssignmentEmitter().emit(
+tests/synthesis/test_assignment_emission.py:89:        CircuitRegionAssignmentEmitter().emit(
+tests/synthesis/test_assignment_emission.py:97:        CircuitRegionAssignmentEmitter().emit(
+tests/synthesis/test_assignment_emission.py:109:        CircuitRegionAssignmentEmitter().emit(
+tests/synthesis/test_assignment_emission.py:115:        CircuitRegionAssignmentEmitter().emit(
+tests/synthesis/test_assignment_emission.py:124:    emitter = CircuitRegionAssignmentEmitter(
+tests/synthesis/test_assignment_emission.py:128:        emitter.emit(region, {"device.M1.width": "x"})
+tests/synthesis/test_hierarchical_workflow.py:5:    HierarchicalSynthesisWorkflow,
+tests/synthesis/test_hierarchical_workflow.py:85:    result = HierarchicalSynthesisWorkflow().run(two_stage_bindings(), two_stage_program())
+tests/synthesis/test_hierarchical_workflow.py:100:    result = HierarchicalSynthesisWorkflow().run(two_stage_bindings(), two_stage_program()[:1])
+tests/synthesis/test_hierarchical_workflow.py:108:    result = HierarchicalSynthesisWorkflow().run(two_stage_bindings(), two_stage_program()[:1])
+tests/synthesis/test_hierarchical_workflow.py:113:    result = HierarchicalSynthesisWorkflow().run(two_stage_bindings(), two_stage_program())
+tests/synthesis/test_hierarchical_workflow.py:121:        HierarchicalSynthesisWorkflow().run(two_stage_bindings(), (stage,))
+tests/synthesis/test_hierarchical_workflow.py:127:        HierarchicalSynthesisWorkflow().run(two_stage_bindings(), (stage,))
+tests/synthesis/test_hierarchical_workflow.py:137:        HierarchicalSynthesisWorkflow(reject_empty_stage=True).run(two_stage_bindings(), (stage,))
+tests/synthesis/test_hierarchical_workflow.py:141:    result = HierarchicalSynthesisWorkflow().run(two_stage_bindings(), two_stage_program())
+tests/synthesis/test_indexed_intersection.py:7:    IntersectionPlanner,
+tests/synthesis/test_indexed_intersection.py:25:    plan = IntersectionPlanner().plan((a, b), (constraint,))
+tests/synthesis/test_indexed_intersection.py:35:    plan = IntersectionPlanner().plan((a, b), (constraint,))
+tests/planning/test_planning_architecture.py:4:def test_planning_does_not_execute_downstream_work() -> None:
+tests/simulation/test_workflow.py:9:from openams.simulation.screening import (
+tests/simulation/test_workflow.py:15:    SimulationWorkflow,
+tests/simulation/test_workflow.py:16:    WorkflowError,
+tests/simulation/test_workflow.py:17:    WorkflowStage,
+tests/simulation/test_workflow.py:95:    workflow = SimulationWorkflow(
+tests/simulation/test_workflow.py:97:        parser=__import__(
+tests/simulation/test_workflow.py:110:    assert result.screening_summary.passed_case_count == 1
+tests/simulation/test_workflow.py:111:    assert result.screening_summary.failed_case_count == 1
+tests/simulation/test_workflow.py:117:        SimulationWorkflow(
+tests/simulation/test_workflow.py:119:            parser=object(),
+tests/simulation/test_workflow.py:140:    workflow = SimulationWorkflow(
+tests/simulation/test_workflow.py:142:        parser=object(),
+tests/simulation/test_workflow.py:147:    with pytest.raises(WorkflowError, match="execution failed"):
+tests/simulation/test_workflow.py:151:def test_parser_failure_is_recorded_and_other_cases_continue(tmp_path: Path):
+tests/simulation/test_workflow.py:158:        def parse_case(self, case_result, declarations):
+tests/simulation/test_workflow.py:162:            return NgspiceRawResultParser().parse_case(case_result, declarations)
+tests/simulation/test_workflow.py:164:    workflow = SimulationWorkflow(
+tests/simulation/test_workflow.py:166:        parser=SelectiveParser(),
+tests/simulation/test_workflow.py:175:    assert result.diagnostics[0].stage is WorkflowStage.PARSING
+tests/simulation/test_workflow.py:177:    assert result.screening_summary.passed_case_count == 1
+tests/simulation/test_workflow.py:184:    workflow = SimulationWorkflow(
+tests/simulation/test_workflow.py:186:        parser=__import__(
+tests/simulation/test_workflow.py:200:    assert "screening_summary" in payload
+tests/simulation/test_workflow.py:201:    assert payload["screening_summary"]["passed_case_count"] == 1
+tests/simulation/test_manifest.py:11:    SimulationBackend,
+tests/simulation/test_manifest.py:49:        backend=SimulationBackend(name="ngspice"),
+tests/simulation/test_manifest.py:64:        backend=SimulationBackend(name="generic"),
+tests/simulation/test_manifest.py:81:        name="m", backend=SimulationBackend(name="generic"), template=template(),
+tests/simulation/test_manifest.py:92:            name="m", backend=SimulationBackend(name="generic"), template=template(),
+tests/simulation/test_manifest.py:101:            name="m", backend=SimulationBackend(name="generic"), template=template(),
+tests/simulation/test_manifest.py:114:            name="m", backend=SimulationBackend(name="generic"), template=bad,
+tests/simulation/test_manifest.py:121:        name="m", backend=SimulationBackend(name="generic"), template=template(),
+tests/simulation/test_raw_results.py:12:    parse_declared_measurement,
+tests/simulation/test_raw_results.py:13:    parse_finite_float,
+tests/simulation/test_raw_results.py:26:def test_parse_finite_float_accepts_scientific_notation():
+tests/simulation/test_raw_results.py:27:    assert parse_finite_float(" -2.5e-6 ") == -2.5e-6
+tests/simulation/test_raw_results.py:30:def test_measurement_parser_uses_last_occurrence_and_alias():
+tests/simulation/test_raw_results.py:37:    result = parse_declared_measurement(
+tests/simulation/test_raw_results.py:47:def test_measurement_parser_marks_missing_value():
+tests/simulation/test_raw_results.py:49:    result = parse_declared_measurement(
+tests/simulation/test_raw_results.py:58:def test_measurement_parser_marks_malformed_value():
+tests/simulation/test_raw_results.py:60:    result = parse_declared_measurement(
+tests/simulation/test_raw_results.py:77:def test_parser_builds_successful_analysis_result(tmp_path: Path):
+tests/simulation/test_raw_results.py:92:    parsed = NgspiceRawResultParser().parse_case(case, declarations)
+tests/simulation/test_raw_results.py:94:    assert parsed.execution_succeeded
+tests/simulation/test_raw_results.py:95:    assert len(parsed.analyses) == 2
+tests/simulation/test_raw_results.py:96:    assert all(a.status is AnalysisStatus.SUCCEEDED for a in parsed.analyses)
+tests/simulation/test_raw_results.py:99:def test_parser_marks_analysis_incomplete_for_required_missing_measurement(
+tests/simulation/test_raw_results.py:114:    parsed = NgspiceRawResultParser().parse_case(case, declarations)
+tests/simulation/test_raw_results.py:116:    assert parsed.analyses[0].status is AnalysisStatus.INCOMPLETE
+tests/simulation/test_raw_results.py:117:    assert parsed.analyses[0].measurements[1].status is MeasurementStatus.MISSING
+tests/simulation/test_raw_results.py:120:def test_parser_marks_failed_execution_not_run(tmp_path: Path):
+tests/simulation/test_raw_results.py:130:    parsed = NgspiceRawResultParser().parse_case(case, declarations)
+tests/simulation/test_raw_results.py:132:    assert parsed.analyses[0].status is AnalysisStatus.NOT_RUN
+tests/simulation/test_raw_results.py:133:    assert not parsed.succeeded
+tests/simulation/test_raw_results.py:151:    parsed = NgspiceRawResultParser().parse_case(case, declarations)
+tests/simulation/test_raw_results.py:153:    assert parsed.analyses[0].status is AnalysisStatus.SUCCEEDED
+tests/simulation/test_ngspice_adapter.py:11:    NgspiceAdapterError,
+tests/simulation/test_ngspice_adapter.py:199:    with pytest.raises(NgspiceInputError, match="cannot execute backend"):
+tests/simulation/test_persistence.py:16:from openams.simulation.screening import (
+tests/simulation/test_persistence.py:25:    SimulationWorkflowPersistence,
+tests/simulation/test_persistence.py:28:from openams.simulation.workflow import SimulationWorkflowResult
+tests/simulation/test_persistence.py:31:def make_result(tmp_path: Path) -> SimulationWorkflowResult:
+tests/simulation/test_persistence.py:93:    return SimulationWorkflowResult(
+tests/simulation/test_persistence.py:97:        screening_summary=summary,
+tests/simulation/test_persistence.py:103:    artifacts = SimulationWorkflowPersistence().persist(result, tmp_path)
+tests/simulation/test_persistence.py:116:    artifacts = SimulationWorkflowPersistence().persist(result, tmp_path)
+tests/simulation/test_persistence.py:139:    artifacts = SimulationWorkflowPersistence().persist(result, tmp_path)
+tests/simulation/test_persistence.py:161:        SimulationWorkflowPersistence().load_payload(path)
+tests/simulation/test_persistence.py:166:    persistence = SimulationWorkflowPersistence()
+tests/simulation/test_persistence.py:172:    assert payload["workflow"]["screening_summary"]["passed_case_count"] == 1
+tests/simulation/test_screening.py:10:from openams.simulation.screening import (
+tests/simulation/test_screening.py:75:    result = engine.screen_case(
+tests/simulation/test_screening.py:96:    result = engine.screen_case(
+tests/simulation/test_screening.py:117:    result = engine.screen_case(
+tests/simulation/test_screening.py:145:    result = engine.screen_case(
+tests/simulation/test_screening.py:174:    result = engine.screen_case(
+tests/simulation/test_screening.py:196:    result = engine.screen_case(
+tests/simulation/test_screening.py:223:    result = engine.screen_case(
+tests/simulation/test_screening.py:252:    result = engine.screen_case(
+tests/simulation/test_screening.py:262:def test_screen_many_summarizes_outcomes():
+tests/simulation/test_screening.py:275:    summary = engine.screen_many(
+tests/simulation/test_screening.py:293:def test_screening_result_preserves_raw_result_identity():
+tests/simulation/test_screening.py:307:    screened = engine.screen_case(raw)
+tests/simulation/test_screening.py:309:    assert screened.raw_result is raw
+tests/optimization/test_ngspice_runtime.py:92:    def execute(self, *, plan, request):
+tests/optimization/test_ngspice_runtime.py:99:        "execute",
+tests/optimization/test_ngspice_runtime.py:100:        execute,
+tests/optimization/test_ngspice_runtime.py:103:    result = executor.execute(
+tests/optimization/test_persisted_plan_executor.py:46:    def execute(self, *, plan, request):
+tests/optimization/test_persisted_plan_executor.py:55:def test_persist_before_execute_and_link_session(tmp_path: Path):
+tests/optimization/test_persisted_plan_executor.py:64:    result = service.execute(
+tests/optimization/test_persisted_plan_executor.py:102:    result = service.execute(
+tests/optimization/test_persisted_plan_executor.py:127:        service.execute(
+tests/optimization/test_persisted_plan_executor.py:141:    result = service.execute(
+tests/optimization/test_persisted_plan_executor.py:166:        service.execute(
+tests/optimization/test_persisted_plan_executor.py:187:        def execute(self, *, plan, request):
+tests/optimization/test_persisted_plan_executor.py:196:    ).execute(
+tests/optimization/test_evaluation.py:16:from openams.simulation.screening import (
+tests/optimization/test_evaluation.py:23:def make_screening(
+tests/optimization/test_evaluation.py:121:        make_screening(
+tests/optimization/test_evaluation.py:134:def test_failed_screening_is_infeasible():
+tests/optimization/test_evaluation.py:137:        make_screening(
+tests/optimization/test_evaluation.py:150:def test_unknown_screening_remains_unknown():
+tests/optimization/test_evaluation.py:153:        make_screening(
+tests/optimization/test_evaluation.py:167:        make_screening(
+tests/optimization/test_evaluation.py:196:        make_screening(
+tests/optimization/test_evaluation.py:221:            make_screening(
+tests/optimization/test_evaluation.py:226:            make_screening(
+tests/optimization/test_evaluation.py:231:            make_screening(
+tests/optimization/test_evaluation.py:261:            make_screening(
+tests/optimization/test_evaluation.py:265:            make_screening(
+tests/optimization/test_evaluation.py:269:            make_screening(
+tests/optimization/test_evaluation.py:284:def test_evaluation_preserves_screening_identity():
+tests/optimization/test_evaluation.py:285:    screening = make_screening(
+tests/optimization/test_evaluation.py:291:    evaluation = engine.evaluate_case(screening)
+tests/optimization/test_evaluation.py:293:    assert evaluation.screening_result is screening
+tests/optimization/test_adapters.py:7:    AdapterConfigurationError,
+tests/optimization/test_adapters.py:8:    AssignmentWorkflowExecutorAdapter,
+tests/optimization/test_adapters.py:9:    CandidateEvaluationPersistenceAdapter,
+tests/optimization/test_adapters.py:10:    OptimizationSessionPersistenceAdapter,
+tests/optimization/test_adapters.py:12:    WorkflowBatchExecutorAdapter,
+tests/optimization/test_adapters.py:13:    WorkflowPersistenceAdapter,
+tests/optimization/test_adapters.py:42:    result = WorkflowBatchExecutorAdapter(workflow).execute((proposal(),))
+tests/optimization/test_adapters.py:74:        return "executed"
+tests/optimization/test_adapters.py:76:    result = AssignmentWorkflowExecutorAdapter(workflow).execute(
+tests/optimization/test_adapters.py:80:    assert result == "executed"
+tests/optimization/test_adapters.py:85:class WorkflowArtifacts:
+tests/optimization/test_adapters.py:89:class FakeWorkflowPersistence:
+tests/optimization/test_adapters.py:92:        return WorkflowArtifacts(
+tests/optimization/test_adapters.py:98:    adapter = WorkflowPersistenceAdapter(
+tests/optimization/test_adapters.py:99:        FakeWorkflowPersistence(),
+tests/optimization/test_adapters.py:115:    adapter = WorkflowPersistenceAdapter(BadPersistence())
+tests/optimization/test_adapters.py:119:    except AdapterConfigurationError as exc:
+tests/optimization/test_adapters.py:122:        raise AssertionError("expected AdapterConfigurationError")
+tests/optimization/test_adapters.py:153:    path = CandidateEvaluationPersistenceAdapter(
+tests/optimization/test_adapters.py:201:    path = OptimizationSessionPersistenceAdapter(
+tests/optimization/test_proposers.py:47:def test_direct_assignment_proposer_emits_resolved_candidates():
+tests/optimization/test_composition_path_resolution.py:58:    spec = ComponentFactorySpec.parse(
+tests/optimization/test_composition_path_resolution.py:76:    spec = ComponentFactorySpec.parse(
+tests/optimization/test_composition_path_resolution.py:97:        ComponentFactorySpec.parse(
+tests/optimization/test_composition_path_resolution.py:112:        ComponentFactorySpec.parse(
+tests/optimization/test_persistence.py:27:from openams.simulation.screening import (
+tests/optimization/test_persistence.py:39:    screen_a = CaseScreeningResult(
+tests/optimization/test_persistence.py:62:        screening_result=screen_a,
+tests/optimization/test_persistence.py:70:    screen_b = CaseScreeningResult(
+tests/optimization/test_persistence.py:93:        screening_result=screen_b,
+tests/optimization/test_plan_executor.py:6:    OptimizationApplicationService,
+tests/optimization/test_plan_executor.py:7:    OptimizationApplicationServices,
+tests/optimization/test_plan_executor.py:27:from openams.simulation.screening import (
+tests/optimization/test_plan_executor.py:39:    screening = CaseScreeningResult(
+tests/optimization/test_plan_executor.py:50:        screening_result=screening,
+tests/optimization/test_plan_executor.py:55:    def execute(self, proposals):
+tests/optimization/test_plan_executor.py:80:    application = OptimizationApplicationService(
+tests/optimization/test_plan_executor.py:81:        OptimizationApplicationServices(
+tests/optimization/test_plan_executor.py:98:    result = make_executor().execute(
+tests/optimization/test_plan_executor.py:130:        make_executor().execute(
+tests/optimization/test_plan_executor.py:147:    result = make_executor().execute(
+tests/optimization/test_plan_executor.py:180:        make_executor().execute(
+tests/optimization/test_plan_executor.py:193:    first = executor.execute(
+tests/optimization/test_plan_executor.py:204:    second = executor.execute(
+tests/optimization/test_plan_executor.py:219:    application = OptimizationApplicationService(
+tests/optimization/test_plan_executor.py:220:        OptimizationApplicationServices(
+tests/optimization/test_plan_executor.py:236:        OptimizationRunPlanExecutor(application).execute(
+tests/optimization/test_plan_executor.py:258:    result = make_executor().execute(
+tests/optimization/test_adapter_contract_fixes.py:9:    AdapterConfigurationError,
+tests/optimization/test_adapter_contract_fixes.py:10:    CandidateEvaluationEngineAdapter,
+tests/optimization/test_adapter_contract_fixes.py:11:    WorkflowPersistenceAdapter,
+tests/optimization/test_adapter_contract_fixes.py:33:    def evaluate_many(screenings):
+tests/optimization/test_adapter_contract_fixes.py:34:        seen["screenings"] = tuple(screenings)
+tests/optimization/test_adapter_contract_fixes.py:39:    adapter = CandidateEvaluationEngineAdapter(
+tests/optimization/test_adapter_contract_fixes.py:41:        screening_results_getter=lambda result: result,
+tests/optimization/test_adapter_contract_fixes.py:45:    assert seen["screenings"] == (1, 2)
+tests/optimization/test_adapter_contract_fixes.py:58:        AdapterConfigurationError,
+tests/optimization/test_adapter_contract_fixes.py:61:        CandidateEvaluationEngineAdapter(
+tests/optimization/test_adapter_contract_fixes.py:64:            screening_results_getter=lambda result: result,
+tests/optimization/test_adapter_contract_fixes.py:69:class WorkflowArtifacts:
+tests/optimization/test_adapter_contract_fixes.py:73:class WorkflowPersistence:
+tests/optimization/test_adapter_contract_fixes.py:75:        return WorkflowArtifacts(
+tests/optimization/test_adapter_contract_fixes.py:83:    path = WorkflowPersistenceAdapter(
+tests/optimization/test_adapter_contract_fixes.py:84:        WorkflowPersistence()
+tests/optimization/test_application.py:11:    OptimizationApplicationService,
+tests/optimization/test_application.py:12:    OptimizationApplicationServices,
+tests/optimization/test_application.py:27:from openams.simulation.screening import (
+tests/optimization/test_application.py:39:    screening = CaseScreeningResult(
+tests/optimization/test_application.py:50:        screening_result=screening,
+tests/optimization/test_application.py:58:    def execute(self, proposals):
+tests/optimization/test_application.py:87:    service = OptimizationApplicationService(
+tests/optimization/test_application.py:88:        OptimizationApplicationServices(
+tests/optimization/test_application.py:250:        OptimizationApplicationService.resume_contract_search_session(
+tests/optimization/test_cycle.py:27:from openams.simulation.screening import (
+tests/optimization/test_cycle.py:39:    screening = CaseScreeningResult(
+tests/optimization/test_cycle.py:50:        screening_result=screening,
+tests/optimization/test_cycle.py:58:    def execute(self, proposals):
+tests/optimization/test_cycle.py:189:    class WorkflowPersister:
+tests/optimization/test_cycle.py:221:            workflow=WorkflowPersister(),
+tests/optimization/test_launch_input.py:33:def test_parse_normalized_launch_input():
+tests/optimization/test_launch_input.py:34:    request = OptimizationLaunchInputParser().parse(payload())
+tests/optimization/test_launch_input.py:58:    request = OptimizationLaunchInputParser().parse(source)
+tests/optimization/test_launch_input.py:78:        OptimizationLaunchInputParser().parse(source)
+tests/optimization/test_launch_input.py:89:        OptimizationLaunchInputParser().parse(source)
+tests/optimization/test_launch_input.py:100:        OptimizationLaunchInputParser().parse(source)
+tests/optimization/test_composition.py:19:    OptimizationLaunchService,
+tests/optimization/test_composition.py:60:    assert isinstance(service, OptimizationLaunchService)
+tests/optimization/test_composition.py:94:    assert isinstance(service, OptimizationLaunchService)
+tests/optimization/test_composition.py:191:    assert isinstance(service, OptimizationLaunchService)
+tests/optimization/test_composition.py:224:    assert isinstance(service, OptimizationLaunchService)
+tests/optimization/test_runtime_preflight.py:95:def test_preflight_does_not_execute_leaf_factories(
+tests/optimization/test_runtime_preflight.py:102:        raise AssertionError("factory was executed")
+tests/optimization/test_launch_service.py:14:    OptimizationLaunchService,
+tests/optimization/test_launch_service.py:48:    def execute(self, *, plan, request):
+tests/optimization/test_launch_service.py:87:    def execute(self, *, plan, request):
+tests/optimization/test_launch_service.py:114:    result = OptimizationLaunchService(
+tests/optimization/test_launch_service.py:154:    service = OptimizationLaunchService(
+tests/optimization/test_launch_service.py:187:        def execute(self, *, plan, request):
+tests/optimization/test_launch_service.py:190:    service = OptimizationLaunchService(
+tests/optimization/test_launch_service.py:218:        OptimizationLaunchService(
+tests/optimization/test_launch_service.py:233:    service = OptimizationLaunchService(

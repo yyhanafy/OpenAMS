@@ -1,0 +1,63 @@
+src/openams/planning/planner.py:70:def _variable_plans(request: PlanningRequest) -> tuple[VariablePlan, ...]:
+src/openams/planning/planner.py:109:def build_execution_plan(request: PlanningRequest) -> ExecutionPlan:
+src/openams/planning/validation.py:49:def validate_planning_request(request: PlanningRequest) -> PlanningRequest:
+src/openams/planning/validation.py:94:def validate_execution_plan(plan: ExecutionPlan) -> ExecutionPlan:
+src/openams/cli/launch_optimization.py:55:def build_parser() -> argparse.ArgumentParser:
+src/openams/cli/launch_validated_optimization.py:17:def build_parser() -> argparse.ArgumentParser:
+src/openams/cli/validate_optimization_runtime.py:16:def build_parser() -> argparse.ArgumentParser:
+src/openams/synthesis/assignments.py:106:    def plans(self) -> tuple[ExecutionPlan, ...]:
+src/openams/synthesis/assignments.py:126:    def emit(
+src/openams/synthesis/assignments.py:185:    def _emit_row(
+src/openams/synthesis/planning.py:68:class IntersectionPlanner:
+src/openams/synthesis/planning.py:71:    def plan(
+src/openams/synthesis/compiler.py:85:    def compile(
+src/openams/synthesis/compiler.py:138:    def _compile_one(
+src/openams/synthesis/workflow.py:73:class SynthesisWorkflowResult:
+src/openams/synthesis/workflow.py:94:class HierarchicalSynthesisWorkflow:
+src/openams/synthesis/indexed.py:45:    def plan(self, inputs: Sequence[RegionInput]) -> JoinPlan:
+src/openams/synthesis/indexed.py:72:    def _build_indexed(self, regions: tuple[RegionInput, ...], plan: JoinPlan) -> CircuitRegion:
+src/openams/simulation/persistence.py:23:class PersistedWorkflowArtifacts:
+src/openams/simulation/persistence.py:62:def canonical_workflow_payload(
+src/openams/simulation/persistence.py:212:class SimulationWorkflowPersistence:
+src/openams/simulation/screening.py:309:    def screen_case(
+src/openams/simulation/screening.py:448:    def screen_many(
+src/openams/simulation/workflow.py:21:class WorkflowError(RuntimeError):
+src/openams/simulation/workflow.py:25:class WorkflowStage(str, Enum):
+src/openams/simulation/workflow.py:32:class WorkflowDiagnostic:
+src/openams/simulation/workflow.py:50:class SimulationWorkflowResult:
+src/openams/simulation/workflow.py:96:    def parse_case(
+src/openams/simulation/workflow.py:104:class SimulationWorkflow:
+src/openams/simulation/workflow.py:190:def build_ngspice_workflow(
+src/openams/simulation/results.py:155:def parse_finite_float(text: str) -> float:
+src/openams/simulation/results.py:179:def parse_declared_measurement(
+src/openams/simulation/results.py:269:    def parse_case(
+src/openams/optimization/plan_executor.py:107:    def execute(
+src/openams/optimization/persisted_plan_executor.py:34:    def run_plan_json(self) -> Path:
+src/openams/optimization/persisted_plan_executor.py:71:    def execute(
+src/openams/optimization/ngspice_runtime.py:156:    def execute(
+src/openams/optimization/ngspice_runtime.py:299:    def _default_screening_results_getter(
+src/openams/optimization/ngspice_runtime.py:347:def create_run_plan_executor(
+src/openams/optimization/adapters.py:28:class WorkflowCallable(Protocol):
+src/openams/optimization/adapters.py:39:class WorkflowBatchExecutorAdapter:
+src/openams/optimization/adapters.py:44:    def execute(
+src/openams/optimization/adapters.py:105:class WorkflowPersistenceAdapter:
+src/openams/optimization/adapters.py:116:    def persist_workflow(
+src/openams/optimization/adapters.py:207:class AssignmentWorkflowExecutorAdapter:
+src/openams/optimization/adapters.py:213:    def execute(
+src/openams/optimization/composition.py:37:    def parse(
+src/openams/optimization/launch_input.py:38:    def parse(
+src/openams/optimization/launch_service.py:62:class OptimizationLaunchService:
+src/openams/optimization/launch_service.py:150:    def _expected_run_plan_path(
+src/openams/optimization/application.py:149:class OptimizationApplicationServices:
+src/openams/optimization/application.py:166:class OptimizationApplicationService:
+src/openams/optimization/cycle.py:36:    def execute(
+src/openams/optimization/cycle.py:53:class WorkflowArtifactPersister(Protocol):
+src/openams/optimization/cycle.py:56:    def persist_workflow(
+src/openams/optimization/run_plan_persistence.py:244:    def _validate_reconstructed_plan(
+src/openams/topology/spice_numbers.py:27:def parse_spice_scalar(token: str) -> float | str:
+src/openams/topology/spice_parser.py:101:def _parse_mos(tokens: list[str], line_number: int) -> ParsedDevice:
+src/openams/topology/spice_parser.py:122:def _parse_two_terminal(
+src/openams/topology/spice_parser.py:143:def _parse_x_mos(tokens: list[str], line_number: int) -> ParsedDevice:
+src/openams/topology/spice_parser.py:179:def _parse_device(tokens: list[str], line_number: int) -> ParsedDevice:
+src/openams/topology/spice_parser.py:222:def _model_device(parsed: ParsedDevice) -> Device:
+src/openams/topology/spice_parser.py:232:def parse_spice_circuit(text: str, *, name: str = "circuit") -> Circuit:

@@ -1,0 +1,397 @@
+src/openams/topology/queries.py:10:def node(circuit: Circuit, name: str) -> Node:
+src/openams/topology/queries.py:19:def device(circuit: Circuit, name: str) -> Device:
+src/openams/topology/queries.py:28:def connected_terminals(
+src/openams/topology/queries.py:53:def connected_devices(circuit: Circuit, node_name: str) -> tuple[Device, ...]:
+src/openams/topology/spice_numbers.py:27:def parse_spice_scalar(token: str) -> float | str:
+src/openams/topology/spice_parser.py:30:def _logical_lines(text: str) -> Iterable[tuple[int, str]]:
+src/openams/topology/spice_parser.py:57:def _strip_inline_comment(line: str) -> str:
+src/openams/topology/spice_parser.py:76:def _tokens(line: str, line_number: int) -> list[str]:
+src/openams/topology/spice_parser.py:85:def _parameters(tokens: list[str]) -> dict[str, Any]:
+src/openams/topology/spice_parser.py:101:def _parse_mos(tokens: list[str], line_number: int) -> ParsedDevice:
+src/openams/topology/spice_parser.py:122:def _parse_two_terminal(
+src/openams/topology/spice_parser.py:143:def _parse_x_mos(tokens: list[str], line_number: int) -> ParsedDevice:
+src/openams/topology/spice_parser.py:179:def _parse_device(tokens: list[str], line_number: int) -> ParsedDevice:
+src/openams/topology/spice_parser.py:201:def _device_kind(value: str) -> DeviceKind:
+src/openams/topology/spice_parser.py:222:def _model_device(parsed: ParsedDevice) -> Device:
+src/openams/topology/spice_parser.py:232:def parse_spice_circuit(text: str, *, name: str = "circuit") -> Circuit:
+src/openams/topology/errors.py:4:class TopologyError(ValueError):
+src/openams/topology/errors.py:8:class MalformedElementError(TopologyError):
+src/openams/topology/errors.py:12:class UnsupportedElementError(TopologyError):
+src/openams/topology/errors.py:16:class UnsupportedHierarchyError(TopologyError):
+src/openams/topology/errors.py:20:class DuplicateDeviceError(TopologyError):
+src/openams/topology/records.py:11:class ParsedDevice:
+src/openams/metadata/validation.py:17:def validate_technology_config(config: TechnologyConfig) -> None:
+src/openams/metadata/validation.py:29:def validate_project_inputs(project: ProjectInputs) -> None:
+src/openams/metadata/normalize.py:12:def _require_mapping(value: Any, *, name: str) -> Mapping[str, Any]:
+src/openams/metadata/normalize.py:18:def normalize_technology_config(
+src/openams/metadata/normalize.py:86:def normalize_project_inputs(
+src/openams/metadata/errors.py:4:class MetadataError(ValueError):
+src/openams/metadata/errors.py:8:class MetadataValidationError(MetadataError):
+src/openams/metadata/model.py:10:def _freeze(value: Any) -> Any:
+src/openams/metadata/model.py:21:class TechnologySourceConfig:
+src/openams/metadata/model.py:50:class TechnologyConfig:
+src/openams/metadata/model.py:74:class ProjectInputs:
+src/openams/constraints/queries.py:15:def symbols_in_constraint(constraint: Constraint) -> frozenset[str]:
+src/openams/constraints/queries.py:33:def symbols_in_constraint_set(constraints: ConstraintSet) -> frozenset[str]:
+src/openams/constraints/_immutable.py:10:def require_name(value: str, field_name: str) -> str:
+src/openams/constraints/_immutable.py:19:def require_finite(value: int | float, field_name: str) -> float:
+src/openams/constraints/_immutable.py:28:def freeze_mapping(value: Mapping[str, Any] | None) -> Mapping[str, Any]:
+src/openams/constraints/validation.py:9:def validate_constraint_set(
+src/openams/constraints/errors.py:4:class ConstraintError(ValueError):
+src/openams/constraints/errors.py:8:class ConstraintValidationError(ConstraintError):
+src/openams/constraints/model.py:17:class RelationConstraint:
+src/openams/constraints/model.py:42:class BoundConstraint:
+src/openams/constraints/model.py:88:class RatioConstraint:
+src/openams/constraints/model.py:113:class ConstraintSet:
+src/openams/constraints/expressions.py:16:class Symbol:
+src/openams/constraints/expressions.py:24:class Constant:
+src/openams/constraints/expressions.py:32:class UnaryExpression:
+src/openams/constraints/expressions.py:45:class BinaryExpression:
+src/openams/constraints/expressions.py:71:def as_expression(value: ExpressionLike) -> Expression:
+src/openams/constraints/expressions.py:85:def symbols_in_expression(expression: ExpressionLike) -> frozenset[str]:
+src/openams/technology/adaptive/refinement.py:11:class RefinementPolicy:
+src/openams/technology/adaptive/refinement.py:24:def surviving_domain(
+src/openams/technology/adaptive/generator.py:20:class ContinuousTechnologyModel(Protocol):
+src/openams/technology/adaptive/generator.py:31:def axis_values(axis: AxisDomain) -> tuple[float, ...]:
+src/openams/technology/adaptive/generator.py:42:def coordinate_grid(domain: SamplingDomain) -> Iterator[dict[str, float]]:
+src/openams/technology/adaptive/generator.py:49:def _batches(items: Iterable[dict[str, float]], size: int) -> Iterator[list[dict[str, float]]]:
+src/openams/technology/adaptive/generator.py:55:def _finite(evaluation: ModelEvaluation) -> bool:
+src/openams/technology/adaptive/generator.py:61:class AdaptiveTableGenerator:
+src/openams/technology/adaptive/errors.py:3:class AdaptiveTableError(Exception):
+src/openams/technology/adaptive/errors.py:6:class InvalidSamplingDomainError(AdaptiveTableError):
+src/openams/technology/adaptive/errors.py:9:class PointBudgetExceededError(AdaptiveTableError):
+src/openams/technology/adaptive/errors.py:12:class ModelEvaluationError(AdaptiveTableError):
+src/openams/technology/adaptive/model.py:13:class AxisSpacing(str, Enum):
+src/openams/technology/adaptive/model.py:19:class AxisDomain:
+src/openams/technology/adaptive/model.py:50:class SamplingDomain:
+src/openams/technology/adaptive/model.py:71:class GenerationPolicy:
+src/openams/technology/adaptive/model.py:87:class ModelEvaluation:
+src/openams/technology/adaptive/model.py:103:class GeneratedPoint:
+src/openams/technology/adaptive/model.py:121:class AdaptiveTable:
+src/openams/technology/queries.py:14:def missing_capabilities(
+src/openams/technology/queries.py:42:def supports_request(
+src/openams/technology/queries.py:51:def result_quantity(
+src/openams/technology/table/queries.py:29:def points_for_model(
+src/openams/technology/table/queries.py:46:def exact_point(
+src/openams/technology/table/queries.py:62:def _axis_target(
+src/openams/technology/table/queries.py:71:def _normalized_distance(
+src/openams/technology/table/queries.py:88:def nearest_points(
+src/openams/technology/table/queries.py:119:def _matches_other_axes(
+src/openams/technology/table/queries.py:142:def bracket_points(
+src/openams/technology/table/backend.py:23:class TableTechnologyBackend:
+src/openams/technology/table/validation.py:11:def _validate_point_capabilities(
+src/openams/technology/table/validation.py:36:def validate_characterization_table(
+src/openams/technology/table/_keys.py:25:def exact_operating_point_key(point: DeviceOperatingPoint) -> ExactPointKey:
+src/openams/technology/table/_keys.py:44:def exact_characterization_key(point: CharacterizationPoint) -> ExactPointKey:
+src/openams/technology/table/_keys.py:48:def model_condition_key(point: DeviceOperatingPoint) -> tuple[str, str, str, str]:
+src/openams/technology/table/_keys.py:57:def coordinate_value(point: CharacterizationPoint, axis: str) -> float:
+src/openams/technology/table/errors.py:6:class TableValidationError(TechnologyValidationError):
+src/openams/technology/table/errors.py:10:class DuplicateCharacterizationPointError(TableValidationError):
+src/openams/technology/table/errors.py:14:class TableLookupError(TechnologyLookupError):
+src/openams/technology/table/model.py:20:class BracketAxis(str, Enum):
+src/openams/technology/table/model.py:30:class BracketResult:
+src/openams/technology/table/model.py:46:class CharacterizationTable:
+src/openams/technology/table/interpolation/_coordinates.py:10:def coordinate_value(
+src/openams/technology/table/interpolation/_coordinates.py:19:def replace_coordinate(
+src/openams/technology/table/interpolation/queries.py:30:def _same_model_context(
+src/openams/technology/table/interpolation/queries.py:43:def _required_values(
+src/openams/technology/table/interpolation/queries.py:56:def _point_signature(
+src/openams/technology/table/interpolation/queries.py:77:def _interpolate_pair(
+src/openams/technology/table/interpolation/queries.py:142:def _collapse_axis(
+src/openams/technology/table/interpolation/queries.py:203:def interpolate_request(
+src/openams/technology/table/interpolation/backend.py:22:class InterpolatingTableTechnologyBackend:
+src/openams/technology/table/interpolation/_regions.py:10:def merge_regions(
+src/openams/technology/table/interpolation/errors.py:6:class InterpolationError(TableLookupError):
+src/openams/technology/table/interpolation/errors.py:10:class InterpolationOutOfRangeError(InterpolationError):
+src/openams/technology/table/interpolation/errors.py:14:class InterpolationGridError(InterpolationError):
+src/openams/technology/table/interpolation/errors.py:18:class IncompatibleOperatingRegionError(InterpolationError):
+src/openams/technology/table/interpolation/model.py:9:class InterpolationAxis(str, Enum):
+src/openams/technology/table/interpolation/model.py:29:class InterpolationPolicy:
+src/openams/technology/table/interpolation/model.py:47:class InterpolationStep:
+src/openams/technology/_immutable.py:10:def require_name(value: str, field_name: str) -> str:
+src/openams/technology/_immutable.py:19:def optional_name(value: str | None, field_name: str) -> str | None:
+src/openams/technology/_immutable.py:25:def require_finite(value: int | float, field_name: str) -> float:
+src/openams/technology/_immutable.py:34:def require_positive(value: int | float, field_name: str) -> float:
+src/openams/technology/_immutable.py:41:def freeze_mapping(value: Mapping[str, Any] | None) -> Mapping[str, Any]:
+src/openams/technology/_immutable.py:49:def freeze_numeric_mapping(
+src/openams/technology/validation.py:14:def validate_lookup_request(
+src/openams/technology/validation.py:22:def validate_lookup_result(
+src/openams/technology/validation.py:46:def validate_characterization_point(
+src/openams/technology/feasible/errors.py:3:class FeasibleRegionError(Exception):
+src/openams/technology/feasible/errors.py:7:class InvalidConstraintError(FeasibleRegionError, ValueError):
+src/openams/technology/feasible/errors.py:11:class MissingFieldError(FeasibleRegionError, KeyError):
+src/openams/technology/feasible/model.py:12:class ConstraintDecision:
+src/openams/technology/feasible/model.py:24:class RejectedPoint:
+src/openams/technology/feasible/model.py:33:class FeasibleRegion:
+src/openams/technology/feasible/builder.py:14:class FeasibleRegionPolicy:
+src/openams/technology/feasible/builder.py:22:class FeasibleRegionBuilder:
+src/openams/technology/feasible/constraints.py:12:class RowConstraint(Protocol):
+src/openams/technology/feasible/constraints.py:21:def _numeric(row: Mapping[str, Any], field: str) -> float:
+src/openams/technology/feasible/constraints.py:34:class RangeConstraint:
+src/openams/technology/feasible/constraints.py:65:class BooleanConstraint:
+src/openams/technology/feasible/constraints.py:89:class AllowedValuesConstraint:
+src/openams/technology/feasible/constraints.py:117:class FieldRelationConstraint:
+src/openams/technology/errors.py:4:class TechnologyError(RuntimeError):
+src/openams/technology/errors.py:8:class TechnologyValidationError(TechnologyError, ValueError):
+src/openams/technology/errors.py:12:class TechnologyCapabilityError(TechnologyError):
+src/openams/technology/errors.py:16:class TechnologyLookupError(TechnologyError):
+src/openams/technology/model.py:20:class DeviceKind(str, Enum):
+src/openams/technology/model.py:24:class DevicePolarity(str, Enum):
+src/openams/technology/model.py:29:class OperatingRegion(str, Enum):
+src/openams/technology/model.py:37:class SignConvention(str, Enum):
+src/openams/technology/model.py:42:class TechnologyQuantity(str, Enum):
+src/openams/technology/model.py:58:class TechnologyIdentity:
+src/openams/technology/model.py:86:class OperatingCondition:
+src/openams/technology/model.py:118:class DeviceModel:
+src/openams/technology/model.py:140:class DeviceOperatingPoint:
+src/openams/technology/model.py:166:class TechnologyCapabilities:
+src/openams/technology/model.py:217:class TechnologyLookupRequest:
+src/openams/technology/model.py:240:class TechnologyLookupResult:
+src/openams/technology/model.py:269:class CharacterizationPoint:
+src/openams/technology/interface.py:16:class TechnologyBackend(Protocol):
+src/openams/synthesis/assignments.py:21:def _freeze(mapping: Mapping[str, Any]) -> Mapping[str, Any]:
+src/openams/synthesis/assignments.py:25:def _require_name(value: str, label: str) -> str:
+src/openams/synthesis/assignments.py:33:class FixedAssignmentPolicy:
+src/openams/synthesis/assignments.py:63:class FixedAssignmentRecord:
+src/openams/synthesis/assignments.py:82:class FixedAssignmentBatch:
+src/openams/synthesis/assignments.py:114:class CircuitRegionAssignmentEmitter:
+src/openams/synthesis/planning.py:13:def _split_field(field: str) -> tuple[str, str] | None:
+src/openams/synthesis/planning.py:23:class JoinKey:
+src/openams/synthesis/planning.py:42:class JoinStep:
+src/openams/synthesis/planning.py:52:class JoinPlan:
+src/openams/synthesis/planning.py:68:class IntersectionPlanner:
+src/openams/synthesis/compiler.py:19:def _freeze(mapping: Mapping[str, str]) -> Mapping[str, str]:
+src/openams/synthesis/compiler.py:24:class RegionBinding:
+src/openams/synthesis/compiler.py:53:class ConstraintCompilationDiagnostic:
+src/openams/synthesis/compiler.py:61:class CompiledIntersection:
+src/openams/synthesis/compiler.py:77:class CircuitConstraintCompiler:
+src/openams/synthesis/compiler.py:219:def _variable_name(node: ast.AST) -> str | None:
+src/openams/synthesis/compiler.py:235:def _linearize(node: ast.AST) -> tuple[dict[str, float], float] | None:
+src/openams/synthesis/workflow.py:19:def _freeze(mapping: Mapping[str, Any]) -> Mapping[str, Any]:
+src/openams/synthesis/workflow.py:24:class CanonicalConstraintRecord:
+src/openams/synthesis/workflow.py:38:class SynthesisStage:
+src/openams/synthesis/workflow.py:61:class StageResult:
+src/openams/synthesis/workflow.py:73:class SynthesisWorkflowResult:
+src/openams/synthesis/workflow.py:94:class HierarchicalSynthesisWorkflow:
+src/openams/synthesis/errors.py:4:class SynthesisError(Exception):
+src/openams/synthesis/errors.py:8:class InvalidRegionError(SynthesisError):
+src/openams/synthesis/errors.py:12:class MissingFieldError(SynthesisError, KeyError):
+src/openams/synthesis/errors.py:16:class CombinationBudgetExceededError(SynthesisError):
+src/openams/synthesis/model.py:13:def _freeze(mapping: Mapping[str, Any]) -> Mapping[str, Any]:
+src/openams/synthesis/model.py:18:class RegionInput:
+src/openams/synthesis/model.py:46:class ConstraintDecision:
+src/openams/synthesis/model.py:56:class RejectedCombination:
+src/openams/synthesis/model.py:68:class CircuitRow:
+src/openams/synthesis/model.py:80:class CircuitRegion:
+src/openams/synthesis/intersection.py:15:class IntersectionPolicy:
+src/openams/synthesis/intersection.py:28:class RegionIntersection:
+src/openams/synthesis/indexed.py:16:class PlannedIntersectionPolicy:
+src/openams/synthesis/indexed.py:29:class PlannedRegionIntersection:
+src/openams/synthesis/constraints.py:12:class CircuitConstraint(Protocol):
+src/openams/synthesis/constraints.py:19:def _numeric(row: Mapping[str, Any], field: str) -> float:
+src/openams/synthesis/constraints.py:32:class FieldRelationConstraint:
+src/openams/synthesis/constraints.py:69:class SumConstraint:
+src/openams/synthesis/constraints.py:107:class AllowedValuesConstraint:
+src/openams/planning/planner.py:16:def _select_route(request: PlanningRequest) -> ExecutionRoute:
+src/openams/planning/planner.py:33:def _stages_for(
+src/openams/planning/planner.py:70:def _variable_plans(request: PlanningRequest) -> tuple[VariablePlan, ...]:
+src/openams/planning/planner.py:109:def build_execution_plan(request: PlanningRequest) -> ExecutionPlan:
+src/openams/planning/queries.py:8:def variables_by_role(
+src/openams/planning/queries.py:19:def variables_requiring_resolution(
+src/openams/planning/_immutable.py:10:def require_name(value: str, field_name: str) -> str:
+src/openams/planning/_immutable.py:19:def freeze_names(values: object, field_name: str) -> frozenset[str]:
+src/openams/planning/_immutable.py:31:def freeze_mapping(value: Mapping[str, Any] | None) -> Mapping[str, Any]:
+src/openams/planning/_immutable.py:39:def freeze_numeric_mapping(
+src/openams/planning/validation.py:49:def validate_planning_request(request: PlanningRequest) -> PlanningRequest:
+src/openams/planning/validation.py:94:def validate_execution_plan(plan: ExecutionPlan) -> ExecutionPlan:
+src/openams/planning/errors.py:4:class PlanningError(ValueError):
+src/openams/planning/errors.py:8:class PlanningValidationError(PlanningError):
+src/openams/planning/model.py:17:class VariableRole(str, Enum):
+src/openams/planning/model.py:25:class ExecutionRoute(str, Enum):
+src/openams/planning/model.py:33:class ExecutionStage(str, Enum):
+src/openams/planning/model.py:44:class PlanningRequest:
+src/openams/planning/model.py:100:class VariablePlan:
+src/openams/planning/model.py:117:class ExecutionPlan:
+src/openams/simulation/persistence.py:18:class PersistenceError(RuntimeError):
+src/openams/simulation/persistence.py:23:class PersistedWorkflowArtifacts:
+src/openams/simulation/persistence.py:38:def _relativize_path(value: Any, base_directory: Path) -> Any:
+src/openams/simulation/persistence.py:62:def canonical_workflow_payload(
+src/openams/simulation/persistence.py:79:def write_canonical_json(path: Path, payload: Mapping[str, Any]) -> None:
+src/openams/simulation/persistence.py:91:def _measurement_index(case_payload: Mapping[str, Any]) -> dict[tuple[str, str], Any]:
+src/openams/simulation/persistence.py:101:def deterministic_summary_rows(
+src/openams/simulation/persistence.py:195:def write_summary_csv(
+src/openams/simulation/persistence.py:212:class SimulationWorkflowPersistence:
+src/openams/simulation/screening.py:23:class ScreeningError(RuntimeError):
+src/openams/simulation/screening.py:27:class ScreeningOutcome(str, Enum):
+src/openams/simulation/screening.py:33:class ComparisonOperator(str, Enum):
+src/openams/simulation/screening.py:44:class SpecificationRule:
+src/openams/simulation/screening.py:105:class RuleScreeningResult:
+src/openams/simulation/screening.py:139:class CaseScreeningResult:
+src/openams/simulation/screening.py:176:class ScreeningSummary:
+src/openams/simulation/screening.py:205:def _expected_payload(rule: SpecificationRule) -> dict[str, Any]:
+src/openams/simulation/screening.py:219:def _compare(value: float, rule: SpecificationRule) -> bool:
+src/openams/simulation/screening.py:259:def _find_measurement(
+src/openams/simulation/screening.py:294:class SpecificationScreeningEngine:
+src/openams/simulation/manifest.py:20:def _enum_value(value: Any) -> str:
+src/openams/simulation/manifest.py:26:class DirectSimulationInput:
+src/openams/simulation/manifest.py:34:class DirectSimulationManifestBuilder:
+src/openams/simulation/ngspice.py:21:class NgspiceAdapterError(RuntimeError):
+src/openams/simulation/ngspice.py:25:class NgspiceInputError(NgspiceAdapterError, ValueError):
+src/openams/simulation/ngspice.py:29:class NgspiceExecutionError(NgspiceAdapterError):
+src/openams/simulation/ngspice.py:33:class NgspiceCaseStatus(str, Enum):
+src/openams/simulation/ngspice.py:41:class NgspiceRunPolicy:
+src/openams/simulation/ngspice.py:70:class NgspiceCaseResult:
+src/openams/simulation/ngspice.py:108:class NgspiceRunResult:
+src/openams/simulation/ngspice.py:147:def _safe_component(value: str) -> str:
+src/openams/simulation/ngspice.py:154:def _read_attr(obj: Any, *names: str, default: Any = None) -> Any:
+src/openams/simulation/ngspice.py:166:def _as_mapping(value: Any, *, label: str) -> dict[str, Any]:
+src/openams/simulation/ngspice.py:177:def _jsonable(value: Any) -> Any:
+src/openams/simulation/ngspice.py:197:def _format_parameter(value: Any) -> str:
+src/openams/simulation/ngspice.py:211:def render_ngspice_template(
+src/openams/simulation/ngspice.py:255:class NgspiceRunner:
+src/openams/simulation/workflow.py:21:class WorkflowError(RuntimeError):
+src/openams/simulation/workflow.py:25:class WorkflowStage(str, Enum):
+src/openams/simulation/workflow.py:32:class WorkflowDiagnostic:
+src/openams/simulation/workflow.py:50:class SimulationWorkflowResult:
+src/openams/simulation/workflow.py:90:class SimulationRunnerProtocol(Protocol):
+src/openams/simulation/workflow.py:95:class RawResultParserProtocol(Protocol):
+src/openams/simulation/workflow.py:104:class SimulationWorkflow:
+src/openams/simulation/workflow.py:190:def build_ngspice_workflow(
+src/openams/simulation/results.py:13:class ResultParsingError(RuntimeError):
+src/openams/simulation/results.py:17:class MeasurementStatus(str, Enum):
+src/openams/simulation/results.py:23:class AnalysisStatus(str, Enum):
+src/openams/simulation/results.py:31:class MeasurementDeclaration:
+src/openams/simulation/results.py:52:class ScalarMeasurement:
+src/openams/simulation/results.py:84:class RawAnalysisResult:
+src/openams/simulation/results.py:113:class RawSimulationCaseResult:
+src/openams/simulation/results.py:155:def parse_finite_float(text: str) -> float:
+src/openams/simulation/results.py:167:def _measurement_patterns(names: Sequence[str]) -> tuple[re.Pattern[str], ...]:
+src/openams/simulation/results.py:179:def parse_declared_measurement(
+src/openams/simulation/results.py:239:def detect_ngspice_convergence(text: str) -> tuple[bool | None, tuple[str, ...]]:
+src/openams/simulation/results.py:266:class NgspiceRawResultParser:
+src/openams/simulation/protocols.py:11:class SimulationRunner(Protocol):
+src/openams/simulation/errors.py:4:class SimulationError(Exception):
+src/openams/simulation/errors.py:8:class InvalidExecutionPlanError(SimulationError):
+src/openams/simulation/errors.py:12:class InvalidSimulationManifestError(SimulationError):
+src/openams/simulation/model.py:14:def _freeze(mapping: Mapping[str, Any]) -> Mapping[str, Any]:
+src/openams/simulation/model.py:18:def _name(value: str, label: str) -> str:
+src/openams/simulation/model.py:26:class SimulationBackend:
+src/openams/simulation/model.py:41:class SimulationTemplate:
+src/openams/simulation/model.py:76:class SimulationCase:
+src/openams/simulation/model.py:114:class SimulationManifest:
+src/openams/simulation/model.py:140:class SimulationRunRequest:
+src/openams/optimization/persistence.py:17:class EvaluationPersistenceError(RuntimeError):
+src/openams/optimization/persistence.py:22:class PersistedEvaluationArtifacts:
+src/openams/optimization/persistence.py:41:def _relativize_path(value: Any, base_directory: Path) -> Any:
+src/openams/optimization/persistence.py:61:def canonical_evaluation_payload(
+src/openams/optimization/persistence.py:80:def write_canonical_json(path: Path, payload: Mapping[str, Any]) -> None:
+src/openams/optimization/persistence.py:103:def ranking_rows(
+src/openams/optimization/persistence.py:144:def objective_component_rows(
+src/openams/optimization/persistence.py:188:def write_csv(
+src/openams/optimization/persistence.py:209:def optimizer_feedback_payload(
+src/openams/optimization/persistence.py:225:class CandidateEvaluationPersistence:
+src/openams/optimization/session.py:13:class OptimizationSessionError(RuntimeError):
+src/openams/optimization/session.py:17:class OptimizationRoute(str, Enum):
+src/openams/optimization/session.py:22:class ProposalStatus(str, Enum):
+src/openams/optimization/session.py:29:class CandidateProposal:
+src/openams/optimization/session.py:74:class ProposalRecord:
+src/openams/optimization/session.py:103:class OptimizationIteration:
+src/openams/optimization/session.py:150:class OptimizationSessionState:
+src/openams/optimization/session.py:246:class ProposalRequest:
+src/openams/optimization/session.py:317:class CandidateProposer(Protocol):
+src/openams/optimization/session.py:327:class OptimizationSession:
+src/openams/optimization/preflight.py:23:class OptimizationRuntimePreflightError(RuntimeError):
+src/openams/optimization/preflight.py:28:class OptimizationRuntimePreflightReport:
+src/openams/optimization/preflight.py:69:class OptimizationRuntimePreflight:
+src/openams/optimization/proposers.py:24:class ProposalGenerationError(RuntimeError):
+src/openams/optimization/proposers.py:28:def _candidate_id(
+src/openams/optimization/proposers.py:45:def _sorted_float_mapping(
+src/openams/optimization/proposers.py:60:class DirectAssignmentProposer:
+src/openams/optimization/proposers.py:139:class GridSearchProposer:
+src/openams/optimization/proposers.py:225:class MidpointProposer:
+src/openams/optimization/run_plan.py:18:class RunPlanError(RuntimeError):
+src/openams/optimization/run_plan.py:22:class ResolutionState(str, Enum):
+src/openams/optimization/run_plan.py:31:class ParameterRange:
+src/openams/optimization/run_plan.py:64:class SynthesisRunInput:
+src/openams/optimization/run_plan.py:146:class OptimizationRunPlan:
+src/openams/optimization/run_plan.py:194:class OptimizationRouteSelector:
+src/openams/optimization/launch_manifest_builder.py:21:class OptimizationLaunchManifestBuilder:
+src/openams/optimization/plan_executor.py:23:class RunPlanExecutionError(RuntimeError):
+src/openams/optimization/plan_executor.py:28:class RunPlanExecutionRequest:
+src/openams/optimization/plan_executor.py:76:class OptimizationRunPlanExecutor:
+src/openams/optimization/persisted_plan_executor.py:21:class PersistedRunPlanExecutionError(RuntimeError):
+src/openams/optimization/persisted_plan_executor.py:26:class PersistedRunPlanExecutionResult:
+src/openams/optimization/persisted_plan_executor.py:38:class PersistedOptimizationRunPlanExecutor:
+src/openams/optimization/ngspice_runtime.py:42:class NgspiceRuntimeConfigurationError(RuntimeError):
+src/openams/optimization/ngspice_runtime.py:52:class NgspiceRuntimeSpec:
+src/openams/optimization/ngspice_runtime.py:142:class ReferenceProposerRunPlanExecutor(
+src/openams/optimization/ngspice_runtime.py:178:class NgspiceOptimizationRuntimeFactory:
+src/openams/optimization/ngspice_runtime.py:347:def create_run_plan_executor(
+src/openams/optimization/launch_manifest.py:12:class OptimizationLaunchStatus(str, Enum):
+src/openams/optimization/launch_manifest.py:21:class LaunchManifestError(RuntimeError):
+src/openams/optimization/launch_manifest.py:26:class OptimizationLaunchArtifacts:
+src/openams/optimization/launch_manifest.py:84:class OptimizationLaunchManifest:
+src/openams/optimization/launch_manifest.py:141:class OptimizationLaunchManifestArtifacts:
+src/openams/optimization/launch_manifest.py:147:class OptimizationLaunchManifestPersistence:
+src/openams/optimization/adapters.py:24:class AdapterConfigurationError(RuntimeError):
+src/openams/optimization/adapters.py:28:class WorkflowCallable(Protocol):
+src/openams/optimization/adapters.py:39:class WorkflowBatchExecutorAdapter:
+src/openams/optimization/adapters.py:52:class CandidateEvaluationEngineAdapter:
+src/openams/optimization/adapters.py:105:class WorkflowPersistenceAdapter:
+src/openams/optimization/adapters.py:138:class CandidateEvaluationPersistenceAdapter:
+src/openams/optimization/adapters.py:161:class OptimizationSessionPersistenceAdapter:
+src/openams/optimization/adapters.py:184:class ProposalAssignmentMapper:
+src/openams/optimization/adapters.py:207:class AssignmentWorkflowExecutorAdapter:
+src/openams/optimization/session_persistence.py:10:class SessionPersistenceError(RuntimeError): pass
+src/openams/optimization/session_persistence.py:12:class PersistedSessionArtifacts:
+src/openams/optimization/session_persistence.py:19:def _relativize_path(value: Any, base_directory: Path) -> Any:
+src/openams/optimization/session_persistence.py:28:def canonical_session_payload(state: OptimizationSessionState, *, output_directory: Path, evaluation_artifact_path: str | Path | None = None) -> dict[str, Any]:
+src/openams/optimization/session_persistence.py:31:def write_canonical_json(path: Path, payload: Mapping[str, Any]) -> None:
+src/openams/optimization/session_persistence.py:35:def proposal_history_rows(state: OptimizationSessionState) -> tuple[dict[str, Any], ...]:
+src/openams/optimization/session_persistence.py:44:def feedback_rows(state: OptimizationSessionState) -> tuple[dict[str, Any], ...]:
+src/openams/optimization/session_persistence.py:57:def write_csv(path: Path, *, fieldnames: tuple[str,...], rows: Iterable[Mapping[str,Any]]) -> None:
+src/openams/optimization/session_persistence.py:62:def _component(payload: Mapping[str,Any]) -> ObjectiveComponent:
+src/openams/optimization/session_persistence.py:64:def _feedback(payload: Mapping[str,Any]) -> OptimizerFeedback:
+src/openams/optimization/session_persistence.py:66:def reconstruct_session_state(payload: Mapping[str,Any]) -> OptimizationSessionState:
+src/openams/optimization/session_persistence.py:79:class OptimizationSessionPersistence:
+src/openams/optimization/composition.py:20:class OptimizationCompositionError(RuntimeError):
+src/openams/optimization/composition.py:25:class ComponentFactorySpec:
+src/openams/optimization/composition.py:124:class OptimizationRuntimeComponents:
+src/openams/optimization/composition.py:131:class OptimizationCompositionSpec:
+src/openams/optimization/composition.py:181:class OptimizationCompositionRoot:
+src/openams/optimization/composition.py:299:def create_optimization_launch_service(
+src/openams/optimization/launch_input.py:14:class OptimizationLaunchInputError(ValueError):
+src/openams/optimization/launch_input.py:18:class OptimizationLaunchInputParser:
+src/openams/optimization/launch_service.py:30:class OptimizationLaunchRequest:
+src/openams/optimization/launch_service.py:49:class OptimizationLaunchResult:
+src/openams/optimization/launch_service.py:62:class OptimizationLaunchService:
+src/openams/optimization/application.py:36:class OptimizationApplicationError(RuntimeError):
+src/openams/optimization/application.py:41:class DirectAssignmentRunRequest:
+src/openams/optimization/application.py:91:class ContractSearchIterationRequest:
+src/openams/optimization/application.py:149:class OptimizationApplicationServices:
+src/openams/optimization/application.py:166:class OptimizationApplicationService:
+src/openams/optimization/cycle.py:25:class OptimizationCycleError(RuntimeError):
+src/openams/optimization/cycle.py:29:class CandidateBatchExecutor(Protocol):
+src/openams/optimization/cycle.py:43:class CandidateBatchEvaluator(Protocol):
+src/openams/optimization/cycle.py:53:class WorkflowArtifactPersister(Protocol):
+src/openams/optimization/cycle.py:64:class EvaluationArtifactPersister(Protocol):
+src/openams/optimization/cycle.py:77:class SessionArtifactPersister(Protocol):
+src/openams/optimization/cycle.py:91:class OptimizationCycleArtifacts:
+src/openams/optimization/cycle.py:119:class OptimizationCycleResult:
+src/openams/optimization/cycle.py:165:class OptimizationCyclePersistence:
+src/openams/optimization/cycle.py:173:class OptimizationCycleOrchestrator:
+src/openams/optimization/evaluation.py:21:class EvaluationError(RuntimeError):
+src/openams/optimization/evaluation.py:25:class CandidateState(str, Enum):
+src/openams/optimization/evaluation.py:31:class ObjectiveDirection(str, Enum):
+src/openams/optimization/evaluation.py:37:class ObjectiveDefinition:
+src/openams/optimization/evaluation.py:72:class ObjectiveComponent:
+src/openams/optimization/evaluation.py:110:class OptimizerFeedback:
+src/openams/optimization/evaluation.py:134:class CandidateEvaluation:
+src/openams/optimization/evaluation.py:188:class RankedCandidate:
+src/openams/optimization/evaluation.py:200:class CandidateEvaluationSummary:
+src/openams/optimization/evaluation.py:238:def _find_measurement(
+src/openams/optimization/evaluation.py:263:def _evaluate_objective(
+src/openams/optimization/evaluation.py:339:class CandidateEvaluationEngine:
+src/openams/optimization/run_plan_persistence.py:17:class RunPlanPersistenceError(RuntimeError):
+src/openams/optimization/run_plan_persistence.py:22:class OptimizationRunPlanArtifacts:
+src/openams/optimization/run_plan_persistence.py:28:class OptimizationRunPlanPersistence:

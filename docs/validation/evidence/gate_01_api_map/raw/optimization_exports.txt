@@ -1,0 +1,3 @@
+===== openams.optimization =====
+"""Optimization-facing models and services."""
+

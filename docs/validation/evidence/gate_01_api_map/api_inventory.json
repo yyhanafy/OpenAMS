@@ -1,0 +1,145 @@
+{
+  "gate": 1,
+  "proof": "Public APIs mapped",
+  "status": "PASS",
+  "subsystems": {
+    "topology": {
+      "public_entries": [
+        "parse_spice_circuit",
+        "parse_spice_subcircuit",
+        "extract_spice_subcircuit",
+        "connected_devices",
+        "connected_terminals",
+        "device",
+        "node"
+      ],
+      "returns": [
+        "Circuit",
+        "ParsedSubcircuit"
+      ],
+      "downstream": [
+        "constraints",
+        "synthesis",
+        "orchestration"
+      ]
+    },
+    "metadata": {
+      "modules": [
+        "model",
+        "normalize",
+        "validation",
+        "io.yaml_loader"
+      ],
+      "returns": [
+        "normalized metadata",
+        "validation diagnostics"
+      ],
+      "downstream": [
+        "constraints",
+        "planning",
+        "simulation"
+      ]
+    },
+    "constraints": {
+      "modules": [
+        "model",
+        "expressions",
+        "validation",
+        "queries"
+      ],
+      "returns": [
+        "canonical constraints",
+        "diagnostics"
+      ],
+      "downstream": [
+        "synthesis",
+        "planning",
+        "optimization"
+      ]
+    },
+    "technology": {
+      "concepts": [
+        "backend interface",
+        "table backend",
+        "interpolation backend",
+        "adaptive generation",
+        "feasible-region builder"
+      ],
+      "returns": [
+        "technology responses",
+        "feasible regions"
+      ],
+      "downstream": [
+        "synthesis",
+        "planning",
+        "optimization"
+      ]
+    },
+    "synthesis": {
+      "public_entries": [
+        "CircuitConstraintCompiler",
+        "HierarchicalSynthesisWorkflow",
+        "CircuitRegionAssignmentEmitter"
+      ],
+      "returns": [
+        "CompiledIntersection",
+        "SynthesisWorkflowResult",
+        "CircuitRegion",
+        "FixedAssignmentBatch"
+      ],
+      "downstream": [
+        "planning",
+        "simulation",
+        "optimization"
+      ]
+    },
+    "planning": {
+      "public_entries": [
+        "build_execution_plan"
+      ],
+      "returns": [
+        "ExecutionPlan",
+        "ExecutionRoute"
+      ],
+      "downstream": [
+        "simulation",
+        "optimization"
+      ]
+    },
+    "simulation": {
+      "public_entries": [
+        "DirectSimulationManifestBuilder",
+        "NgspiceRunner",
+        "SimulationWorkflow",
+        "build_ngspice_workflow"
+      ],
+      "returns": [
+        "SimulationManifest",
+        "NgspiceRunResult",
+        "SimulationWorkflowResult"
+      ],
+      "downstream": [
+        "screening",
+        "persistence"
+      ]
+    },
+    "optimization": {
+      "public_entries": [
+        "OptimizationApplicationService",
+        "OptimizationLaunchService",
+        "RunPlanExecutor",
+        "PersistedRunPlanExecutor"
+      ],
+      "cli_entries": [
+        "openams.cli.launch_optimization",
+        "openams.cli.launch_validated_optimization",
+        "openams.cli.validate_optimization_runtime"
+      ],
+      "returns": [
+        "launch manifests",
+        "optimization sessions",
+        "candidate evaluations"
+      ]
+    }
+  }
+}
