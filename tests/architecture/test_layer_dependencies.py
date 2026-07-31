@@ -16,6 +16,7 @@ ALLOWED = {
     "synthesis": {"model", "planning", "technology"},
     "simulation": {"model"},
     "evaluation": {"model"},
+    "adapters": {"io", "technology"},
 }
 
 
