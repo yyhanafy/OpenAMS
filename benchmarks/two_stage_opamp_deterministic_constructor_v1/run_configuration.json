@@ -1,0 +1,125 @@
+{
+  "schema_version": "3.0",
+  "algorithm": "deterministic_dependency_plus_dense_capacitance_ac",
+  "generated_at_utc": "2026-08-02T19:21:41.644185+00:00",
+  "command": [
+    "/home/yhanafy/AMS-Tutorial/openams/.venv-openams/bin/python",
+    "tools/validation/run_coarse_independent_ac_scan.py",
+    "--i5-count",
+    "40",
+    "--w1-count",
+    "25",
+    "--vout-count",
+    "10",
+    "--w1-min-um",
+    "1.0",
+    "--w1-max-um",
+    "50.0",
+    "--vout-min-v",
+    "0.6",
+    "--vout-max-v",
+    "1.5",
+    "--n1-v",
+    "0.6",
+    "--vbias-v",
+    "0.6",
+    "--vdd-v",
+    "1.8",
+    "--vss-v",
+    "0.0",
+    "--vin-cm-v",
+    "0.9",
+    "--c-miller-f",
+    "3e-12",
+    "--c-load-f",
+    "10e-12",
+    "--gain-min-db",
+    "69.542425",
+    "--ugb-min-hz",
+    "5e6",
+    "--phase-margin-min-deg",
+    "60",
+    "--power-max-w",
+    "2e-3",
+    "--progress-every",
+    "25",
+    "--checkpoint-every",
+    "25",
+    "--output-dir",
+    "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/generated/assignment_synthesis/coarse_independent_ac_scan_v3_reproduced"
+  ],
+  "git_commit": "c0599e243d912c45c07b858c9fcf319ae5c13d15",
+  "git_status_porcelain": "M src/openams/validation/two_stage_small_signal_ac.py\n M tools/validation/run_coarse_independent_ac_scan.py\n?? docs/reference/\n?? tests/validation/test_coarse_scan_schema_v3.py\n?? tests/validation/test_two_stage_small_signal_ac_phase.py",
+  "python_version": "3.12.3",
+  "numpy_version": "2.5.1",
+  "platform": "Linux-6.8.0-136-generic-x86_64-with-glibc2.39",
+  "hostname": "yhanafy-Precision-5770",
+  "processor": "x86_64",
+  "grid": {
+    "i5_count": 40,
+    "w1_count": 25,
+    "vout_count": 10,
+    "w1_range_um": [
+      1.0,
+      50.0
+    ],
+    "vout_range_v": [
+      0.6,
+      1.5
+    ]
+  },
+  "construction_policy": {
+    "n1_v": 0.6,
+    "vbias_v": 0.6,
+    "iout_min_a": 1e-08,
+    "iout_max_a": 0.002,
+    "width_min_um": 0.42,
+    "width_max_um": 100.0,
+    "current_tolerance_a": 2e-08,
+    "relation_tolerance": 0.005
+  },
+  "operating_conditions": {
+    "vdd_v": 1.8,
+    "vss_v": 0.0,
+    "vin_cm_v": 0.9,
+    "c_miller_f": 3e-12,
+    "c_load_f": 1e-11
+  },
+  "models": {
+    "nmos_checkpoint": "/home/yhanafy/AMS-Tutorial/openams/runtime/mlp_dense_validation/sky130_nmos_mlp.pt",
+    "nmos_checkpoint_sha256": "3c9e9669e7727a3f757a71164f663936de548c849893ad2bdae104d8d82b1fdf",
+    "pmos_checkpoint": "/home/yhanafy/AMS-Tutorial/openams/runtime/mlp_dense_validation/sky130_pmos_mlp.pt",
+    "pmos_checkpoint_sha256": "99b6fa03cdeebd97053008390fb278aff729e71d3d946c10f552bffdf87b288d",
+    "dense_capacitance_table": "technology/sky130_tt_27c_mlp_dense_training_clean.csv",
+    "dense_capacitance_table_sha256": "c164c2a3593ea6b992699037d767d7b8a5ec02b8423b6f6d78ee5883f6260091",
+    "mlp_outputs": [
+      "id_abs_a",
+      "vdsat_abs_v",
+      "vth_abs_v",
+      "gm_s",
+      "gds_s"
+    ],
+    "not_available_from_current_mlp": [
+      "gmb_s",
+      "intrinsic_capacitances"
+    ]
+  },
+  "specification_thresholds": {
+    "gain_min_db": 69.542425,
+    "ugb_min_hz": 5000000.0,
+    "phase_margin_min_deg": 60.0,
+    "power_max_w": 0.002
+  },
+  "terminal_voltage_convention": {
+    "vd_v_vg_v_vs_v_vb_v": "signed node voltages relative to VSS=0 reference",
+    "vgs_signed_v": "Vg-Vs",
+    "vds_signed_v": "Vd-Vs",
+    "vbs_signed_v": "Vb-Vs",
+    "*_abs_v": "polarity-normalized nonnegative magnitudes supplied to MLP"
+  },
+  "frequency_sweep": {
+    "minimum_hz": 1.0,
+    "maximum_hz": 10000000000.0,
+    "count": 601
+  }
+}

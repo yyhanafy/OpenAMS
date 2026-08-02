@@ -1,0 +1,23 @@
+{
+  "benchmark_name": "two_stage_opamp_deterministic_constructor_v1",
+  "benchmark_status": "FROZEN",
+  "expected_invariants": {
+    "constructed": 6555,
+    "mlp_queries": 24643554,
+    "rejected": 3445,
+    "rows": 10000,
+    "unique_grid_indices": 10000
+  },
+  "frozen_at_utc": "2026-08-02T20:36:53.791105+00:00",
+  "git_commit_at_freeze": "c0599e243d912c45c07b858c9fcf319ae5c13d15",
+  "git_dirty_at_freeze": true,
+  "immutability_policy": "Do not edit files in place. Any algorithm, schema, model, technology, estimator, or grid change requires a new benchmark version.",
+  "observed": {
+    "constructed": 6555,
+    "mlp_queries": 24643554,
+    "rejected": 3445,
+    "rows": 10000
+  },
+  "platform": "Linux-6.8.0-136-generic-x86_64-with-glibc2.39",
+  "python_version": "3.12.3"
+}

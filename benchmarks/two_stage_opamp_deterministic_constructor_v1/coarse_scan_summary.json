@@ -1,0 +1,69 @@
+{
+  "status": "PASS",
+  "schema_version": "3.0",
+  "algorithm": "deterministic_dependency_plus_dense_capacitance_ac",
+  "grid": {
+    "i5_count": 40,
+    "w1_count": 25,
+    "vout_count": 10,
+    "configured_points": 10000,
+    "points_in_this_output": 10000,
+    "w1_range_um": [
+      1.0,
+      50.0
+    ],
+    "vout_range_v": [
+      0.6,
+      1.5
+    ]
+  },
+  "construction_policy": {
+    "n1_v": 0.6,
+    "vbias_v": 0.6
+  },
+  "results": {
+    "pass_count": 6555,
+    "reject_count": 3445,
+    "mlp_queries": 24643554,
+    "failure_counts": {
+      "no scalar root bracket in [0.42, 100.0]": 3190,
+      "no scalar root bracket in [0.35, 0.9]": 210,
+      "query lies outside the characterized model domain": 20,
+      "at least one device is not saturated": 19,
+      "no Iout root for the size relation": 6
+    }
+  },
+  "metrics": {
+    "gain_est_db": {
+      "minimum": 49.43831280679934,
+      "maximum": 64.47790124256373,
+      "mean": 61.89119017519088
+    },
+    "ugb_est_hz": {
+      "minimum": 1250763.8702367484,
+      "maximum": 10454128.186384182,
+      "mean": 4804372.547096171
+    },
+    "phase_margin_est_deg": {
+      "minimum": 24.244128451863162,
+      "maximum": 73.58612352719541,
+      "mean": 52.359691498696215
+    },
+    "power_est_w": {
+      "minimum": 2.4285199251861465e-05,
+      "maximum": 0.00011986600552193391,
+      "mean": 5.8520327079484125e-05
+    }
+  },
+  "validation": {
+    "row_count_matches_grid": true,
+    "unique_grid_indices": 10000,
+    "phase_at_ugb_principal_range": true
+  },
+  "limitations": [
+    "AC metrics are reduced small-signal estimates, not ngspice results.",
+    "Capacitances use nearest-bias width-normalized dense-table values.",
+    "The current MLP does not predict capacitances directly.",
+    "N1 and Vbias are fixed construction-policy values."
+  ]
+}
