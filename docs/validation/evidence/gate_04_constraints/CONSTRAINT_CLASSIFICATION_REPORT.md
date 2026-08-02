@@ -3,7 +3,7 @@
 ## Summary
 
 - **Status:** PASS
-- **Classified items:** 31
+- **Classified items:** 32
 - **Linear compiler constraints:** 5
 - **Topology heuristics excluded from compiler:** second_stage_size_relation
 
@@ -34,6 +34,7 @@
 | `w_m7_um` | `dependent_quantity_declaration` | `synthesis_adapter_or_emitter` | `—` |
 | `vtail_v` | `dependent_quantity_declaration` | `synthesis_adapter_or_emitter` | `—` |
 | `n1_v` | `dependent_quantity_declaration` | `synthesis_adapter_or_emitter` | `—` |
+| `n2_v` | `dependent_quantity_declaration` | `synthesis_adapter_or_emitter` | `—` |
 | `vbias_v` | `dependent_quantity_declaration` | `synthesis_adapter_or_emitter` | `—` |
 | `input_bias_network` | `dependency_group` | `hierarchical_synthesis_workflow` | `—` |
 | `output_stage` | `dependency_group` | `hierarchical_synthesis_workflow` | `—` |

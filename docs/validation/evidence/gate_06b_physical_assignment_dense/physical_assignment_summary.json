@@ -1,0 +1,31 @@
+{
+  "gate": "6B",
+  "status": "NO_PHYSICAL_ASSIGNMENT_FOUND",
+  "source": "/home/yhanafy/AMS-Tutorial/openams/technology/sky130_tt_27c_mlp_dense.csv",
+  "searched_saturated_points": 254343,
+  "nmos_points": 123372,
+  "pmos_points": 130971,
+  "diode_pmos_points": 888,
+  "nmos_body_zero_points": 24445,
+  "pmos_body_zero_points": 26026,
+  "tolerances": {
+    "current_relative": 0.1,
+    "current_absolute_a": 1e-06,
+    "node_voltage_v": 0.025,
+    "diode_voltage_v": 0.025,
+    "width_relative": 1e-08
+  },
+  "rejection_counts": {
+    "m1_tail_or_body": 61084,
+    "m3_not_diode_connected": 0,
+    "m1_vds_mismatch": 4377168,
+    "m3_current_mismatch": 115380,
+    "no_m5_coordinate": 97,
+    "m5_current_mismatch": 596681,
+    "no_m7_coordinate": 0,
+    "no_m6_coordinate": 3210192,
+    "m6_m7_current_mismatch": 90075000,
+    "width_relation_mismatch": 2941176
+  },
+  "conclusion": "The smoke table contains no complete assignment satisfying shared-node voltage equations, measured-current KCL, saturation, and the second-stage width relation."
+}

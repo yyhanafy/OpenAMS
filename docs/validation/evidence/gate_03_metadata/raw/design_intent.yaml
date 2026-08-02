@@ -45,11 +45,18 @@ synthesis_parameterization:
       sampling: characterized_current_grid
       role: tail_branch_current
     w_m1_um:
-      kind: width
+      kind: total_width
       minimum: 1.0
-      maximum: 50.0
-      sampling: characterized_width_grid
+      maximum: 100.0
+      sampling: continuous_total_width_with_integer_nf
       role: input_pair_width
+      finger_realization:
+        enabled: true
+        finger_width_min_um: 0.42
+        finger_width_max_um: 100.0
+        nf_min: 1
+        scaling_model: linear_current_scaling
+        nf_max: 1
     vout_v:
       kind: node_voltage
       minimum: 0.5
@@ -71,7 +78,16 @@ synthesis_parameterization:
   - w_m7_um
   - vtail_v
   - n1_v
+  - n2_v
   - vbias_v
+  dependent_width_realization:
+    total_width_min_um: 0.42
+    total_width_max_um: 100.0
+    finger_width_min_um: 0.42
+    finger_width_max_um: 100.0
+    nf_min: 1
+    nf_max: 1
+    scaling_model: linear_current_scaling
 assignment_synthesis:
   strategy: intent_declared_dependency_groups
   groups:
@@ -106,3 +122,34 @@ assignment_synthesis:
   classification:
     fixed_assignments: direct_simulation
     ranged_assignments: extract_optimization_variables_and_build_contract
+dependent_derivation_contract:
+  semantics: group_ordered_technology_backed_regions
+  technology_interpolation: linear_total_width_scaling
+  groups:
+    input_bias_network:
+      solver: two_stage_input_bias_adapter
+      derives:
+      - i_m1_a
+      - i_m2_a
+      - i_m3_a
+      - i_m4_a
+      - w_m2_um
+      - w_m3_um
+      - w_m4_um
+      - w_m5_um
+      - vtail_v
+      - n1_v
+      - n2_v
+      - vbias_v
+    output_stage:
+      solver: two_stage_output_stage_adapter
+      depends_on:
+      - input_bias_network
+      derives:
+      - i_m6_a
+      - i_m7_a
+      - w_m6_um
+      - w_m7_um
+      deferred_constraints:
+      - second_stage_size_relation
+      - complete_assignment_intersection

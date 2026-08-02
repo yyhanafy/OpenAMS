@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from math import isfinite
 from typing import Mapping
 
 from openams.io import LoadedCharacterizationCsv, load_characterization_csv
@@ -70,9 +71,18 @@ def _optional_float(
     if not text:
         return None
     try:
-        return float(text)
+        value = float(text)
     except ValueError as exc:
         raise InputError(f"line {line}: field {key!r} must be numeric") from exc
+
+    # Dense characterization files may contain NaN or infinity for optional
+    # metrics that a simulator could not extract at a particular point.
+    # Those quantities are omitted from that point instead of invalidating the
+    # entire table. Required coordinate fields remain strict and finite.
+    if not isfinite(value):
+        return None
+
+    return value
 
 
 def _polarity(value: str, line: int) -> DevicePolarity:

@@ -2,12 +2,12 @@
   "gate": "4A",
   "proof": "Design-intent declarations classified by owning subsystem",
   "status": "PASS",
-  "design_intent": "examples/two_stage_opamp/inputs/design_intent.yaml",
-  "design_rules": "examples/two_stage_opamp/inputs/design_rules.yaml",
-  "classification_count": 31,
+  "design_intent": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/design_intent.yaml",
+  "design_rules": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/design_rules.yaml",
+  "classification_count": 32,
   "category_counts": {
     "dependency_group": 2,
-    "dependent_quantity_declaration": 15,
+    "dependent_quantity_declaration": 16,
     "linear_compiler_constraint": 5,
     "operating_or_assignment_policy": 2,
     "simulation_constraint": 1,
@@ -133,11 +133,19 @@
       "id": "w_m1_um",
       "source_path": "synthesis_parameterization.independent_variables",
       "original": {
-        "kind": "width",
+        "kind": "total_width",
         "minimum": 1.0,
-        "maximum": 50.0,
-        "sampling": "characterized_width_grid",
-        "role": "input_pair_width"
+        "maximum": 100.0,
+        "sampling": "continuous_total_width_with_integer_nf",
+        "role": "input_pair_width",
+        "finger_realization": {
+          "enabled": true,
+          "finger_width_min_um": 0.42,
+          "finger_width_max_um": 100.0,
+          "nf_min": 1,
+          "scaling_model": "linear_current_scaling",
+          "nf_max": 1
+        }
       },
       "category": "synthesis_parameter",
       "owner": "synthesis_parameterization",
@@ -295,6 +303,16 @@
       "id": "n1_v",
       "source_path": "synthesis_parameterization.dependent_quantities",
       "original": "n1_v",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "n2_v",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "n2_v",
       "category": "dependent_quantity_declaration",
       "owner": "synthesis_adapter_or_emitter",
       "reason": "declares expected derived outputs rather than a join predicate",

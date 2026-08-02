@@ -26,3 +26,22 @@ generated/
 .vscode/
 .idea/
 .DS_Store
+
+# Local Python environments
+.venv-openams/
+__pycache__/
+*.pyc
+
+# Large trained models and runtime outputs
+runtime/
+*.pt
+*.pth
+
+# Large technology datasets
+technology/sky130_tt_27c_mlp_dense.csv
+technology/sky130_tt_27c_mlp_dense_training_clean.csv
+technology/sky130_tt_27c_mlp_dense_training_rejected.csv
+technology/sky130_tt_27c_mlp_dense.csv.before_cleanup
+
+# Generated experiment outputs
+examples/*/generated/

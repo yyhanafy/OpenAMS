@@ -2,7 +2,7 @@
   "gate": 2,
   "proof": "Official netlist subcircuit parsed into canonical Circuit",
   "status": "PASS",
-  "source_netlist": "examples/two_stage_opamp/inputs/netlist.spice",
+  "source_netlist": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/netlist.spice",
   "subcircuit": "two_stage_opamp",
   "ports": [
     "inp",

@@ -2,7 +2,7 @@
   "gate": 3,
   "proof": "Metadata serialized and normalized into ProjectInputs",
   "status": "PASS",
-  "input_dir": "examples/two_stage_opamp/inputs",
+  "input_dir": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs",
   "pyyaml_version": "6.0.3",
   "migration": {
     "performed": false,
@@ -31,7 +31,8 @@
       "schema_version",
       "circuit_intent",
       "synthesis_parameterization",
-      "assignment_synthesis"
+      "assignment_synthesis",
+      "dependent_derivation_contract"
     ],
     "design_rules": [
       "schema_version",

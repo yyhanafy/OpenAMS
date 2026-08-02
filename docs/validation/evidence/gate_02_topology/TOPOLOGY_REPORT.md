@@ -4,7 +4,7 @@
 
 - **Gate:** 2
 - **Status:** PASS
-- **Netlist:** `examples/two_stage_opamp/inputs/netlist.spice`
+- **Netlist:** `/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/netlist.spice`
 - **Subcircuit:** `two_stage_opamp`
 - **Ports:** `inp, inn, out, vdd, vss, vbias`
 - **Devices:** 8

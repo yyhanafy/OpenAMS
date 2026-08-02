@@ -32,10 +32,10 @@
     "region": "saturation",
     "values": {
       "vth": 0.615506,
-      "vdsat": 0.0432843,
-      "gds": 7.92464e-09,
       "id": 1.44188e-08,
-      "gm": 3.24205e-07
+      "gm": 3.24205e-07,
+      "gds": 7.92464e-09,
+      "vdsat": 0.0432843
     },
     "diagnostics": {
       "lookup_method": "exact_table_match",
@@ -53,10 +53,10 @@
     "region": "saturation",
     "values": {
       "vth": 0.881583,
-      "vdsat": 0.0430148,
-      "gds": 5.74576e-11,
       "id": 1.55149e-10,
-      "gm": 3.49228e-09
+      "gm": 3.49228e-09,
+      "gds": 5.74576e-11,
+      "vdsat": 0.0430148
     },
     "diagnostics": {
       "lookup_method": "exact_table_match",

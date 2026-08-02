@@ -4,7 +4,7 @@
 
 - **Gate:** 3
 - **Status:** PASS
-- **Input directory:** `examples/two_stage_opamp/inputs`
+- **Input directory:** `/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs`
 - **PyYAML:** `6.0.3`
 
 ## Serialization
@@ -37,7 +37,8 @@
     "schema_version",
     "circuit_intent",
     "synthesis_parameterization",
-    "assignment_synthesis"
+    "assignment_synthesis",
+    "dependent_derivation_contract"
   ],
   "design_rules": [
     "schema_version",

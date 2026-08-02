@@ -2,7 +2,7 @@
   "gate": "4B",
   "proof": "Real design-intent constraints compile and execute",
   "status": "PASS",
-  "constraint_artifact": "docs/validation/evidence/gate_04_constraints/compiler_constraints.json",
+  "constraint_artifact": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/generated/compiler_constraints.json",
   "constraint_count": 5,
   "compiled_constraint_count": 5,
   "diagnostic_count": 5,
