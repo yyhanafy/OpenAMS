@@ -1,6 +1,21 @@
 \
 #!/usr/bin/env python3
-"""Run and compare ngspice DC operating points for OpenAMS validation decks."""
+"""Run and compare ngspice DC operating points for OpenAMS validation decks.
+
+V2 classification:
+- dc_physical_valid:
+    ngspice converged
+    AND all device currents match within tolerance
+    AND all devices remain saturated
+    AND internal bias nodes match within tolerance
+    AND actual ngspice Vout remains inside the allowed output window
+- vout_target_match:
+    requested/constructed Vout matches ngspice within the target tolerance
+- proceed_to_ac:
+    same as dc_physical_valid
+
+A Vout target mismatch is a model-accuracy warning, not a physical-validity failure.
+"""
 
 from __future__ import annotations
 
@@ -44,6 +59,8 @@ DEVICE_MODEL = {
 
 DEVICE_KEYS = ("id", "gm", "gds", "vds", "vdsat")
 
+INTERNAL_NODE_KEYS = ("vtail_v", "n1_v", "n2_v", "vbias_v")
+
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
@@ -51,7 +68,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--output", required=True, type=Path)
     p.add_argument("--limit", type=int, default=None)
     p.add_argument("--ngspice", default="ngspice")
-    p.add_argument("--voltage-tolerance-v", type=float, default=0.025)
+    p.add_argument("--internal-node-tolerance-v", type=float, default=0.025)
+    p.add_argument("--vout-target-tolerance-v", type=float, default=0.025)
+    p.add_argument("--vout-min-v", type=float, default=0.5)
+    p.add_argument("--vout-max-v", type=float, default=2.0)
     p.add_argument("--current-relative-tolerance", type=float, default=0.10)
     p.add_argument("--current-absolute-tolerance-a", type=float, default=1e-6)
     p.add_argument("--overwrite", action="store_true")
@@ -134,9 +154,10 @@ def current_match(
     return abs_error, rel_error, passed
 
 
-def voltage_match(actual: float, expected: float, tol: float) -> tuple[float, bool]:
-    err = abs(actual - expected)
-    return err, err <= tol
+def voltage_match(actual: float, expected: float, tol: float) -> tuple[float, float, bool]:
+    signed_error = actual - expected
+    abs_error = abs(signed_error)
+    return signed_error, abs_error, abs_error <= tol
 
 
 def point_dirs(points_root: Path) -> list[Path]:
@@ -176,15 +197,15 @@ def run_point(
     op = parse_op(log_text)
     devices = parse_devices(log_text)
 
-    errors = []
+    extraction_errors = []
     if return_code != 0:
-        errors.append(f"ngspice_return_code_{return_code}")
+        extraction_errors.append(f"ngspice_return_code_{return_code}")
     if len(op) < 8:
-        errors.append("incomplete_operating_point_block")
+        extraction_errors.append("incomplete_operating_point_block")
     if len(devices) != 7 or any(set(values) != set(DEVICE_KEYS) for values in devices.values()):
-        errors.append("incomplete_device_block")
+        extraction_errors.append("incomplete_device_block")
     if "No matching instances" in log_text or "not available" in log_text:
-        errors.append("hierarchy_or_vector_error")
+        extraction_errors.append("hierarchy_or_vector_error")
 
     expected_nodes = {
         "vtail_v": get_assignment_value(assignment, "vtail_v"),
@@ -195,26 +216,65 @@ def run_point(
     }
 
     node_comparisons: dict[str, Any] = {}
-    node_passes = []
-    for key, expected in expected_nodes.items():
+    internal_node_passes = []
+
+    for key in INTERNAL_NODE_KEYS:
+        expected = expected_nodes[key]
         actual = op.get(key)
         if expected is None or actual is None:
-            node_comparisons[key] = {"expected": expected, "actual": actual, "pass": False}
-            node_passes.append(False)
+            node_comparisons[key] = {
+                "expected": expected,
+                "actual": actual,
+                "pass": False,
+            }
+            internal_node_passes.append(False)
             continue
-        err, passed = voltage_match(actual, expected, args.voltage_tolerance_v)
+        signed_err, abs_err, passed = voltage_match(
+            actual, expected, args.internal_node_tolerance_v
+        )
         node_comparisons[key] = {
             "expected": expected,
             "actual": actual,
-            "absolute_error_v": err,
+            "signed_error_v": signed_err,
+            "absolute_error_v": abs_err,
             "pass": passed,
         }
-        node_passes.append(passed)
+        internal_node_passes.append(passed)
+
+    vout_expected = expected_nodes["vout_v"]
+    vout_actual = op.get("vout_v")
+    if vout_expected is None or vout_actual is None:
+        vout_comparison = {
+            "expected": vout_expected,
+            "actual": vout_actual,
+            "target_match": False,
+            "within_allowed_window": False,
+        }
+        vout_target_match = False
+        vout_within_window = False
+    else:
+        signed_err, abs_err, target_match = voltage_match(
+            vout_actual, vout_expected, args.vout_target_tolerance_v
+        )
+        vout_within_window = args.vout_min_v <= vout_actual <= args.vout_max_v
+        vout_target_match = target_match
+        vout_comparison = {
+            "expected": vout_expected,
+            "actual": vout_actual,
+            "signed_error_v": signed_err,
+            "absolute_error_v": abs_err,
+            "target_match": target_match,
+            "within_allowed_window": vout_within_window,
+            "allowed_min_v": args.vout_min_v,
+            "allowed_max_v": args.vout_max_v,
+            "warning": not target_match,
+        }
+
+    node_comparisons["vout_v"] = vout_comparison
 
     device_comparisons: dict[str, Any] = {}
     current_passes = []
     saturation_passes = []
-    gm_gds_rows = {}
 
     for idx in range(1, 8):
         name = f"M{idx}"
@@ -231,7 +291,6 @@ def run_point(
         actual_id_signed = actual.get("id")
         actual_current = abs(actual_id_signed) if actual_id_signed is not None else None
 
-        current_cmp: dict[str, Any]
         if expected_current is None or actual_current is None:
             current_cmp = {
                 "expected_abs_a": expected_current,
@@ -273,13 +332,6 @@ def run_point(
         expected_gm = get_point_value(expected_point, "gm_s", "gm")
         expected_gds = get_point_value(expected_point, "gds_s", "gds")
 
-        gm_gds_rows[name] = {
-            "gm_expected_s": expected_gm,
-            "gm_actual_s": actual.get("gm"),
-            "gds_expected_s": expected_gds,
-            "gds_actual_s": actual.get("gds"),
-        }
-
         device_comparisons[name] = {
             "polarity": DEVICE_POLARITY[idx],
             "model": DEVICE_MODEL[DEVICE_POLARITY[idx]],
@@ -289,11 +341,37 @@ def run_point(
                 "actual_saturated": saturated,
                 "actual_margin_v": saturation_margin,
             },
-            "small_signal": gm_gds_rows[name],
+            "small_signal": {
+                "gm_expected_s": expected_gm,
+                "gm_actual_s": actual.get("gm"),
+                "gds_expected_s": expected_gds,
+                "gds_actual_s": actual.get("gds"),
+            },
         }
 
-    converged = return_code == 0 and not errors
-    dc_pass = converged and all(node_passes) and all(current_passes) and all(saturation_passes)
+    extraction_complete = return_code == 0 and not extraction_errors
+    all_internal_nodes_match = all(internal_node_passes)
+    all_currents_match = all(current_passes)
+    all_devices_saturated = all(saturation_passes)
+
+    dc_physical_valid = (
+        extraction_complete
+        and all_internal_nodes_match
+        and all_currents_match
+        and all_devices_saturated
+        and vout_within_window
+    )
+    exact_realization_pass = dc_physical_valid and vout_target_match
+    proceed_to_ac = dc_physical_valid
+
+    if not extraction_complete:
+        classification = "EXTRACTION_OR_CONVERGENCE_FAILURE"
+    elif not dc_physical_valid:
+        classification = "PHYSICALLY_INVALID_OR_OUTSIDE_WINDOW"
+    elif vout_target_match:
+        classification = "PASS_PHYSICAL_AND_TARGET_MATCH"
+    else:
+        classification = "PASS_PHYSICAL_WITH_VOUT_WARNING"
 
     result = {
         "grid_index": assignment_record.get("grid_index"),
@@ -302,16 +380,25 @@ def run_point(
         "execution_mode": execution_mode,
         "ngspice_return_code": return_code,
         "runtime_s": runtime_s,
-        "converged": converged,
-        "errors": errors,
+        "extraction_complete": extraction_complete,
+        "extraction_errors": extraction_errors,
         "node_comparisons": node_comparisons,
         "device_comparisons": device_comparisons,
-        "all_nodes_within_tolerance": all(node_passes),
-        "all_currents_within_tolerance": all(current_passes),
-        "all_devices_saturated": all(saturation_passes),
-        "dc_validation_pass": dc_pass,
+        "all_internal_nodes_within_tolerance": all_internal_nodes_match,
+        "all_currents_within_tolerance": all_currents_match,
+        "all_devices_saturated": all_devices_saturated,
+        "vout_within_allowed_window": vout_within_window,
+        "vout_target_match": vout_target_match,
+        "vout_target_warning": dc_physical_valid and not vout_target_match,
+        "dc_physical_valid": dc_physical_valid,
+        "dc_exact_realization_pass": exact_realization_pass,
+        "proceed_to_ac": proceed_to_ac,
+        "classification": classification,
         "tolerances": {
-            "voltage_tolerance_v": args.voltage_tolerance_v,
+            "internal_node_tolerance_v": args.internal_node_tolerance_v,
+            "vout_target_tolerance_v": args.vout_target_tolerance_v,
+            "vout_allowed_min_v": args.vout_min_v,
+            "vout_allowed_max_v": args.vout_max_v,
             "current_relative_tolerance": args.current_relative_tolerance,
             "current_absolute_tolerance_a": args.current_absolute_tolerance_a,
         },
@@ -331,21 +418,34 @@ def flatten(result: dict[str, Any]) -> dict[str, Any]:
         "grid_index": result["grid_index"],
         "assignment_id": result["assignment_id"],
         "ngspice_return_code": result["ngspice_return_code"],
-        "converged": result["converged"],
-        "dc_validation_pass": result["dc_validation_pass"],
-        "all_nodes_within_tolerance": result["all_nodes_within_tolerance"],
+        "extraction_complete": result["extraction_complete"],
+        "dc_physical_valid": result["dc_physical_valid"],
+        "dc_exact_realization_pass": result["dc_exact_realization_pass"],
+        "proceed_to_ac": result["proceed_to_ac"],
+        "classification": result["classification"],
+        "all_internal_nodes_within_tolerance": result[
+            "all_internal_nodes_within_tolerance"
+        ],
         "all_currents_within_tolerance": result["all_currents_within_tolerance"],
         "all_devices_saturated": result["all_devices_saturated"],
+        "vout_within_allowed_window": result["vout_within_allowed_window"],
+        "vout_target_match": result["vout_target_match"],
+        "vout_target_warning": result["vout_target_warning"],
         "runtime_s": result["runtime_s"],
-        "errors": ";".join(result["errors"]),
+        "extraction_errors": ";".join(result["extraction_errors"]),
     }
 
     for node, cmp in result["node_comparisons"].items():
         prefix = node.removesuffix("_v")
         row[f"{prefix}_expected_v"] = cmp.get("expected")
         row[f"{prefix}_ngspice_v"] = cmp.get("actual")
+        row[f"{prefix}_signed_error_v"] = cmp.get("signed_error_v")
         row[f"{prefix}_absolute_error_v"] = cmp.get("absolute_error_v")
-        row[f"{prefix}_pass"] = cmp.get("pass")
+        if node == "vout_v":
+            row["vout_target_match"] = cmp.get("target_match")
+            row["vout_within_allowed_window"] = cmp.get("within_allowed_window")
+        else:
+            row[f"{prefix}_pass"] = cmp.get("pass")
 
     for device, data in result["device_comparisons"].items():
         p = device.lower()
@@ -399,11 +499,11 @@ def main() -> int:
         aggregate.append(flatten(result))
         print(
             f"[{index}/{len(dirs)}] {point_dir.name} "
-            f"converged={result['converged']} "
-            f"dc_pass={result['dc_validation_pass']}"
+            f"classification={result['classification']} "
+            f"proceed_to_ac={result['proceed_to_ac']}"
         )
 
-    fields = []
+    fields: list[str] = []
     for row in aggregate:
         for key in row:
             if key not in fields:
@@ -414,15 +514,31 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(aggregate)
 
-    passed = sum(bool(row["dc_validation_pass"]) for row in aggregate)
+    physical = sum(bool(row["dc_physical_valid"]) for row in aggregate)
+    exact = sum(bool(row["dc_exact_realization_pass"]) for row in aggregate)
+    warnings = sum(bool(row["vout_target_warning"]) for row in aggregate)
+    proceed = sum(bool(row["proceed_to_ac"]) for row in aggregate)
+
+    classifications: dict[str, int] = {}
+    for row in aggregate:
+        name = str(row["classification"])
+        classifications[name] = classifications.get(name, 0) + 1
+
     summary = {
         "status": "PASS",
         "points_processed": len(aggregate),
-        "dc_validation_passed": passed,
-        "dc_validation_failed": len(aggregate) - passed,
+        "dc_physical_valid": physical,
+        "dc_physical_invalid": len(aggregate) - physical,
+        "dc_exact_realization_pass": exact,
+        "vout_target_warnings": warnings,
+        "proceed_to_ac": proceed,
+        "classifications": classifications,
         "aggregate_csv": str(output),
         "tolerances": {
-            "voltage_tolerance_v": args.voltage_tolerance_v,
+            "internal_node_tolerance_v": args.internal_node_tolerance_v,
+            "vout_target_tolerance_v": args.vout_target_tolerance_v,
+            "vout_allowed_min_v": args.vout_min_v,
+            "vout_allowed_max_v": args.vout_max_v,
             "current_relative_tolerance": args.current_relative_tolerance,
             "current_absolute_tolerance_a": args.current_absolute_tolerance_a,
         },
@@ -431,11 +547,13 @@ def main() -> int:
         json.dumps(summary, indent=2, sort_keys=True) + "\n"
     )
 
-    print("===== OPENAMS NGSPICE DC VALIDATION =====")
-    print(f"points: {len(aggregate)}")
-    print(f"passed: {passed}")
-    print(f"failed: {len(aggregate) - passed}")
-    print(f"csv:    {output}")
+    print("===== OPENAMS NGSPICE DC VALIDATION V2 =====")
+    print(f"points:             {len(aggregate)}")
+    print(f"physically valid:   {physical}")
+    print(f"exact Vout match:   {exact}")
+    print(f"Vout warnings:      {warnings}")
+    print(f"proceed to AC:      {proceed}")
+    print(f"csv:                {output}")
     return 0
 
 
