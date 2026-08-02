@@ -15,22 +15,38 @@ from typing import Any, Mapping
 
 import numpy as np
 
-from openams.validation.dense_capacitance_lookup import DenseCapacitanceLookup
+from openams.validation.dense_capacitance_lookup import (
+    DenseCapacitanceLookup,
+    DeviceCapacitances,
+)
 
 
 @dataclass(frozen=True)
 class AcMetrics:
+    gain_v_v: float | None
     gain_db: float | None
     ugb_hz: float | None
     phase_margin_deg: float | None
     phase_at_ugb_deg: float | None
+    phase_at_ugb_unwrapped_deg: float | None
     min_cap_lookup_distance: float
     max_cap_lookup_distance: float
+    device_capacitances: Mapping[str, DeviceCapacitances]
 
 
 UNKNOWN = ("n1", "n2", "out", "vtail")
 INDEX = {name: idx for idx, name in enumerate(UNKNOWN)}
 GROUND = {"0", "vdd", "vss", "vbias", "body"}
+
+
+def normalize_phase_deg(phase_deg: float) -> float:
+    """Return the equivalent principal phase in [-180, 180).
+
+    ``np.unwrap`` is useful for interpolation but can return an equivalent
+    branch such as +208 degrees instead of -152 degrees. Phase margin must use
+    the principal loop-gain phase, not the unwrapped branch value.
+    """
+    return float((phase_deg + 180.0) % 360.0 - 180.0)
 
 
 def _stamp_branch(
@@ -52,7 +68,6 @@ def _stamp_branch(
             matrix[row, INDEX[other]] -= sign * admittance
         elif other in known:
             rhs[row] += sign * admittance * known[other]
-        # Ground contributes zero.
 
     add_equation(a, b, 1.0)
     add_equation(b, a, 1.0)
@@ -105,7 +120,7 @@ def estimate_two_stage_ac(
     }
 
     points = assignment["device_points"]
-    caps = {}
+    caps: dict[str, DeviceCapacitances] = {}
     distances = []
 
     for device, (_, _, _, polarity) in device_nodes.items():
@@ -170,23 +185,28 @@ def estimate_two_stage_ac(
     finite = np.isfinite(response.real) & np.isfinite(response.imag)
     if not np.any(finite):
         return AcMetrics(
+            gain_v_v=None,
             gain_db=None,
             ugb_hz=None,
             phase_margin_deg=None,
             phase_at_ugb_deg=None,
+            phase_at_ugb_unwrapped_deg=None,
             min_cap_lookup_distance=min(distances),
             max_cap_lookup_distance=max(distances),
+            device_capacitances=caps,
         )
 
     magnitude = np.abs(response)
     gain_db_curve = 20.0 * np.log10(np.maximum(magnitude, 1e-300))
-    gain_db = float(gain_db_curve[np.flatnonzero(finite)[0]])
-
-    # Normalize low-frequency phase to 0 degrees so PM is referenced to the
-    # low-frequency amplifier sign.
     first = np.flatnonzero(finite)[0]
+    gain_v_v = float(magnitude[first])
+    gain_db = float(gain_db_curve[first])
+
+    # Reference phase to the low-frequency amplifier sign. Keep the unwrapped
+    # curve for interpolation, then convert the interpolated phase back to its
+    # principal equivalent before computing conventional phase margin.
     normalized = response * np.exp(-1j * np.angle(response[first]))
-    phase_deg = np.unwrap(np.angle(normalized)) * 180.0 / np.pi
+    phase_unwrapped_deg = np.unwrap(np.angle(normalized)) * 180.0 / np.pi
 
     crossing = None
     for index in range(first + 1, len(frequencies_hz)):
@@ -198,6 +218,7 @@ def estimate_two_stage_ac(
 
     if crossing is None:
         ugb_hz = None
+        phase_at_unwrapped = None
         phase_at = None
         phase_margin = None
     else:
@@ -207,17 +228,22 @@ def estimate_two_stage_ac(
         y1 = gain_db_curve[crossing]
         fraction = 0.0 if y1 == y0 else (0.0 - y0) / (y1 - y0)
         ugb_hz = float(10.0 ** (x0 + fraction * (x1 - x0)))
-        phase_at = float(
-            phase_deg[crossing - 1]
-            + fraction * (phase_deg[crossing] - phase_deg[crossing - 1])
+        phase_at_unwrapped = float(
+            phase_unwrapped_deg[crossing - 1]
+            + fraction
+            * (phase_unwrapped_deg[crossing] - phase_unwrapped_deg[crossing - 1])
         )
+        phase_at = normalize_phase_deg(phase_at_unwrapped)
         phase_margin = float(180.0 + phase_at)
 
     return AcMetrics(
+        gain_v_v=gain_v_v,
         gain_db=gain_db,
         ugb_hz=ugb_hz,
         phase_margin_deg=phase_margin,
         phase_at_ugb_deg=phase_at,
+        phase_at_ugb_unwrapped_deg=phase_at_unwrapped,
         min_cap_lookup_distance=min(distances),
         max_cap_lookup_distance=max(distances),
+        device_capacitances=caps,
     )
