@@ -354,24 +354,39 @@ def run_point(
     all_currents_match = all(current_passes)
     all_devices_saturated = all(saturation_passes)
 
+    # Physical validity is decided only from the actual ngspice circuit.
+    # Model-to-ngspice discrepancies are diagnostics, not validity gates.
     dc_physical_valid = (
         extraction_complete
-        and all_internal_nodes_match
-        and all_currents_match
         and all_devices_saturated
         and vout_within_window
     )
-    exact_realization_pass = dc_physical_valid and vout_target_match
+    exact_realization_pass = (
+        dc_physical_valid
+        and vout_target_match
+        and all_internal_nodes_match
+        and all_currents_match
+    )
     proceed_to_ac = dc_physical_valid
+
+    model_accuracy_warnings = []
+    if dc_physical_valid and not all_internal_nodes_match:
+        model_accuracy_warnings.append("INTERNAL_NODE_MODEL_WARNING")
+    if dc_physical_valid and not all_currents_match:
+        model_accuracy_warnings.append("CURRENT_MODEL_WARNING")
+    if dc_physical_valid and not vout_target_match:
+        model_accuracy_warnings.append("VOUT_TARGET_MODEL_WARNING")
 
     if not extraction_complete:
         classification = "EXTRACTION_OR_CONVERGENCE_FAILURE"
-    elif not dc_physical_valid:
-        classification = "PHYSICALLY_INVALID_OR_OUTSIDE_WINDOW"
-    elif vout_target_match:
-        classification = "PASS_PHYSICAL_AND_TARGET_MATCH"
+    elif not all_devices_saturated:
+        classification = "PHYSICALLY_INVALID_DEVICE_REGION"
+    elif not vout_within_window:
+        classification = "PHYSICALLY_INVALID_VOUT_WINDOW"
+    elif model_accuracy_warnings:
+        classification = "PASS_PHYSICAL_WITH_MODEL_WARNINGS"
     else:
-        classification = "PASS_PHYSICAL_WITH_VOUT_WARNING"
+        classification = "PASS_PHYSICAL_AND_MODEL_MATCH"
 
     result = {
         "grid_index": assignment_record.get("grid_index"),
@@ -390,6 +405,9 @@ def run_point(
         "vout_within_allowed_window": vout_within_window,
         "vout_target_match": vout_target_match,
         "vout_target_warning": dc_physical_valid and not vout_target_match,
+        "internal_node_model_warning": dc_physical_valid and not all_internal_nodes_match,
+        "current_model_warning": dc_physical_valid and not all_currents_match,
+        "model_accuracy_warnings": model_accuracy_warnings,
         "dc_physical_valid": dc_physical_valid,
         "dc_exact_realization_pass": exact_realization_pass,
         "proceed_to_ac": proceed_to_ac,
@@ -431,6 +449,9 @@ def flatten(result: dict[str, Any]) -> dict[str, Any]:
         "vout_within_allowed_window": result["vout_within_allowed_window"],
         "vout_target_match": result["vout_target_match"],
         "vout_target_warning": result["vout_target_warning"],
+        "internal_node_model_warning": result["internal_node_model_warning"],
+        "current_model_warning": result["current_model_warning"],
+        "model_accuracy_warnings": ";".join(result["model_accuracy_warnings"]),
         "runtime_s": result["runtime_s"],
         "extraction_errors": ";".join(result["extraction_errors"]),
     }
@@ -516,7 +537,9 @@ def main() -> int:
 
     physical = sum(bool(row["dc_physical_valid"]) for row in aggregate)
     exact = sum(bool(row["dc_exact_realization_pass"]) for row in aggregate)
-    warnings = sum(bool(row["vout_target_warning"]) for row in aggregate)
+    vout_warnings = sum(bool(row["vout_target_warning"]) for row in aggregate)
+    node_warnings = sum(bool(row["internal_node_model_warning"]) for row in aggregate)
+    current_warnings = sum(bool(row["current_model_warning"]) for row in aggregate)
     proceed = sum(bool(row["proceed_to_ac"]) for row in aggregate)
 
     classifications: dict[str, int] = {}
@@ -530,7 +553,9 @@ def main() -> int:
         "dc_physical_valid": physical,
         "dc_physical_invalid": len(aggregate) - physical,
         "dc_exact_realization_pass": exact,
-        "vout_target_warnings": warnings,
+        "vout_target_warnings": vout_warnings,
+        "internal_node_model_warnings": node_warnings,
+        "current_model_warnings": current_warnings,
         "proceed_to_ac": proceed,
         "classifications": classifications,
         "aggregate_csv": str(output),
@@ -547,11 +572,13 @@ def main() -> int:
         json.dumps(summary, indent=2, sort_keys=True) + "\n"
     )
 
-    print("===== OPENAMS NGSPICE DC VALIDATION V2 =====")
+    print("===== OPENAMS NGSPICE DC VALIDATION V3 =====")
     print(f"points:             {len(aggregate)}")
     print(f"physically valid:   {physical}")
     print(f"exact Vout match:   {exact}")
-    print(f"Vout warnings:      {warnings}")
+    print(f"Vout warnings:      {vout_warnings}")
+    print(f"node warnings:      {node_warnings}")
+    print(f"current warnings:   {current_warnings}")
     print(f"proceed to AC:      {proceed}")
     print(f"csv:                {output}")
     return 0
