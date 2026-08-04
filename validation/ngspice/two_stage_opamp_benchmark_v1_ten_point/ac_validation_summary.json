@@ -1,0 +1,37 @@
+{
+  "aggregate_csv": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_opamp_benchmark_v1_ten_point/aggregate_ac_comparison.csv",
+  "metrics": {
+    "gain_db": {
+      "count": 10,
+      "mean_signed_error": 0.7123197631010754,
+      "median_absolute_error": 0.2689615031502477,
+      "p95_absolute_error": 2.573702201421032,
+      "pearson": 0.9962503090208358,
+      "spearman": 0.9636363636363635
+    },
+    "phase_margin_deg": {
+      "count": 10,
+      "mean_signed_error": -87.38020214386097,
+      "median_absolute_error": 87.23546968302054,
+      "p95_absolute_error": 102.65958994238296,
+      "pearson": -0.998630007681223,
+      "spearman": -0.9999999999999999
+    },
+    "ugb_hz": {
+      "count": 10,
+      "mean_signed_error": -262586.13365105394,
+      "median_absolute_error": 263709.78998047276,
+      "p95_absolute_error": 283833.02109269093,
+      "pearson": 0.9998901940454255,
+      "spearman": 0.9999999999999999
+    }
+  },
+  "ngspice_executed_by_ac_validator": true,
+  "points_discovered": 10,
+  "points_processed": 10,
+  "points_skipped_dc_ineligible": 0,
+  "points_with_ac_newer_than_deck": 10,
+  "points_with_unity_gain_crossing": 10,
+  "require_fresh_ac": true,
+  "status": "PASS"
+}

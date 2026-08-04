@@ -1,0 +1,116 @@
+* OpenAMS folded-cascode OTA — pure DUT definition
+*
+* Independent assignment variables:
+*   w_m1_um, vnb1_v, i_m3_a
+*
+* Derived balanced-current relationships:
+*   I1 = I2 = I3/2
+*   I4 = I5 = 1.5*I3
+*   I6 = I7 = I8 = I9 = I10 = I11 = I3
+*
+* Width relationships:
+*   W1 = W2
+*   W4 = W5
+*   W6 = W7
+*   W8 = W9 = W10 = W11
+*
+* Dependent assignment biases:
+*   vpb1_v, vpb2_v, vnb2_v
+*
+* All MOS devices must be saturated.
+* Output headroom:
+*   VDSAT9 + VDSAT11 < VOUT < VDD - VDSAT5 - VDSAT7
+
+.include "diff_input.spice"
+.include "nmos_tail_current_source.spice"
+.include "pmos_current_source_pair.spice"
+.include "pmos_cascode_pair.spice"
+.include "nmos_cascode_pair.spice"
+.include "nmos_current_sink_pair.spice"
+.include "load_capacitor.spice"
+
+* Geometry and fixed load settings.
+* The active SKY130 characterization table uses L = 0.5 um.
+.param l_default_um=0.5
+.param c_load={c_load_f}
+
+* Independent assignment variables.
+.param w_m1_um={w_m1_um}
+.param vnb1={vnb1_v}
+.param i_m3_a={i_m3_a}
+
+* Dependent assignment biases.
+.param vpb1={vpb1_v}
+.param vpb2={vpb2_v}
+.param vnb2={vnb2_v}
+
+* Dependent widths and matching relations.
+.param w_m2_um={w_m1_um}
+.param w_m3_um={w_m3_um}
+.param w_m4_um={w_m4_um}
+.param w_m5_um={w_m4_um}
+.param w_m6_um={w_m6_um}
+.param w_m7_um={w_m6_um}
+.param w_m8_um={w_m8_um}
+.param w_m9_um={w_m8_um}
+.param w_m10_um={w_m8_um}
+.param w_m11_um={w_m8_um}
+
+* Generated finger counts.
+.param nf_m1={nf_m1}
+.param nf_m3={nf_m3}
+.param nf_m4={nf_m4}
+.param nf_m6={nf_m6}
+.param nf_m8={nf_m8}
+.param nf_m10={nf_m10}
+
+* Convert numerical micrometer values to SPICE dimensions.
+.param l_default={l_default_um}u
+.param w_m1={w_m1_um}u
+.param w_m2={w_m2_um}u
+.param w_m3={w_m3_um}u
+.param w_m4={w_m4_um}u
+.param w_m5={w_m5_um}u
+.param w_m6={w_m6_um}u
+.param w_m7={w_m7_um}u
+.param w_m8={w_m8_um}u
+.param w_m9={w_m9_um}u
+.param w_m10={w_m10_um}u
+.param w_m11={w_m11_um}u
+
+.subckt folded_cascode_ota vip vin vout vdd vss
+
+* Bias sources internal to the generated DUT assignment.
+VNB1BIAS vnb1_node vss {vnb1}
+VPB1BIAS vpb1_node vss {vpb1}
+VPB2BIAS vpb2_node vss {vpb2}
+VNB2BIAS vnb2_node vss {vnb2}
+
+* M1-M2: matched NMOS differential pair, I1=I2=I3/2.
+XINPUT vip vin psrc_left psrc_right tail vss nmos_differential_pair
++ w_in={w_m1} l_in={l_default} nf_in={nf_m1}
+
+* M3: NMOS tail current source carrying I3.
+XTAIL tail vnb1_node vss nmos_tail_current_source
++ w_tail={w_m3} l_tail={l_default} nf_tail={nf_m3}
+
+* M4-M5: matched PMOS current sources, I4=I5=1.5*I3.
+XPCS psrc_left psrc_right vpb1_node vdd pmos_current_source_pair
++ w_pcs={w_m4} l_pcs={l_default} nf_pcs={nf_m4}
+
+* M6-M7: matched folded PMOS cascodes, I6=I7=I3.
+XPFOLD psrc_left psrc_right x vout vpb2_node vdd pmos_folded_cascode_pair
++ w_pfold={w_m6} l_pfold={l_default} nf_pfold={nf_m6}
+
+* M8-M9: matched NMOS cascodes, I8=I9=I3.
+XNCAS nsink_left nsink_right x vout vnb2_node vss nmos_cascode_pair
++ w_ncas={w_m8} l_ncas={l_default} nf_ncas={nf_m8}
+
+* M10-M11: matched NMOS sinks, I10=I11=I3.
+XNSINK nsink_left nsink_right x vss nmos_current_sink_pair
++ w_nsink={w_m10} l_nsink={l_default} nf_nsink={nf_m10}
+
+* Output load is part of the DUT definition used by this example.
+XCL vout vss load_capacitor c_load={c_load}
+
+.ends folded_cascode_ota

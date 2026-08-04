@@ -1,0 +1,99 @@
+{
+  "assignment_id": "deterministic_dependency_assignment_000609",
+  "comparisons": {
+    "gain_db": {
+      "absolute_error": 2.463954247476792,
+      "actual": 55.8931706,
+      "expected": 53.429216352523206,
+      "relative_error": 0.04611623406975969,
+      "signed_error": 2.463954247476792
+    },
+    "gain_v_v": {
+      "absolute_error": 153.9335173437808,
+      "actual": 623.2446081523188,
+      "expected": 469.31109080853804,
+      "relative_error": 0.32799889105237473,
+      "signed_error": 153.9335173437808
+    },
+    "phase_at_ugb_deg": {
+      "absolute_error": 107.08857407302747,
+      "actual": -227.7170767348128,
+      "expected": -120.62850266178532,
+      "relative_error": 0.8877551466694343,
+      "signed_error": -107.08857407302747
+    },
+    "phase_at_ugb_unwrapped_deg": {
+      "absolute_error": 467.08857407302753,
+      "actual": -227.7170767348128,
+      "expected": 239.3714973382147,
+      "relative_error": 1.9513124129940373,
+      "signed_error": -467.08857407302753
+    },
+    "phase_margin_deg": {
+      "absolute_error": 107.08857407302747,
+      "actual": -47.71707673481279,
+      "expected": 59.37149733821468,
+      "relative_error": 1.8037034414508446,
+      "signed_error": -107.08857407302747
+    },
+    "ugb_hz": {
+      "absolute_error": 164758.68600008963,
+      "actual": 2627681.2702603345,
+      "expected": 2792439.956260424,
+      "relative_error": 0.05900169335090411,
+      "signed_error": -164758.68600008963
+    }
+  },
+  "dc_classification": "PASS_PHYSICAL_WITH_MODEL_WARNINGS",
+  "dc_physical_valid": true,
+  "grid_index": 609,
+  "ngspice_ac_metrics": {
+    "ac_rows": 1001,
+    "frequency_start_hz": 1.0,
+    "frequency_stop_hz": 10000000000.0,
+    "gain_db": 55.8931706,
+    "gain_v_v": 623.2446081523188,
+    "low_frequency_phase_absolute_deg": 179.9932818641721,
+    "phase_at_ugb_deg": -227.7170767348128,
+    "phase_at_ugb_unwrapped_deg": -227.7170767348128,
+    "phase_margin_deg": -47.71707673481279,
+    "status": "PASS",
+    "ugb_hz": 2627681.2702603345
+  },
+  "openams_estimated_ac_metrics": {
+    "gain_db": 53.429216352523206,
+    "gain_v_v": 469.31109080853804,
+    "phase_at_ugb_deg": -120.62850266178532,
+    "phase_at_ugb_unwrapped_deg": 239.3714973382147,
+    "phase_margin_deg": 59.37149733821468,
+    "ugb_hz": 2792439.956260424
+  },
+  "point_directory": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_opamp_benchmark_v1/points/point_000609",
+  "proceed_to_ac": true,
+  "simulation_provenance": {
+    "ac_exists": true,
+    "ac_generated_fresh": true,
+    "ac_path": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_opamp_benchmark_v1/points/point_000609/openams_ac.dat",
+    "command": [
+      "ngspice",
+      "-b",
+      "-o",
+      "ngspice.log",
+      "deck.spice"
+    ],
+    "deck_mtime_ns": 1785713927539964103,
+    "deck_sha256": "67a366d7340f282506df79aa2b1f1cc5e9dd0c3ea7b9b09e638c66d772b1d472",
+    "executed": true,
+    "finished_at_utc": "2026-08-03T00:56:11.154488+00:00",
+    "log_path": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_opamp_benchmark_v1/points/point_000609/ngspice.log",
+    "ngspice_log_sha256": "245422ab13aec47b9594346792a6242e1e8ed19bbfd4c0b08a1d47cdc1b17461",
+    "openams_ac_mtime_ns": 1785718571133484448,
+    "openams_ac_newer_than_deck": true,
+    "openams_ac_sha256": "ab63fff61fffea8c6a81d92a15c6dab92ed165ea26ab39188e5308024ad63b82",
+    "return_code": 0,
+    "runtime_s": 12.657103761972394,
+    "started_at_utc": "2026-08-03T00:55:58.497375+00:00",
+    "stderr": "",
+    "stdout": "******\n** ngspice-43 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2024, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Tue Sep 24 15:15:15 UTC 2024\n******\n\nBatch mode\n\nComments and warnings go to log-file: ngspice.log\n\n"
+  }
+}

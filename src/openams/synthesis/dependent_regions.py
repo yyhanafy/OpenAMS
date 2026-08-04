@@ -613,27 +613,40 @@ def build_dependent_regions(
     completed: dict[str, dict[str, Any]] = {}
     ordered_results = []
 
-    for group in groups:
-        group_id = str(group["id"])
-        solver = str(group["solver"])
-        adapter = _ADAPTERS.get(solver)
-        if adapter is None:
-            raise DependentRegionError(f"no adapter for {solver!r}")
+    use_generic = any(
+        str(group.get("solver", "")) == "generic_dependency_graph"
+        for group in groups
+    )
+    if use_generic:
+        from .generic_dependency import build_generic_group_results
 
-        dependencies = list(group.get("depends_on", []))
-        if not dependencies:
-            result = adapter(model, independent, rows)
-        else:
-            if len(dependencies) != 1 or dependencies[0] not in completed:
-                raise DependentRegionError(
-                    f"group {group_id!r} has unresolved dependencies {dependencies!r}"
-                )
-            result = adapter(model, independent, completed[dependencies[0]], rows)
+        ordered_results, generic_regions, deferred = build_generic_group_results(
+            model, independent, rows
+        )
+    else:
+        deferred = []
+        generic_regions = {}
+        for group in groups:
+            group_id = str(group["id"])
+            solver = str(group["solver"])
+            adapter = _ADAPTERS.get(solver)
+            if adapter is None:
+                raise DependentRegionError(f"no adapter for {solver!r}")
 
-        completed[group_id] = result
-        ordered_results.append(result)
+            dependencies = list(group.get("depends_on", []))
+            if not dependencies:
+                result = adapter(model, independent, rows)
+            else:
+                if len(dependencies) != 1 or dependencies[0] not in completed:
+                    raise DependentRegionError(
+                        f"group {group_id!r} has unresolved dependencies {dependencies!r}"
+                    )
+                result = adapter(model, independent, completed[dependencies[0]], rows)
 
-    all_regions: dict[str, Any] = {}
+            completed[group_id] = result
+            ordered_results.append(result)
+
+    all_regions: dict[str, Any] = dict(generic_regions)
     for result in ordered_results:
         all_regions.update(result["dependent_regions"])
 
@@ -659,6 +672,11 @@ def build_dependent_regions(
         "derived_dependent_quantities": sorted(derived),
         "missing_declared_quantities": missing,
         "additional_derived_quantities": extra,
+        "deferred_correlations": deferred,
+        "resolution_semantics": (
+            "conservative_regions_with_step5_correlation_deferred"
+            if use_generic else "legacy_adapter_correlated_regions"
+        ),
         "next_stage": "intersect_complete_dc_assignments",
     }
 

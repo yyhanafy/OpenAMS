@@ -1,0 +1,35 @@
+{
+  "benchmark": "/home/yhanafy/AMS-Tutorial/openams/benchmarks/two_stage_opamp_deterministic_constructor_v1",
+  "created_at_utc": "2026-08-02T22:39:31.321395+00:00",
+  "deck_template": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/deck_template.spice",
+  "point_count": 3,
+  "points": [
+    {
+      "assignment_id": "deterministic_dependency_assignment_006260",
+      "case_directory": "point_006260",
+      "deck_sha256": "7f41427fd80a6d63f58e6e26518a20bed1c99f72fce2531b288bbbe5e30a14e1",
+      "grid_index": 6260,
+      "selection_order": 0,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006261",
+      "case_directory": "point_006261",
+      "deck_sha256": "30f93bc4d1f97183e8857c441bcedf0d31157165647190b4172a378392c312b6",
+      "grid_index": 6261,
+      "selection_order": 1,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006262",
+      "case_directory": "point_006262",
+      "deck_sha256": "a9c33060120977c48cfbbfe4e0f903120fbbe400d3f05653c3b1f5edd7f0fed9",
+      "grid_index": 6262,
+      "selection_order": 2,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    }
+  ],
+  "schema_version": "1.0",
+  "selection": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_opamp_benchmark_v1/selected_points.csv",
+  "status": "PASS"
+}

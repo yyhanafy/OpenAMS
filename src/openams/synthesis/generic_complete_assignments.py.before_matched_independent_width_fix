@@ -1,0 +1,745 @@
+"""Topology-generic Step 5 candidate construction.
+
+This module converts independent domains plus conservative Step-4 dependent
+regions into fully populated, equation-consistent, technology-backed candidate
+assignments.  It deliberately does not claim that conservative node-voltage
+intervals prove a simultaneous DC operating point; every emitted candidate is
+routed to ngspice DC confirmation.
+"""
+from __future__ import annotations
+
+import ast
+import csv
+import json
+import math
+import re
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Mapping, Sequence
+
+
+class GenericCompleteAssignmentError(ValueError):
+    pass
+
+
+CURRENT_TOKEN_RE = re.compile(r"\bdevice\.([A-Za-z_][A-Za-z0-9_]*)\.current\b")
+
+
+@dataclass(frozen=True)
+class TechRow:
+    index: int
+    polarity: str
+    model: str
+    length_um: float
+    width_um: float
+    vgs_v: float
+    vds_v: float
+    vbs_v: float
+    id_a: float
+    vdsat_v: float | None
+    saturated: bool
+
+    @property
+    def density_a_per_um(self) -> float:
+        return self.id_a / self.width_um
+
+
+def _num(value: Any, name: str) -> float:
+    try:
+        result = float(value)
+    except (TypeError, ValueError) as exc:
+        raise GenericCompleteAssignmentError(f"{name} must be numeric: {value!r}") from exc
+    if not math.isfinite(result):
+        raise GenericCompleteAssignmentError(f"{name} must be finite: {value!r}")
+    return result
+
+
+def _optional_num(row: Mapping[str, Any], *names: str) -> float | None:
+    for name in names:
+        value = row.get(name)
+        if value not in (None, ""):
+            return float(value)
+    return None
+
+
+def _truth(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    return str(value).strip().lower() in {"1", "true", "yes", "y"}
+
+
+def load_rows(path: Path) -> tuple[TechRow, ...]:
+    with path.open(newline="", encoding="utf-8") as stream:
+        reader = csv.DictReader(stream)
+        rows = []
+        for index, row in enumerate(reader):
+            rows.append(
+                TechRow(
+                    index=index,
+                    polarity=str(row["polarity"]).lower(),
+                    model=str(row["model"]),
+                    length_um=_num(row["length_um"], "length_um"),
+                    width_um=_num(row["width_um"], "width_um"),
+                    vgs_v=_num(row.get("vgs_v", row.get("vgs_abs_v")), "vgs"),
+                    vds_v=_num(row.get("vds_v", row.get("vds_abs_v")), "vds"),
+                    vbs_v=_num(row.get("vbs_v", row.get("vbs_abs_v")), "vbs"),
+                    id_a=_num(row.get("id_abs_a", row.get("id_a", row.get("id"))), "id"),
+                    vdsat_v=_optional_num(row, "vdsat_abs_v", "vdsat_v", "vdsat"),
+                    saturated=_truth(row.get("saturated", True)),
+                )
+            )
+    if not rows:
+        raise GenericCompleteAssignmentError(f"empty technology table: {path}")
+    return tuple(rows)
+
+
+def _technology_path(model: Mapping[str, Any]) -> Path:
+    value = model.get("technology", {}).get("source_path")
+    if not value:
+        raise GenericCompleteAssignmentError("compiled model has no technology source_path")
+    return Path(value).resolve()
+
+
+def _device_map(model: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
+    result: dict[str, Mapping[str, Any]] = {}
+    for item in model["topology"]["devices"]:
+        if str(item.get("kind", "")).lower() != "mos":
+            continue
+        raw = str(item["name"])
+        name = raw[1:] if raw.upper().startswith("X") else raw
+        result[name.upper()] = item
+    return result
+
+
+def _polarity(model_name: str) -> str:
+    token = model_name.lower()
+    if "pfet" in token or "pmos" in token:
+        return "pmos"
+    if "nfet" in token or "nmos" in token:
+        return "nmos"
+    raise GenericCompleteAssignmentError(f"cannot infer polarity from {model_name!r}")
+
+
+def _filtered_rows(
+    rows: Sequence[TechRow], device: Mapping[str, Any], *, length_um: float, body_limit_v: float
+) -> tuple[TechRow, ...]:
+    model_name = str(device["model"])
+    polarity = _polarity(model_name)
+    result = tuple(
+        row
+        for row in rows
+        if row.model == model_name
+        and row.polarity == polarity
+        and math.isclose(row.length_um, length_um, rel_tol=0.0, abs_tol=1e-12)
+        and row.saturated
+        and abs(row.vbs_v) <= body_limit_v + 1e-15
+        and row.id_a > 0.0
+        and row.width_um > 0.0
+    )
+    if not result:
+        raise GenericCompleteAssignmentError(f"no technology rows for {model_name}")
+    return result
+
+
+def _width_policy(model: Mapping[str, Any]) -> dict[str, float | int]:
+    intent = model["project_inputs"]["design_intent"]["synthesis_parameterization"]
+    policy = intent.get("dependent_width_realization", {})
+    rules = model["project_inputs"]["design_rules"]["device_constraints"]["all_mos"]
+    return {
+        "total_min_um": float(policy.get("total_width_min_um", rules["width_min_um"])),
+        "total_max_um": float(policy.get("total_width_max_um", rules["width_max_um"])),
+        "finger_min_um": float(policy.get("finger_width_min_um", rules["width_min_um"])),
+        "finger_max_um": float(policy.get("finger_width_max_um", rules["width_max_um"])),
+        "nf_min": int(policy.get("nf_min", 1)),
+        "nf_max": int(policy.get("nf_max", 1)),
+    }
+
+
+def _minimum_nf(width_um: float, policy: Mapping[str, float | int]) -> int | None:
+    if not float(policy["total_min_um"]) <= width_um <= float(policy["total_max_um"]):
+        return None
+    for nf in range(int(policy["nf_min"]), int(policy["nf_max"]) + 1):
+        finger = width_um / nf
+        if float(policy["finger_min_um"]) <= finger <= float(policy["finger_max_um"]):
+            return nf
+    return None
+
+
+def _midpoint(region: Mapping[str, Any]) -> float:
+    return 0.5 * (_num(region["minimum"], "minimum") + _num(region["maximum"], "maximum"))
+
+
+def _representative_independent_values(independent: Mapping[str, Any]) -> dict[str, float]:
+    values: dict[str, float] = {}
+    for name, domain in independent["domains"].items():
+        candidates = [float(value) for value in domain.get("candidate_values", [])]
+        if candidates:
+            values[name] = candidates[len(candidates) // 2]
+        else:
+            values[name] = 0.5 * (
+                float(domain["technology_minimum"]) + float(domain["technology_maximum"])
+            )
+    return values
+
+
+def _eval_expr(expression: str, values: Mapping[str, float]) -> float:
+    rewritten = CURRENT_TOKEN_RE.sub(lambda match: f"i_{match.group(1).lower()}_a", expression)
+    tree = ast.parse(rewritten, mode="eval")
+
+    def visit(node: ast.AST) -> float:
+        if isinstance(node, ast.Expression):
+            return visit(node.body)
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return float(node.value)
+        if isinstance(node, ast.Name):
+            if node.id not in values:
+                raise KeyError(node.id)
+            return float(values[node.id])
+        if isinstance(node, ast.UnaryOp):
+            value = visit(node.operand)
+            if isinstance(node.op, ast.USub):
+                return -value
+            if isinstance(node.op, ast.UAdd):
+                return value
+        if isinstance(node, ast.BinOp):
+            left, right = visit(node.left), visit(node.right)
+            if isinstance(node.op, ast.Add):
+                return left + right
+            if isinstance(node.op, ast.Sub):
+                return left - right
+            if isinstance(node.op, ast.Mult):
+                return left * right
+            if isinstance(node.op, ast.Div):
+                return left / right
+        raise GenericCompleteAssignmentError(f"unsupported expression node {type(node).__name__}")
+
+    return visit(tree)
+
+
+def _propagate_currents(model: Mapping[str, Any], values: dict[str, float]) -> None:
+    pending: list[tuple[str, str]] = []
+    for item in model["constraint_model"].get("canonical_constraints", []):
+        expression = str(item["expression"])
+        if "==" not in expression:
+            continue
+        left, right = expression.split("==", 1)
+        match = CURRENT_TOKEN_RE.fullmatch(left.strip())
+        if match:
+            pending.append((f"i_{match.group(1).lower()}_a", right.strip()))
+    while pending:
+        next_pending = []
+        progress = False
+        for left, right in pending:
+            try:
+                result = _eval_expr(right, values)
+            except KeyError:
+                next_pending.append((left, right))
+                continue
+            if result <= 0.0:
+                raise GenericCompleteAssignmentError(f"derived non-positive current {left}={result}")
+            values[left] = result
+            progress = True
+        if not progress:
+            raise GenericCompleteAssignmentError(f"unresolved current equations: {next_pending!r}")
+        pending = next_pending
+
+
+def _matched_width_groups(model: Mapping[str, Any]) -> list[list[str]]:
+    patterns = (
+        model["project_inputs"]["design_intent"]
+        .get("circuit_intent", {})
+        .get("confirmed_patterns", {})
+    )
+    return [[str(name).upper() for name in group] for group in patterns.get("matched_width_groups", [])]
+
+
+
+def _operating_conditions(
+    model: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    return (
+        model.get("project_inputs", {})
+        .get("design_rules", {})
+        .get("operating_conditions", {})
+    )
+
+
+def _node_voltage(
+    node: str,
+    model: Mapping[str, Any],
+    values: Mapping[str, float],
+) -> float | None:
+    """Resolve a circuit-node voltage from assignment or operating data."""
+
+    token = str(node).strip()
+    lower = token.lower()
+
+    direct_candidates = (
+        f"{lower}_v",
+        f"v{lower}_v",
+    )
+
+    for key in direct_candidates:
+        if key in values:
+            return float(values[key])
+
+    if lower.endswith("_node"):
+        base = lower[:-5]
+        key = f"{base}_v"
+        if key in values:
+            return float(values[key])
+
+    operating = _operating_conditions(model)
+
+    for key in (
+        f"{lower}_v",
+        lower,
+    ):
+        if key in operating:
+            return float(operating[key])
+
+    if lower in {"vip", "vin", "inp", "inn"}:
+        for key in (
+            "vin_cm_v",
+            "input_common_mode_v",
+            "input_common_mode",
+        ):
+            if key in operating:
+                return float(operating[key])
+
+    return None
+
+
+def _implied_device_voltages(
+    model: Mapping[str, Any],
+    device: Mapping[str, Any],
+    polarity: str,
+    values: Mapping[str, float],
+) -> tuple[float | None, float | None, float | None]:
+    """Return candidate-implied absolute VGS, VDS and VBS."""
+
+    terminals = device.get("terminals", {})
+
+    vd = _node_voltage(
+        str(terminals.get("drain", "")),
+        model,
+        values,
+    )
+    vg = _node_voltage(
+        str(terminals.get("gate", "")),
+        model,
+        values,
+    )
+    vs = _node_voltage(
+        str(terminals.get("source", "")),
+        model,
+        values,
+    )
+    vb = _node_voltage(
+        str(terminals.get("bulk", "")),
+        model,
+        values,
+    )
+
+    if vg is None or vs is None:
+        vgs = None
+    elif polarity == "nmos":
+        vgs = vg - vs
+    else:
+        vgs = vs - vg
+
+    if vd is None or vs is None:
+        vds = None
+    elif polarity == "nmos":
+        vds = vd - vs
+    else:
+        vds = vs - vd
+
+    if vb is None or vs is None:
+        vbs = None
+    else:
+        vbs = abs(vb - vs)
+
+    return vgs, vds, vbs
+
+
+def _independent_variable_ids(
+    model: Mapping[str, Any],
+) -> set[str]:
+    return {
+        str(item["id"])
+        for item in (
+            model.get("synthesis_interface", {})
+            .get("independent_variables", [])
+        )
+    }
+
+
+
+def _select_row(
+    rows: Sequence[TechRow],
+    *,
+    target_current_a: float,
+    target_width_um: float | None,
+    preferred_vgs: float | None,
+    preferred_vds: float | None,
+) -> tuple[TechRow, float, float]:
+    """Select the closest technology row.
+
+    Returns:
+        row,
+        predicted_current_at_target_width,
+        relative_current_error
+    """
+
+    def score(row: TechRow) -> tuple[float, float, float, int]:
+        width = (
+            target_width_um
+            if target_width_um is not None
+            else target_current_a / row.density_a_per_um
+        )
+
+        predicted = row.density_a_per_um * width
+        current_error = abs(predicted - target_current_a) / max(
+            abs(target_current_a),
+            1e-30,
+        )
+
+        vgs_error = (
+            abs(row.vgs_v - preferred_vgs)
+            if preferred_vgs is not None
+            else 0.0
+        )
+
+        vds_error = (
+            abs(row.vds_v - preferred_vds)
+            if preferred_vds is not None
+            else 0.0
+        )
+
+        return (
+            current_error,
+            vgs_error + vds_error,
+            -row.vds_v,
+            row.index,
+        )
+
+    row = min(rows, key=score)
+
+    width = (
+        target_width_um
+        if target_width_um is not None
+        else target_current_a / row.density_a_per_um
+    )
+
+    predicted = row.density_a_per_um * width
+    relative_error = abs(predicted - target_current_a) / max(
+        abs(target_current_a),
+        1e-30,
+    )
+
+    return row, predicted, relative_error
+
+
+def _recover_widths(
+    model: Mapping[str, Any],
+    tech_rows: Sequence[TechRow],
+    values: dict[str, float],
+) -> dict[str, dict[str, Any]]:
+    devices = _device_map(model)
+    rules = model["project_inputs"]["design_rules"]
+    all_mos = rules["device_constraints"]["all_mos"]
+
+    length = float(all_mos["length_um"])
+    body_limit = float(all_mos["body_voltage_abs_max_v"])
+    policy = _width_policy(model)
+
+    intersection = rules.get(
+        "technology_intersection",
+        {},
+    )
+    current_relative_tolerance = float(
+        intersection.get(
+            "current_relative_tolerance",
+            0.1,
+        )
+    )
+    current_absolute_tolerance = float(
+        intersection.get(
+            "current_absolute_tolerance_a",
+            1e-6,
+        )
+    )
+
+    groups = _matched_width_groups(model)
+    group_for: dict[str, list[str]] = {
+        member: group
+        for group in groups
+        for member in group
+    }
+
+    independent_ids = _independent_variable_ids(model)
+
+    done: set[str] = set()
+    provenance: dict[str, dict[str, Any]] = {}
+
+    for device_name in sorted(devices):
+        if device_name in done:
+            continue
+
+        group = group_for.get(
+            device_name,
+            [device_name],
+        )
+
+        currents = [
+            float(values[f"i_{member.lower()}_a"])
+            for member in group
+        ]
+
+        if max(currents) - min(currents) > max(
+            current_absolute_tolerance,
+            current_relative_tolerance
+            * max(max(abs(value) for value in currents), 1e-30),
+        ):
+            raise GenericCompleteAssignmentError(
+                f"matched-width group {group!r} has unequal target currents"
+            )
+
+        representative = group[0]
+        representative_device = devices[representative]
+        polarity = _polarity(
+            str(representative_device["model"])
+        )
+
+        rows = _filtered_rows(
+            tech_rows,
+            representative_device,
+            length_um=length,
+            body_limit_v=body_limit,
+        )
+
+        implied_vgs, implied_vds, implied_vbs = (
+            _implied_device_voltages(
+                model,
+                representative_device,
+                polarity,
+                values,
+            )
+        )
+
+        existing_widths = {
+            float(values[f"w_{member.lower()}_um"])
+            for member in group
+            if f"w_{member.lower()}_um" in values
+        }
+
+        independent_width_ids = {
+            f"w_{member.lower()}_um"
+            for member in group
+        } & independent_ids
+
+        if independent_width_ids:
+            if len(existing_widths) != 1:
+                raise GenericCompleteAssignmentError(
+                    f"independent matched-width group {group!r} "
+                    "does not have one preserved width"
+                )
+            prescribed_width = next(iter(existing_widths))
+        else:
+            prescribed_width = None
+
+        row, predicted_current, current_relative_error = _select_row(
+            rows,
+            target_current_a=currents[0],
+            target_width_um=prescribed_width,
+            preferred_vgs=implied_vgs,
+            preferred_vds=implied_vds,
+        )
+
+        width = (
+            prescribed_width
+            if prescribed_width is not None
+            else currents[0] / row.density_a_per_um
+        )
+
+        nf = _minimum_nf(width, policy)
+        if nf is None:
+            raise GenericCompleteAssignmentError(
+                f"width {width} um is not physically realizable "
+                f"for group {group!r}"
+            )
+
+        allowed_current_error = max(
+            current_absolute_tolerance,
+            current_relative_tolerance
+            * max(abs(currents[0]), 1e-30),
+        )
+
+        absolute_current_error = abs(
+            predicted_current - currents[0]
+        )
+
+        if prescribed_width is not None and (
+            absolute_current_error > allowed_current_error
+        ):
+            raise GenericCompleteAssignmentError(
+                f"independent width for group {group!r} has no "
+                "technology row within current tolerance: "
+                f"target={currents[0]}, predicted={predicted_current}"
+            )
+
+        for member in group:
+            width_key = f"w_{member.lower()}_um"
+
+            if width_key in independent_ids:
+                existing = float(values[width_key])
+                if not math.isclose(
+                    existing,
+                    width,
+                    rel_tol=0.0,
+                    abs_tol=1e-15,
+                ):
+                    raise GenericCompleteAssignmentError(
+                        f"attempt to overwrite independent {width_key}: "
+                        f"{existing} -> {width}"
+                    )
+            else:
+                values[width_key] = width
+
+            values[f"nf_{member.lower()}"] = float(nf)
+            values[f"w_finger_{member.lower()}_um"] = width / nf
+
+            provenance[member] = {
+                "technology_row_index": row.index,
+                "model": row.model,
+                "polarity": row.polarity,
+                "width_selection": (
+                    "preserved_independent_width"
+                    if prescribed_width is not None
+                    else "recovered_dependent_width"
+                ),
+                "target_current_a": currents[0],
+                "predicted_current_a": predicted_current,
+                "current_absolute_error_a": absolute_current_error,
+                "current_relative_error": current_relative_error,
+                "candidate_implied_vgs_v": implied_vgs,
+                "candidate_implied_vds_v": implied_vds,
+                "candidate_implied_vbs_v": implied_vbs,
+                "technology_vgs_v": row.vgs_v,
+                "technology_vds_v": row.vds_v,
+                "technology_vbs_v": row.vbs_v,
+                "vgs_mismatch_v": (
+                    abs(row.vgs_v - implied_vgs)
+                    if implied_vgs is not None
+                    else None
+                ),
+                "vds_mismatch_v": (
+                    abs(row.vds_v - implied_vds)
+                    if implied_vds is not None
+                    else None
+                ),
+                "vbs_mismatch_v": (
+                    abs(row.vbs_v - implied_vbs)
+                    if implied_vbs is not None
+                    else None
+                ),
+                "vdsat_v": row.vdsat_v,
+                "density_a_per_um": row.density_a_per_um,
+                "voltage_fit_status": (
+                    "PROVISIONAL_REQUIRES_DC_CONFIRMATION"
+                ),
+            }
+
+            done.add(member)
+
+    return provenance
+
+
+def _fill_dependent_midpoints(dependent: Mapping[str, Any], values: dict[str, float]) -> None:
+    for name, region in dependent.get("dependent_regions", {}).items():
+        if name in values:
+            continue
+        if isinstance(region, Mapping) and "minimum" in region and "maximum" in region:
+            values[name] = _midpoint(region)
+
+
+def build_generic_complete_assignments(
+    compiled_model_path: Path,
+    independent_regions_path: Path,
+    dependent_regions_path: Path,
+) -> Mapping[str, Any]:
+    model = json.loads(compiled_model_path.read_text(encoding="utf-8"))
+    independent = json.loads(independent_regions_path.read_text(encoding="utf-8"))
+    dependent = json.loads(dependent_regions_path.read_text(encoding="utf-8"))
+    tech_path = _technology_path(model)
+    rows = load_rows(tech_path)
+
+    values = _representative_independent_values(independent)
+    independent_snapshot = dict(values)
+
+    _propagate_currents(model, values)
+
+    # Candidate node and bias voltages must exist before selecting rows,
+    # so technology-row scoring can use implied VGS/VDS values.
+    _fill_dependent_midpoints(dependent, values)
+
+    provenance = _recover_widths(
+        model,
+        rows,
+        values,
+    )
+
+    # Independent variables are immutable throughout Step 5.
+    for name, original_value in independent_snapshot.items():
+        if name not in values:
+            raise GenericCompleteAssignmentError(
+                f"independent variable {name!r} disappeared"
+            )
+
+        if not math.isclose(
+            float(values[name]),
+            float(original_value),
+            rel_tol=0.0,
+            abs_tol=1e-15,
+        ):
+            raise GenericCompleteAssignmentError(
+                f"independent variable {name!r} was overwritten: "
+                f"{original_value} -> {values[name]}"
+            )
+
+    assignment: dict[str, Any] = {
+        "assignment_id": "generic_candidate_000000",
+        **values,
+        "device_technology_provenance": provenance,
+        "assignment_semantics": "equation_consistent_technology_backed_candidate",
+        "physical_correlation_status": "REQUIRES_NGSPICE_DC_CONFIRMATION",
+        "route": "ngspice_dc_confirmation",
+    }
+    declared = {
+        item["id"] for item in model.get("synthesis_interface", {}).get("dependent_quantities", [])
+    }
+    missing = sorted(name for name in declared if name not in assignment)
+    if missing:
+        raise GenericCompleteAssignmentError(f"candidate missing declared quantities: {missing!r}")
+
+    deferred = list(dependent.get("deferred_correlations", []))
+    return {
+        "artifact": "openams.complete_dc_assignments",
+        "schema_version": 3,
+        "status": "PASS",
+        "circuit_name": model.get("circuit_name"),
+        "compiled_model": str(compiled_model_path.resolve()),
+        "independent_regions": str(independent_regions_path.resolve()),
+        "dependent_regions": str(dependent_regions_path.resolve()),
+        "technology_source": str(tech_path),
+        "algorithm": "generic_equation_and_technology_candidate_construction",
+        "complete_assignment_count": 1,
+        "fixed_assignment_count": 0,
+        "ranged_assignment_count": 1,
+        "recommended_route": "ngspice_dc_confirmation",
+        "physical_proof_level": "candidate_not_yet_simulator_confirmed",
+        "deferred_correlations": deferred,
+        "assignments": [assignment],
+        "next_stage": "ngspice_dc_confirmation",
+    }

@@ -1,0 +1,77 @@
+{
+  "gate": 5,
+  "proof": "Real SKY130 table loaded and queried",
+  "status": "PASS",
+  "source_path": "/home/yhanafy/AMS-Tutorial/openams/technology/sky130_tt_27c_inverse_smoke.csv",
+  "provider": "mos_inverse_table",
+  "technology_name": "sky130_tt_27c",
+  "row_count": 3024,
+  "capabilities": {
+    "polarities": [
+      "nmos",
+      "pmos"
+    ],
+    "quantities": [
+      "gds",
+      "gm",
+      "id",
+      "vdsat",
+      "vth"
+    ],
+    "saturation_classification": true,
+    "derivatives": true
+  },
+  "nmos_lookup": {
+    "model": "sky130_fd_pr__nfet_01v8",
+    "polarity": "nmos",
+    "length_m": 5e-07,
+    "width_m": 4.1999999999999995e-07,
+    "vgs_v": 0.5,
+    "vds_v": 0.15,
+    "vbs_v": 0.0,
+    "region": "saturation",
+    "values": {
+      "vth": 0.615506,
+      "vdsat": 0.0432843,
+      "id": 1.44188e-08,
+      "gm": 3.24205e-07,
+      "gds": 7.92464e-09
+    },
+    "diagnostics": {
+      "lookup_method": "exact_table_match",
+      "source": "/home/yhanafy/AMS-Tutorial/openams/technology/sky130_tt_27c_inverse_smoke.csv"
+    }
+  },
+  "pmos_lookup": {
+    "model": "sky130_fd_pr__pfet_01v8",
+    "polarity": "pmos",
+    "length_m": 5e-07,
+    "width_m": 4.1999999999999995e-07,
+    "vgs_v": 0.5,
+    "vds_v": 0.15,
+    "vbs_v": 0.0,
+    "region": "saturation",
+    "values": {
+      "vth": 0.881583,
+      "vdsat": 0.0430148,
+      "id": 1.55149e-10,
+      "gm": 3.49228e-09,
+      "gds": 5.74576e-11
+    },
+    "diagnostics": {
+      "lookup_method": "exact_table_match",
+      "source": "/home/yhanafy/AMS-Tutorial/openams/technology/sky130_tt_27c_inverse_smoke.csv"
+    }
+  },
+  "checks": {
+    "source_exists": true,
+    "provider_is_inverse_table": true,
+    "row_count_is_3024": true,
+    "both_polarities_supported": true,
+    "required_quantities_supported": true,
+    "nmos_lookup_saturated": true,
+    "pmos_lookup_saturated": true,
+    "nmos_exact_lookup": true,
+    "pmos_exact_lookup": true
+  }
+}

@@ -1,0 +1,50 @@
+circuit:
+  name: folded_cascode_ota
+  technology: sky130A
+
+conditions:
+  vdd: 1.8
+  vss: 0.0
+  input_common_mode: 0.9
+  load_capacitance: 1.0e-11
+  temperature_c: 27
+
+dc_validity:
+  require_convergence: true
+
+  output_voltage:
+    metric: vout_dc
+    min: 0.2
+    max: 1.6
+
+  require_all_mos_saturated: true
+
+  topology_headroom:
+    lower_bound: vss + vdsat_m9 + vdsat_m11
+    upper_bound: vdd - vdsat_m5 - vdsat_m7
+    require_nonempty_window: true
+
+metrics:
+  dc:
+    - vout_dc
+    - supply_current_a
+    - power_w
+    - device_regions
+    - device_margins
+
+  ac:
+    - gain_db
+    - ugb_hz
+    - phase_margin_deg
+
+# Initial validation targets retained from the two-stage reference.
+# Change these values when folded-cascode-specific targets are established.
+reporting_targets:
+  gain_db:
+    min: 60.0
+  ugb_hz:
+    min: 5.0e6
+  phase_margin_deg:
+    min: 60.0
+  power_w:
+    max: 2.0e-3

@@ -1,0 +1,280 @@
+{
+  "all_currents_within_tolerance": true,
+  "all_devices_saturated": true,
+  "all_internal_nodes_within_tolerance": false,
+  "assignment_id": "deterministic_dependency_assignment_002583",
+  "classification": "PASS_PHYSICAL_WITH_MODEL_WARNINGS",
+  "current_model_warning": false,
+  "dc_exact_realization_pass": false,
+  "dc_physical_valid": true,
+  "device_comparisons": {
+    "M1": {
+      "current": {
+        "absolute_error_a": 2.429092695928302e-07,
+        "actual_abs_a": 9.227791e-06,
+        "actual_signed_a": 9.227791e-06,
+        "expected_abs_a": 9.47070026959283e-06,
+        "pass": true,
+        "relative_error": 0.02564850144954207
+      },
+      "model": "sky130_fd_pr__nfet_01v8",
+      "ngspice": {
+        "gds": 2.655597e-06,
+        "gm": 0.0002040216,
+        "id": 9.227791e-06,
+        "vds": 0.3652651,
+        "vdsat": 0.06161788
+      },
+      "polarity": "nmos",
+      "saturation": {
+        "actual_margin_v": 0.30364722,
+        "actual_saturated": true
+      },
+      "small_signal": {
+        "gds_actual_s": 2.655597e-06,
+        "gds_expected_s": 3.0245681834398122e-06,
+        "gm_actual_s": 0.0002040216,
+        "gm_expected_s": 0.0002025396968059768
+      }
+    },
+    "M2": {
+      "current": {
+        "absolute_error_a": 2.429323240332907e-07,
+        "actual_abs_a": 9.227791e-06,
+        "actual_signed_a": 9.227791e-06,
+        "expected_abs_a": 9.470723324033291e-06,
+        "pass": true,
+        "relative_error": 0.0256508732988552
+      },
+      "model": "sky130_fd_pr__nfet_01v8",
+      "ngspice": {
+        "gds": 2.655597e-06,
+        "gm": 0.0002040216,
+        "id": 9.227791e-06,
+        "vds": 0.3652651,
+        "vdsat": 0.06161788
+      },
+      "polarity": "nmos",
+      "saturation": {
+        "actual_margin_v": 0.30364722,
+        "actual_saturated": true
+      },
+      "small_signal": {
+        "gds_actual_s": 2.655597e-06,
+        "gds_expected_s": 3.0245253142239137e-06,
+        "gm_actual_s": 0.0002040216,
+        "gm_expected_s": 0.00020254006566759758
+      }
+    },
+    "M3": {
+      "current": {
+        "absolute_error_a": 2.429064949030251e-07,
+        "actual_abs_a": 9.22779e-06,
+        "actual_signed_a": 9.22779e-06,
+        "expected_abs_a": 9.470696494903024e-06,
+        "pass": true,
+        "relative_error": 0.02564821869582173
+      },
+      "model": "sky130_fd_pr__pfet_01v8",
+      "ngspice": {
+        "gds": 6.651408e-07,
+        "gm": 6.828786e-05,
+        "id": 9.22779e-06,
+        "vds": 1.1922,
+        "vdsat": 0.2399041
+      },
+      "polarity": "pmos",
+      "saturation": {
+        "actual_margin_v": 0.9522959,
+        "actual_saturated": true
+      },
+      "small_signal": {
+        "gds_actual_s": 6.651408e-07,
+        "gds_expected_s": 6.551493376605309e-07,
+        "gm_actual_s": 6.828786e-05,
+        "gm_expected_s": 6.986756975038875e-05
+      }
+    },
+    "M4": {
+      "current": {
+        "absolute_error_a": 2.429064949030251e-07,
+        "actual_abs_a": 9.22779e-06,
+        "actual_signed_a": 9.22779e-06,
+        "expected_abs_a": 9.470696494903024e-06,
+        "pass": true,
+        "relative_error": 0.02564821869582173
+      },
+      "model": "sky130_fd_pr__pfet_01v8",
+      "ngspice": {
+        "gds": 6.651408e-07,
+        "gm": 6.828786e-05,
+        "id": 9.22779e-06,
+        "vds": 1.1922,
+        "vdsat": 0.2399041
+      },
+      "polarity": "pmos",
+      "saturation": {
+        "actual_margin_v": 0.9522959,
+        "actual_saturated": true
+      },
+      "small_signal": {
+        "gds_actual_s": 6.651408e-07,
+        "gds_expected_s": 6.551512365057066e-07,
+        "gm_actual_s": 6.828786e-05,
+        "gm_expected_s": 6.986756975038875e-05
+      }
+    },
+    "M5": {
+      "current": {
+        "absolute_error_a": 4.858171375215193e-07,
+        "actual_abs_a": 1.845558e-05,
+        "actual_signed_a": 1.845558e-05,
+        "expected_abs_a": 1.8941397137521518e-05,
+        "pass": true,
+        "relative_error": 0.025648432055687762
+      },
+      "model": "sky130_fd_pr__nfet_01v8",
+      "ngspice": {
+        "gds": 7.127211e-06,
+        "gm": 0.0004080332,
+        "id": 1.845558e-05,
+        "vds": 0.2425351,
+        "vdsat": 0.05908046
+      },
+      "polarity": "nmos",
+      "saturation": {
+        "actual_margin_v": 0.18345464,
+        "actual_saturated": true
+      },
+      "small_signal": {
+        "gds_actual_s": 7.127211e-06,
+        "gds_expected_s": 6.2331841991816876e-06,
+        "gm_actual_s": 0.0004080332,
+        "gm_expected_s": 0.0004128261100763569
+      }
+    },
+    "M6": {
+      "current": {
+        "absolute_error_a": 2.494988149448848e-07,
+        "actual_abs_a": 7.459505e-06,
+        "actual_signed_a": 7.459505e-06,
+        "expected_abs_a": 7.709003814944885e-06,
+        "pass": true,
+        "relative_error": 0.032364598712637756
+      },
+      "model": "sky130_fd_pr__pfet_01v8",
+      "ngspice": {
+        "gds": 5.739109e-07,
+        "gm": 5.374588e-05,
+        "id": 7.459505e-06,
+        "vds": 1.026647,
+        "vdsat": 0.2460925
+      },
+      "polarity": "pmos",
+      "saturation": {
+        "actual_margin_v": 0.7805545,
+        "actual_saturated": true
+      },
+      "small_signal": {
+        "gds_actual_s": 5.739109e-07,
+        "gds_expected_s": 6.067810038671468e-07,
+        "gm_actual_s": 5.374588e-05,
+        "gm_expected_s": 5.485057511574197e-05
+      }
+    },
+    "M7": {
+      "current": {
+        "absolute_error_a": 2.494991293258032e-07,
+        "actual_abs_a": 7.459505e-06,
+        "actual_signed_a": 7.459505e-06,
+        "expected_abs_a": 7.709004129325803e-06,
+        "pass": true,
+        "relative_error": 0.03236463817377969
+      },
+      "model": "sky130_fd_pr__nfet_01v8",
+      "ngspice": {
+        "gds": 1.495588e-06,
+        "gm": 0.0001616084,
+        "id": 7.459505e-06,
+        "vds": 0.7733532,
+        "vdsat": 0.05837122
+      },
+      "polarity": "nmos",
+      "saturation": {
+        "actual_margin_v": 0.7149819799999999,
+        "actual_saturated": true
+      },
+      "small_signal": {
+        "gds_actual_s": 1.495588e-06,
+        "gds_expected_s": 1.4656311183272804e-06,
+        "gm_actual_s": 0.0001616084,
+        "gm_expected_s": 0.00016678251236015035
+      }
+    }
+  },
+  "execution_mode": "executed",
+  "extraction_complete": true,
+  "extraction_errors": [],
+  "grid_index": 2583,
+  "internal_node_model_warning": true,
+  "model_accuracy_warnings": [
+    "INTERNAL_NODE_MODEL_WARNING",
+    "VOUT_TARGET_MODEL_WARNING"
+  ],
+  "ngspice_return_code": 0,
+  "node_comparisons": {
+    "n1_v": {
+      "absolute_error_v": 0.007800200000000035,
+      "actual": 0.6078002,
+      "expected": 0.6,
+      "pass": true,
+      "signed_error_v": 0.007800200000000035
+    },
+    "n2_v": {
+      "absolute_error_v": 0.007793147990518889,
+      "actual": 0.6078002,
+      "expected": 0.6000070520094811,
+      "pass": true,
+      "signed_error_v": 0.007793147990518889
+    },
+    "vbias_v": {
+      "absolute_error_v": 0.0,
+      "actual": 0.6,
+      "expected": 0.6,
+      "pass": true,
+      "signed_error_v": 0.0
+    },
+    "vout_v": {
+      "absolute_error_v": 0.12664680000000006,
+      "actual": 0.7733532,
+      "allowed_max_v": 2.0,
+      "allowed_min_v": 0.5,
+      "expected": 0.9,
+      "signed_error_v": -0.12664680000000006,
+      "target_match": false,
+      "warning": true,
+      "within_allowed_window": true
+    },
+    "vtail_v": {
+      "absolute_error_v": 0.049313189906088684,
+      "actual": 0.2425351,
+      "expected": 0.2918482899060887,
+      "pass": false,
+      "signed_error_v": -0.049313189906088684
+    }
+  },
+  "point_directory": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_opamp_benchmark_v1/points/point_002583",
+  "proceed_to_ac": true,
+  "runtime_s": 12.88078302500071,
+  "tolerances": {
+    "current_absolute_tolerance_a": 1e-06,
+    "current_relative_tolerance": 0.1,
+    "internal_node_tolerance_v": 0.025,
+    "vout_allowed_max_v": 2.0,
+    "vout_allowed_min_v": 0.5,
+    "vout_target_tolerance_v": 0.025
+  },
+  "vout_target_match": false,
+  "vout_target_warning": true,
+  "vout_within_allowed_window": true
+}

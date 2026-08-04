@@ -1,0 +1,811 @@
+{
+  "benchmark": "/home/yhanafy/AMS-Tutorial/openams/benchmarks/two_stage_opamp_deterministic_constructor_v1",
+  "created_at_utc": "2026-08-02T23:38:48.301907+00:00",
+  "deck_template": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/deck_template.spice",
+  "point_count": 100,
+  "points": [
+    {
+      "assignment_id": "deterministic_dependency_assignment_006260",
+      "case_directory": "point_006260",
+      "deck_sha256": "7f41427fd80a6d63f58e6e26518a20bed1c99f72fce2531b288bbbe5e30a14e1",
+      "grid_index": 6260,
+      "selection_order": 0,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006261",
+      "case_directory": "point_006261",
+      "deck_sha256": "30f93bc4d1f97183e8857c441bcedf0d31157165647190b4172a378392c312b6",
+      "grid_index": 6261,
+      "selection_order": 1,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006262",
+      "case_directory": "point_006262",
+      "deck_sha256": "a9c33060120977c48cfbbfe4e0f903120fbbe400d3f05653c3b1f5edd7f0fed9",
+      "grid_index": 6262,
+      "selection_order": 2,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006263",
+      "case_directory": "point_006263",
+      "deck_sha256": "f6ee99ba337989416c002e10fe0e841e8acfb5bc980aa14caed4f871530e1268",
+      "grid_index": 6263,
+      "selection_order": 3,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006264",
+      "case_directory": "point_006264",
+      "deck_sha256": "cc7e84e223387f44c36361cc5dc5bcbeaea37e8e3b0172d29174907f15ef387e",
+      "grid_index": 6264,
+      "selection_order": 4,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006265",
+      "case_directory": "point_006265",
+      "deck_sha256": "690947423581e2565f0b0365bd38347c0b0ebc894a4754a21f9221c53e55105e",
+      "grid_index": 6265,
+      "selection_order": 5,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006266",
+      "case_directory": "point_006266",
+      "deck_sha256": "635fbdaab2015dc518ae66c74cb7f62dac6a88c3af76d67e06f897a16d81cf03",
+      "grid_index": 6266,
+      "selection_order": 6,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006267",
+      "case_directory": "point_006267",
+      "deck_sha256": "58a0eb67951e90603e4130bec85b8127587f41ffee87b52be34faf1506873be7",
+      "grid_index": 6267,
+      "selection_order": 7,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006268",
+      "case_directory": "point_006268",
+      "deck_sha256": "9d3839687512d8f9d119005f4fa8de864d5de307d430dabb0b74ae249373a82e",
+      "grid_index": 6268,
+      "selection_order": 8,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006269",
+      "case_directory": "point_006269",
+      "deck_sha256": "b8c8a86a0a1f9e1f73736895b41b0e82c8d8ecb227726b57b94484d274b71d17",
+      "grid_index": 6269,
+      "selection_order": 9,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006550",
+      "case_directory": "point_006550",
+      "deck_sha256": "4d3612598211b73453c501ca55613fc47ac869e274213e6ba11d0db1007055b8",
+      "grid_index": 6550,
+      "selection_order": 10,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006551",
+      "case_directory": "point_006551",
+      "deck_sha256": "a0e03104183d8f65578f8e160dc0f3e858e3e197a76baad3bba0bab9aeb2e8f9",
+      "grid_index": 6551,
+      "selection_order": 11,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006552",
+      "case_directory": "point_006552",
+      "deck_sha256": "d5674ef1610ed5df14fce5d4d9c2d699f11867a0f95cc05e9185a4fbc61758d2",
+      "grid_index": 6552,
+      "selection_order": 12,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006553",
+      "case_directory": "point_006553",
+      "deck_sha256": "5deda4922ba5f7aac06a3a3d4b7e9e9257bb2c4916ca783d4356860b5c5b4a5e",
+      "grid_index": 6553,
+      "selection_order": 13,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006554",
+      "case_directory": "point_006554",
+      "deck_sha256": "3b2efce07423dc94f5337603266f17e2b4893b2d8226dc6fc2cd1ce5e3cafe1d",
+      "grid_index": 6554,
+      "selection_order": 14,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006555",
+      "case_directory": "point_006555",
+      "deck_sha256": "6c06329f2ebf8b88da4bd402003bced50644b586188594501c693e872af586c0",
+      "grid_index": 6555,
+      "selection_order": 15,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006556",
+      "case_directory": "point_006556",
+      "deck_sha256": "1b6159d3968f2063d7b21c7fde8620daf058aef52f38cb2fe12dd70d80ea1d9f",
+      "grid_index": 6556,
+      "selection_order": 16,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006557",
+      "case_directory": "point_006557",
+      "deck_sha256": "da4b4e572323171ba45777791288f36817aba314f254dce317e82901ddaa0dc7",
+      "grid_index": 6557,
+      "selection_order": 17,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006558",
+      "case_directory": "point_006558",
+      "deck_sha256": "3f83c6469a28af52ec543e758e110f1709947791cce5876f495de4a96d939997",
+      "grid_index": 6558,
+      "selection_order": 18,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006559",
+      "case_directory": "point_006559",
+      "deck_sha256": "9895f76c70e9c5bd0854c3fdecd22014a81a1a54c545fed1e7a345029ef3874d",
+      "grid_index": 6559,
+      "selection_order": 19,
+      "selection_reasons": "accepted_adjacent_to_rejected"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000259",
+      "case_directory": "point_000259",
+      "deck_sha256": "e5bdd7bfd4cabc50c3ec8b90b26503224a46e59e2e249127d975eae8905f4242",
+      "grid_index": 259,
+      "selection_order": 20,
+      "selection_reasons": "gain_low;ugb_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000509",
+      "case_directory": "point_000509",
+      "deck_sha256": "8f680d59fd2442fbf1a11ff3b881c09f35ba45c8bc7f3b0094d541739165d5b8",
+      "grid_index": 509,
+      "selection_order": 21,
+      "selection_reasons": "gain_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000759",
+      "case_directory": "point_000759",
+      "deck_sha256": "e2c0a88cd73349ecd85affb33a3f9779acaff0be0ee3e36d7072dce11b24d51a",
+      "grid_index": 759,
+      "selection_order": 22,
+      "selection_reasons": "random_interior;gain_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_001259",
+      "case_directory": "point_001259",
+      "deck_sha256": "731cc2842e6db7f05fa6e24f07cd5c051989dd01bd3bd6cdf7943dc3e21879d0",
+      "grid_index": 1259,
+      "selection_order": 23,
+      "selection_reasons": "gain_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_001509",
+      "case_directory": "point_001509",
+      "deck_sha256": "a78edb790536d2a70e9cd4bd28c573101f8c1028232bba456fe9a7dcf3f24a6e",
+      "grid_index": 1509,
+      "selection_order": 24,
+      "selection_reasons": "gain_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_001759",
+      "case_directory": "point_001759",
+      "deck_sha256": "cdc9e99e375fe7efc88d8321c18b8621f195194f02618a6033dd71e2c68dbda8",
+      "grid_index": 1759,
+      "selection_order": 25,
+      "selection_reasons": "gain_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_002009",
+      "case_directory": "point_002009",
+      "deck_sha256": "b3ecd233d108336f1fb6f38d3d4a6d558019539a9dbbef8f8b502a97570188c5",
+      "grid_index": 2009,
+      "selection_order": 26,
+      "selection_reasons": "gain_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_002259",
+      "case_directory": "point_002259",
+      "deck_sha256": "5bb2082b2e6c919a155402479a379fda628984cd5b1645286d426d2613fdc07b",
+      "grid_index": 2259,
+      "selection_order": 27,
+      "selection_reasons": "gain_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_002509",
+      "case_directory": "point_002509",
+      "deck_sha256": "6b896ba58afcaccb540200e568ab36b80a8f9f6716ef3ef33ce5acf75b081706",
+      "grid_index": 2509,
+      "selection_order": 28,
+      "selection_reasons": "gain_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_002759",
+      "case_directory": "point_002759",
+      "deck_sha256": "4e79d0dd9e4b88952c5429f2be93a72a74e7ca3a39614c848b9bc231d2d1de54",
+      "grid_index": 2759,
+      "selection_order": 29,
+      "selection_reasons": "gain_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000012",
+      "case_directory": "point_000012",
+      "deck_sha256": "f156741ab7d7117b594eabaf9258a506803d877d1b616e9550ca330782ce8340",
+      "grid_index": 12,
+      "selection_order": 30,
+      "selection_reasons": "gain_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000261",
+      "case_directory": "point_000261",
+      "deck_sha256": "e0cf5e6a5ccebe0fb475ada03dd8d943429c48366f1aa726ece45f10f5124c4b",
+      "grid_index": 261,
+      "selection_order": 31,
+      "selection_reasons": "gain_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000262",
+      "case_directory": "point_000262",
+      "deck_sha256": "e1dd5dc79b6857a926ef475f6ae19f8952866bc073ace21e2edd2e92373f7e5d",
+      "grid_index": 262,
+      "selection_order": 32,
+      "selection_reasons": "gain_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000263",
+      "case_directory": "point_000263",
+      "deck_sha256": "c433ca1687c9e909580bb7cb981aa6f2dbe38374ebed55bf8b43ebdebabbc68e",
+      "grid_index": 263,
+      "selection_order": 33,
+      "selection_reasons": "gain_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000272",
+      "case_directory": "point_000272",
+      "deck_sha256": "b6171b21f33930d05c31d2dcf2c3a9452d6b39f2c90ef82be29e34b9648d2e35",
+      "grid_index": 272,
+      "selection_order": 34,
+      "selection_reasons": "gain_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000512",
+      "case_directory": "point_000512",
+      "deck_sha256": "c25e64cde6fde43109d517d8676313a82f62edc415a366375062bc353fea474c",
+      "grid_index": 512,
+      "selection_order": 35,
+      "selection_reasons": "gain_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000513",
+      "case_directory": "point_000513",
+      "deck_sha256": "59207b7bbc06043d904b0b411c1fc4073faa1e2d364876d0251dbfd82c44d3aa",
+      "grid_index": 513,
+      "selection_order": 36,
+      "selection_reasons": "gain_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000523",
+      "case_directory": "point_000523",
+      "deck_sha256": "d8a37080001c665c5cda76e4e5e7cac06ce9626e7f32bb9ab20a63be295c2d08",
+      "grid_index": 523,
+      "selection_order": 37,
+      "selection_reasons": "gain_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000762",
+      "case_directory": "point_000762",
+      "deck_sha256": "59ab8082612729e6adca548dc04fba209c6aed9215881263b41cae0e6acc68f3",
+      "grid_index": 762,
+      "selection_order": 38,
+      "selection_reasons": "gain_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000763",
+      "case_directory": "point_000763",
+      "deck_sha256": "ef83b90be2181e27133bfbb3ac585353bd1d9a8859d44af12c1cf013949966a0",
+      "grid_index": 763,
+      "selection_order": 39,
+      "selection_reasons": "gain_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000000",
+      "case_directory": "point_000000",
+      "deck_sha256": "a1d2a1ded4718cc53fff249a7d70254bb53a9576ba1291fe7c9bdf0493c01c9f",
+      "grid_index": 0,
+      "selection_order": 40,
+      "selection_reasons": "ugb_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000001",
+      "case_directory": "point_000001",
+      "deck_sha256": "948f5d085ea784b8811576bdfecc160f787a7cfe2cbde4ca1f4f111b10c8b024",
+      "grid_index": 1,
+      "selection_order": 41,
+      "selection_reasons": "ugb_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000002",
+      "case_directory": "point_000002",
+      "deck_sha256": "f8f07acf49b815aaa38856895af26e341bc10940a9dc618714c7e3fc06aa99c4",
+      "grid_index": 2,
+      "selection_order": 42,
+      "selection_reasons": "ugb_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000003",
+      "case_directory": "point_000003",
+      "deck_sha256": "93402092987af879cb89aa1d6739ffff213b9138f909cc405b2c3f0a57d9153c",
+      "grid_index": 3,
+      "selection_order": 43,
+      "selection_reasons": "ugb_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000004",
+      "case_directory": "point_000004",
+      "deck_sha256": "4795a3cc3d299bf5814a157010d17b085c3462c9c5a8ad1b82269dcecb0cf1ef",
+      "grid_index": 4,
+      "selection_order": 44,
+      "selection_reasons": "ugb_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000005",
+      "case_directory": "point_000005",
+      "deck_sha256": "e04d3a8d3282ffaf4f51d0b5deeb80e17708847003bc13da5c5036de39596100",
+      "grid_index": 5,
+      "selection_order": 45,
+      "selection_reasons": "ugb_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000006",
+      "case_directory": "point_000006",
+      "deck_sha256": "5b5f52f0f12ab3c5758ec8f5dc438e72d40b29200a810caa68f5cdefec78c7d4",
+      "grid_index": 6,
+      "selection_order": 46,
+      "selection_reasons": "ugb_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000007",
+      "case_directory": "point_000007",
+      "deck_sha256": "4e5d3112f4316c0362d4f2ded192f314eb1b40b49ea5f7a2c98f4df9cffce66e",
+      "grid_index": 7,
+      "selection_order": 47,
+      "selection_reasons": "ugb_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000008",
+      "case_directory": "point_000008",
+      "deck_sha256": "e6265345905a15e7f53817b9b8de8c5c04e09d974374a5d149e73cd58ef4f73b",
+      "grid_index": 8,
+      "selection_order": 48,
+      "selection_reasons": "ugb_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006660",
+      "case_directory": "point_006660",
+      "deck_sha256": "7c0a61a245e69f15c5ee3c7269a3ab2addbaac41f04f06c55d4400eb20a3d764",
+      "grid_index": 6660,
+      "selection_order": 49,
+      "selection_reasons": "ugb_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006670",
+      "case_directory": "point_006670",
+      "deck_sha256": "fccb6eb07623b992b93d099ad6d40a7eabcd77aa444ef9e87b03cb9c382a241c",
+      "grid_index": 6670,
+      "selection_order": 50,
+      "selection_reasons": "ugb_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006680",
+      "case_directory": "point_006680",
+      "deck_sha256": "c310a660e09e7a00de03df28868e0c6194104410712aa0ffa145064fb36f83d9",
+      "grid_index": 6680,
+      "selection_order": 51,
+      "selection_reasons": "ugb_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006690",
+      "case_directory": "point_006690",
+      "deck_sha256": "10e261fc1f660204988502436a124f57707760be69d89c66a22cd28bad8bcc65",
+      "grid_index": 6690,
+      "selection_order": 52,
+      "selection_reasons": "ugb_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006700",
+      "case_directory": "point_006700",
+      "deck_sha256": "b7dd0365f3c53a3c15576326f627148b71ec4cae247eed6fa2daacd1767f8d19",
+      "grid_index": 6700,
+      "selection_order": 53,
+      "selection_reasons": "ugb_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006710",
+      "case_directory": "point_006710",
+      "deck_sha256": "fbd1ba66a38b6a2381d3a33ded87c2b2790572ffe8043aec364fd67d02bcfd90",
+      "grid_index": 6710,
+      "selection_order": 54,
+      "selection_reasons": "ugb_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006720",
+      "case_directory": "point_006720",
+      "deck_sha256": "2ce315369fb00bc7c9eb227a55c83bc987dbf97b1cd565353ce8246d3bc46af1",
+      "grid_index": 6720,
+      "selection_order": 55,
+      "selection_reasons": "ugb_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006730",
+      "case_directory": "point_006730",
+      "deck_sha256": "478fe7a5d507e2a3c072c5d2c6edc99f9378e37ba0af7b1ef35b7faf8ced154e",
+      "grid_index": 6730,
+      "selection_order": 56,
+      "selection_reasons": "ugb_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006740",
+      "case_directory": "point_006740",
+      "deck_sha256": "0974cbe59b101cfdc5f0da4b08481d6b90d7584ed293220c641c686f62d05ab7",
+      "grid_index": 6740,
+      "selection_order": 57,
+      "selection_reasons": "ugb_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006741",
+      "case_directory": "point_006741",
+      "deck_sha256": "268bd8a9c02aae61fd4a0d58e8f60af6ba31d44adb4fe119c5076854138980d2",
+      "grid_index": 6741,
+      "selection_order": 58,
+      "selection_reasons": "ugb_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000250",
+      "case_directory": "point_000250",
+      "deck_sha256": "8ba623c857d517201afffafdefcb27d1de4691263c2bdccd1bc87e02758c4527",
+      "grid_index": 250,
+      "selection_order": 59,
+      "selection_reasons": "phase_margin_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000500",
+      "case_directory": "point_000500",
+      "deck_sha256": "23b6161041f1b761614b2297f9247c15f2611e23dc5ccb78a1364a0169e15658",
+      "grid_index": 500,
+      "selection_order": 60,
+      "selection_reasons": "phase_margin_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000750",
+      "case_directory": "point_000750",
+      "deck_sha256": "cf7842f66eff769d4dc6f9acbb0f13956047925767cb7ab4b219ed998acce77f",
+      "grid_index": 750,
+      "selection_order": 61,
+      "selection_reasons": "phase_margin_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000751",
+      "case_directory": "point_000751",
+      "deck_sha256": "8baa43095b7cdadb558e1c36bda96a43f20cac53cefb421875020c10ead6fe75",
+      "grid_index": 751,
+      "selection_order": 62,
+      "selection_reasons": "phase_margin_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_001000",
+      "case_directory": "point_001000",
+      "deck_sha256": "ae69175623202ab04b64fb996610ad28f63faf7adf9b9adcd26310e835727fa4",
+      "grid_index": 1000,
+      "selection_order": 63,
+      "selection_reasons": "phase_margin_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_001250",
+      "case_directory": "point_001250",
+      "deck_sha256": "fef17f2ccb4c2b7451cc70c801eb6994d03c44fc1fd0960ffe1110748bdbee07",
+      "grid_index": 1250,
+      "selection_order": 64,
+      "selection_reasons": "phase_margin_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_001500",
+      "case_directory": "point_001500",
+      "deck_sha256": "e163b757a7416bfef2e187fd50c485e00a3a9167e5d9f72d69144fd38bc758b7",
+      "grid_index": 1500,
+      "selection_order": 65,
+      "selection_reasons": "phase_margin_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_001750",
+      "case_directory": "point_001750",
+      "deck_sha256": "2ed6bd2fa38bdb1e1afe7639ef4386132f0cd0e45c1bee0b0f31b1564fa4252f",
+      "grid_index": 1750,
+      "selection_order": 66,
+      "selection_reasons": "phase_margin_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_002000",
+      "case_directory": "point_002000",
+      "deck_sha256": "bc0a94e00f691a506d744e869decdc27b28ed04d5b38936b3ee798e47092ff08",
+      "grid_index": 2000,
+      "selection_order": 67,
+      "selection_reasons": "phase_margin_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_002250",
+      "case_directory": "point_002250",
+      "deck_sha256": "ce95421356776d9ec0a588638e558a5cabcf87cd83718ccff470a4b7bea125eb",
+      "grid_index": 2250,
+      "selection_order": 68,
+      "selection_reasons": "phase_margin_low"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006659",
+      "case_directory": "point_006659",
+      "deck_sha256": "72759a6f2f48d0332211cb43ddf18e096995fe8fd825d38fc559d183285bf0ba",
+      "grid_index": 6659,
+      "selection_order": 69,
+      "selection_reasons": "phase_margin_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006669",
+      "case_directory": "point_006669",
+      "deck_sha256": "56e3d34e0ae6c14e998be5af35f1fadcdd7ef91299feb83b0d97de95fa017ef0",
+      "grid_index": 6669,
+      "selection_order": 70,
+      "selection_reasons": "phase_margin_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006679",
+      "case_directory": "point_006679",
+      "deck_sha256": "6e61095aa55fa4fccc46bd78c0d97f951eb026984f30236c15c95fc8fccae812",
+      "grid_index": 6679,
+      "selection_order": 71,
+      "selection_reasons": "phase_margin_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006689",
+      "case_directory": "point_006689",
+      "deck_sha256": "4ab4269ad88e9c62288e0785d03b2a85589ce926d61ce2814ddfeb8c2d667e0a",
+      "grid_index": 6689,
+      "selection_order": 72,
+      "selection_reasons": "phase_margin_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006699",
+      "case_directory": "point_006699",
+      "deck_sha256": "4919e77e3b90d260cd6532c1890ec6128172558b0f142a601411ce37f1a36475",
+      "grid_index": 6699,
+      "selection_order": 73,
+      "selection_reasons": "phase_margin_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006709",
+      "case_directory": "point_006709",
+      "deck_sha256": "74a11101fd12d753cd0d34cdcc4bb8a778de5de0e0e588b74aa4aff08b40a74d",
+      "grid_index": 6709,
+      "selection_order": 74,
+      "selection_reasons": "phase_margin_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006719",
+      "case_directory": "point_006719",
+      "deck_sha256": "43a43f57d9b60ba8324c4ef8eff665fd991884718e65e0f4208af30db4a9d226",
+      "grid_index": 6719,
+      "selection_order": 75,
+      "selection_reasons": "phase_margin_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006729",
+      "case_directory": "point_006729",
+      "deck_sha256": "21f85a05970d1db83d77bd0567d9ea929b7a03b2abae0d6514f21a0e2462a28e",
+      "grid_index": 6729,
+      "selection_order": 76,
+      "selection_reasons": "phase_margin_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006739",
+      "case_directory": "point_006739",
+      "deck_sha256": "097d7158a5cb3f95b7366bad4891515e9e2f98824480784feeee90ffbdc37bea",
+      "grid_index": 6739,
+      "selection_order": 77,
+      "selection_reasons": "phase_margin_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_006749",
+      "case_directory": "point_006749",
+      "deck_sha256": "1913b5c4113a9616704f5f0a7a32b4f8844af3e596ab68a5b56f8b183590e640",
+      "grid_index": 6749,
+      "selection_order": 78,
+      "selection_reasons": "phase_margin_high"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000323",
+      "case_directory": "point_000323",
+      "deck_sha256": "82a125f2cf07b9aa8ab239a907d5e569fae883b06afb8a39c964d7bf434dbe8c",
+      "grid_index": 323,
+      "selection_order": 79,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000411",
+      "case_directory": "point_000411",
+      "deck_sha256": "4551871bf2b763331c76688bee6770c800e4d7872e0f7bace074bb99cadd573b",
+      "grid_index": 411,
+      "selection_order": 80,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000491",
+      "case_directory": "point_000491",
+      "deck_sha256": "dbfdcd3941f04e256b3f57eee1a8660ac8e8513db9231ceddcecd158014b0799",
+      "grid_index": 491,
+      "selection_order": 81,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000588",
+      "case_directory": "point_000588",
+      "deck_sha256": "f872fafc69ed5ecad4b9653c418932ce9cb92ac018fda8fefb6bda4285dad3db",
+      "grid_index": 588,
+      "selection_order": 82,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000609",
+      "case_directory": "point_000609",
+      "deck_sha256": "67a366d7340f282506df79aa2b1f1cc5e9dd0c3ea7b9b09e638c66d772b1d472",
+      "grid_index": 609,
+      "selection_order": 83,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000720",
+      "case_directory": "point_000720",
+      "deck_sha256": "466f6f90890f4e1454a917d33007356fb6e1fd3a1093deb62f6432ab4cdea5f6",
+      "grid_index": 720,
+      "selection_order": 84,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_000787",
+      "case_directory": "point_000787",
+      "deck_sha256": "429d30874bc889fc7960f38ea58a773f0e0b6604be231958f98f3820de0b7970",
+      "grid_index": 787,
+      "selection_order": 85,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_001251",
+      "case_directory": "point_001251",
+      "deck_sha256": "000ef4faf31bc521d802dce38f93c5d6dc4b71ff335a4ed3e57acc7cc55dcc10",
+      "grid_index": 1251,
+      "selection_order": 86,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_001774",
+      "case_directory": "point_001774",
+      "deck_sha256": "0b9f3b40426664f4916e3258f7fcb5c1f96efbb2309a3e32304367334067c22d",
+      "grid_index": 1774,
+      "selection_order": 87,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_001987",
+      "case_directory": "point_001987",
+      "deck_sha256": "fc3bbb0cb7bf57a3a47b22b56cc0f6ff4b8b15835cd6051e3fea508eee293447",
+      "grid_index": 1987,
+      "selection_order": 88,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_002668",
+      "case_directory": "point_002668",
+      "deck_sha256": "1871268edce6d590c674b37aa9c4fc44929548f3c04353939f799d88ee9ad4f9",
+      "grid_index": 2668,
+      "selection_order": 89,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_003041",
+      "case_directory": "point_003041",
+      "deck_sha256": "d276a1346dad3ccfeff3784e4379ab65ed83a57777a1bc9a11dbc55f91694f16",
+      "grid_index": 3041,
+      "selection_order": 90,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_003300",
+      "case_directory": "point_003300",
+      "deck_sha256": "ccad65d19e210c2a0bc8bac81e4f7b4caa2c9ca1d678e817cdbeb2dbaf1be843",
+      "grid_index": 3300,
+      "selection_order": 91,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_003491",
+      "case_directory": "point_003491",
+      "deck_sha256": "35da41293c80ed2946ccb731a2614cf2fbc6b11b4c35dc0be196d9673f756dd4",
+      "grid_index": 3491,
+      "selection_order": 92,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_003638",
+      "case_directory": "point_003638",
+      "deck_sha256": "72654383f294c925ad6bdd4bb89cedb3b48c9baea40f4403e0b60e8af84a55e4",
+      "grid_index": 3638,
+      "selection_order": 93,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_004302",
+      "case_directory": "point_004302",
+      "deck_sha256": "1061a28b2356738e1ffb72b2b5c1e6fc2e633e9de7a0fd57b25b47e638eedbb9",
+      "grid_index": 4302,
+      "selection_order": 94,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_004555",
+      "case_directory": "point_004555",
+      "deck_sha256": "2104a24af490cae6bd7c0c07d52acc1085471a0a29dfb8ed21720ed4431714e6",
+      "grid_index": 4555,
+      "selection_order": 95,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_004960",
+      "case_directory": "point_004960",
+      "deck_sha256": "4f64b2705bcf5d3e4caac0e23450492d38960137a7ad7c37349833b07d4ed20e",
+      "grid_index": 4960,
+      "selection_order": 96,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_005578",
+      "case_directory": "point_005578",
+      "deck_sha256": "a517553b36c8a807ea1f699f495e87712b59f3145c1b27fd96b2a456563500fb",
+      "grid_index": 5578,
+      "selection_order": 97,
+      "selection_reasons": "random_interior"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_002583",
+      "case_directory": "point_002583",
+      "deck_sha256": "06a4815dc7283f360fb3b53564e9c1b5d09593a849162f05103cca82c35a0fbd",
+      "grid_index": 2583,
+      "selection_order": 98,
+      "selection_reasons": "fixed_seed_backfill"
+    },
+    {
+      "assignment_id": "deterministic_dependency_assignment_003767",
+      "case_directory": "point_003767",
+      "deck_sha256": "9bb5622eb4242da456dd78912a84f3d48e7b4a5619153db6d9e5bf7f2eb362f0",
+      "grid_index": 3767,
+      "selection_order": 99,
+      "selection_reasons": "fixed_seed_backfill"
+    }
+  ],
+  "schema_version": "1.0",
+  "selection": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_opamp_benchmark_v1/selected_points.csv",
+  "status": "PASS"
+}

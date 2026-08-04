@@ -1,0 +1,524 @@
+{
+  "ac_metrics": {
+    "gain_est_db": 59.936082235078885,
+    "gain_est_v_v": 992.6682050749132,
+    "phase_at_ugb_est_deg": -155.3085645423679,
+    "phase_at_ugb_unwrapped_est_deg": 204.6914354576321,
+    "phase_margin_est_deg": 24.69143545763211,
+    "ugb_est_hz": 1904359.9655503223
+  },
+  "assignment": {
+    "algorithm": "deterministic_dependency_ordered_local_solves",
+    "assignment_id": "deterministic_dependency_assignment_000000",
+    "construction_policy": {
+      "current_tolerance_a": 2e-08,
+      "iout_max_a": 0.002,
+      "iout_min_a": 1e-08,
+      "n1_v": 0.6,
+      "relation_tolerance": 0.005,
+      "vbias_v": 0.6,
+      "width_max_um": 100.0,
+      "width_min_um": 0.42
+    },
+    "device_points": {
+      "M1": {
+        "gds_s": 1.3570091870313346e-06,
+        "gm_s": 7.84334986378492e-05,
+        "id_abs_a": 8.204899514321125e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "nmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 0.517063238772159,
+        "vdsat_abs_v": 0.16467765330773265,
+        "vgs_abs_v": 0.817063238772159,
+        "vth_abs_v": 0.6394044959229687,
+        "width_um": 1.0
+      },
+      "M2": {
+        "gds_s": 1.357012392690087e-06,
+        "gm_s": 7.843351054131119e-05,
+        "id_abs_a": 8.204899514321125e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "nmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 0.5170618706862044,
+        "vdsat_abs_v": 0.16467765330773265,
+        "vgs_abs_v": 0.817063238772159,
+        "vth_abs_v": 0.6394044984541339,
+        "width_um": 1.0
+      },
+      "M3": {
+        "gds_s": 5.425460021433233e-07,
+        "gm_s": 5.9017818105756236e-05,
+        "id_abs_a": 8.204898688060055e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "pmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 1.2000000000000002,
+        "vdsat_abs_v": 0.25107744005508315,
+        "vgs_abs_v": 1.2000000000000002,
+        "vth_abs_v": 0.9516198097530201,
+        "width_um": 1.7177263261198532
+      },
+      "M4": {
+        "gds_s": 5.425457400633521e-07,
+        "gm_s": 5.9017766887668136e-05,
+        "id_abs_a": 8.204898688060055e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "pmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 1.2000013680859547,
+        "vdsat_abs_v": 0.25107745973172463,
+        "vgs_abs_v": 1.2000000000000002,
+        "vth_abs_v": 0.9516198097530201,
+        "width_um": 1.7177263261198532
+      },
+      "M5": {
+        "gds_s": 4.314328864962019e-05,
+        "gm_s": 0.00035153110698521033,
+        "id_abs_a": 1.6409798934923652e-05,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "nmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 0.082936761227841,
+        "vdsat_abs_v": 0.058960663146342226,
+        "vgs_abs_v": 0.6,
+        "vth_abs_v": 0.5909728370528184,
+        "width_um": 39.22738644911178
+      },
+      "M6": {
+        "gds_s": 3.854534812608523e-07,
+        "gm_s": 4.2869604247770796e-05,
+        "id_abs_a": 6.414774334623767e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "pmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 1.2000000000000002,
+        "vdsat_abs_v": 0.2675443884298815,
+        "vgs_abs_v": 1.2000013680859547,
+        "vth_abs_v": 0.9313898164684467,
+        "width_um": 1.1867610803780466
+      },
+      "M7": {
+        "gds_s": 1.4104615894997003e-06,
+        "gm_s": 0.00013969575690765432,
+        "id_abs_a": 6.414774962417355e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "nmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 0.6,
+        "vdsat_abs_v": 0.058741948562769944,
+        "vgs_abs_v": 0.6,
+        "vth_abs_v": 0.6038691344642275,
+        "width_um": 13.55091286731278
+      }
+    },
+    "i_m1_a": 8.2049e-06,
+    "i_m2_a": 8.2049e-06,
+    "i_m3_a": 8.2049e-06,
+    "i_m4_a": 8.2049e-06,
+    "i_m5_a": 1.64098e-05,
+    "i_m6_a": 6.414774627997158e-06,
+    "i_m7_a": 6.414774627997158e-06,
+    "independent_variables": {
+      "i_m5_a": 1.64098e-05,
+      "vout_v": 0.6,
+      "w_m1_um": 1.0
+    },
+    "m2_current_residual_a": -4.856788748437571e-13,
+    "n1_v": 0.6,
+    "n2_v": 0.5999986319140453,
+    "size_relation_residual": 2.3704396545642936e-07,
+    "vbias_v": 0.6,
+    "vdd_v": 1.8,
+    "vin_cm_v": 0.9,
+    "vout_v": 0.6,
+    "vss_v": 0.0,
+    "vtail_v": 0.082936761227841,
+    "w_m1_um": 1.0,
+    "w_m2_um": 1.0,
+    "w_m3_um": 1.7177263261198532,
+    "w_m4_um": 1.7177263261198532,
+    "w_m5_um": 39.22738644911178,
+    "w_m6_um": 1.1867610803780466,
+    "w_m7_um": 13.55091286731278
+  },
+  "assignment_id": "deterministic_dependency_assignment_001750",
+  "device_records": {
+    "M1": {
+      "capacitances": {
+        "cdb_f": 2.2163638047903573e-16,
+        "cgd_f": 7.155585881204016e-19,
+        "cgs_f": 2.4629317129310916e-15,
+        "csb_f": 3.2981691750400496e-16,
+        "distance": 0.03709426313563222,
+        "source": "dense_table_nearest_bias_capacitance_density"
+      },
+      "derived": {
+        "current_relative_residual": 5.9193759198010594e-08,
+        "current_residual_a": -4.856788748437571e-13,
+        "gm_over_id_1_v": 9.559349081722276,
+        "ro_ohm": 736914.6867661619,
+        "saturation_margin_v": 0.35238558546442633,
+        "target_current_a": 8.2049e-06,
+        "vb_v": 0.0,
+        "vbs_signed_v": -0.082936761227841,
+        "vd_v": 0.6,
+        "vds_signed_v": 0.517063238772159,
+        "vg_v": 0.9,
+        "vgs_signed_v": 0.817063238772159,
+        "vov_abs_v": 0.17765874284919037,
+        "vs_v": 0.082936761227841
+      },
+      "model_point": {
+        "gds_s": 1.3570091870313346e-06,
+        "gm_s": 7.84334986378492e-05,
+        "id_abs_a": 8.204899514321125e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "nmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 0.517063238772159,
+        "vdsat_abs_v": 0.16467765330773265,
+        "vgs_abs_v": 0.817063238772159,
+        "vth_abs_v": 0.6394044959229687,
+        "width_um": 1.0
+      },
+      "nodes": {
+        "body": "vss",
+        "drain": "n1",
+        "gate": "inp",
+        "source": "vtail"
+      }
+    },
+    "M2": {
+      "capacitances": {
+        "cdb_f": 2.2163638047903573e-16,
+        "cgd_f": 7.155585881204016e-19,
+        "cgs_f": 2.4629317129310916e-15,
+        "csb_f": 3.2981691750400496e-16,
+        "distance": 0.03709547789270327,
+        "source": "dense_table_nearest_bias_capacitance_density"
+      },
+      "derived": {
+        "current_relative_residual": 5.9193759198010594e-08,
+        "current_residual_a": -4.856788748437571e-13,
+        "gm_over_id_1_v": 9.559350532497142,
+        "ro_ohm": 736912.9459589091,
+        "saturation_margin_v": 0.3523842173784717,
+        "target_current_a": 8.2049e-06,
+        "vb_v": 0.0,
+        "vbs_signed_v": -0.082936761227841,
+        "vd_v": 0.5999986319140453,
+        "vds_signed_v": 0.5170618706862044,
+        "vg_v": 0.9,
+        "vgs_signed_v": 0.817063238772159,
+        "vov_abs_v": 0.1776587403180251,
+        "vs_v": 0.082936761227841
+      },
+      "model_point": {
+        "gds_s": 1.357012392690087e-06,
+        "gm_s": 7.843351054131119e-05,
+        "id_abs_a": 8.204899514321125e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "nmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 0.5170618706862044,
+        "vdsat_abs_v": 0.16467765330773265,
+        "vgs_abs_v": 0.817063238772159,
+        "vth_abs_v": 0.6394044984541339,
+        "width_um": 1.0
+      },
+      "nodes": {
+        "body": "vss",
+        "drain": "n2",
+        "gate": "inn",
+        "source": "vtail"
+      }
+    },
+    "M3": {
+      "capacitances": {
+        "cdb_f": 4.093624583509331e-16,
+        "cgd_f": 1.0931823472381677e-17,
+        "cgs_f": 4.468045354926162e-15,
+        "csb_f": 6.134360001171153e-16,
+        "distance": 3.1401849173675503e-16,
+        "source": "dense_table_nearest_bias_capacitance_density"
+      },
+      "derived": {
+        "current_relative_residual": 1.598971279407566e-07,
+        "current_residual_a": -1.3119399450411138e-12,
+        "gm_over_id_1_v": 7.192997786997691,
+        "ro_ohm": 1843161.67854801,
+        "saturation_margin_v": 0.948922559944917,
+        "target_current_a": 8.2049e-06,
+        "vb_v": 1.8,
+        "vbs_signed_v": 0.0,
+        "vd_v": 0.6,
+        "vds_signed_v": -1.2000000000000002,
+        "vg_v": 0.6,
+        "vgs_signed_v": -1.2000000000000002,
+        "vov_abs_v": 0.2483801902469801,
+        "vs_v": 1.8
+      },
+      "model_point": {
+        "gds_s": 5.425460021433233e-07,
+        "gm_s": 5.9017818105756236e-05,
+        "id_abs_a": 8.204898688060055e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "pmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 1.2000000000000002,
+        "vdsat_abs_v": 0.25107744005508315,
+        "vgs_abs_v": 1.2000000000000002,
+        "vth_abs_v": 0.9516198097530201,
+        "width_um": 1.7177263261198532
+      },
+      "nodes": {
+        "body": "vdd",
+        "drain": "n1",
+        "gate": "n1",
+        "source": "vdd"
+      }
+    },
+    "M4": {
+      "capacitances": {
+        "cdb_f": 4.093624583509331e-16,
+        "cgd_f": 1.0931823472381677e-17,
+        "cgs_f": 4.468045354926162e-15,
+        "csb_f": 6.134360001171153e-16,
+        "distance": 1.3680859547449131e-06,
+        "source": "dense_table_nearest_bias_capacitance_density"
+      },
+      "derived": {
+        "current_relative_residual": 1.598971279407566e-07,
+        "current_residual_a": -1.3119399450411138e-12,
+        "gm_over_id_1_v": 7.1929915446185895,
+        "ro_ohm": 1843162.5688983046,
+        "saturation_margin_v": 0.94892390835423,
+        "target_current_a": 8.2049e-06,
+        "vb_v": 1.8,
+        "vbs_signed_v": 0.0,
+        "vd_v": 0.5999986319140453,
+        "vds_signed_v": -1.2000013680859547,
+        "vg_v": 0.6,
+        "vgs_signed_v": -1.2000000000000002,
+        "vov_abs_v": 0.2483801902469801,
+        "vs_v": 1.8
+      },
+      "model_point": {
+        "gds_s": 5.425457400633521e-07,
+        "gm_s": 5.9017766887668136e-05,
+        "id_abs_a": 8.204898688060055e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "pmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 1.2000013680859547,
+        "vdsat_abs_v": 0.25107745973172463,
+        "vgs_abs_v": 1.2000000000000002,
+        "vth_abs_v": 0.9516198097530201,
+        "width_um": 1.7177263261198532
+      },
+      "nodes": {
+        "body": "vdd",
+        "drain": "n2",
+        "gate": "n1",
+        "source": "vdd"
+      }
+    },
+    "M5": {
+      "capacitances": {
+        "cdb_f": 9.731402930447128e-15,
+        "cgd_f": 1.672550695183541e-14,
+        "cgs_f": 6.663867618818816e-14,
+        "csb_f": 1.147724217261231e-14,
+        "distance": 0.007063238772159003,
+        "source": "dense_table_nearest_bias_capacitance_density"
+      },
+      "derived": {
+        "current_relative_residual": 6.490489513019581e-08,
+        "current_residual_a": -1.0650763481074872e-12,
+        "gm_over_id_1_v": 21.422024022309927,
+        "ro_ohm": 23178.57611925009,
+        "saturation_margin_v": 0.023976098081498767,
+        "target_current_a": 1.64098e-05,
+        "vb_v": 0.0,
+        "vbs_signed_v": 0.0,
+        "vd_v": 0.082936761227841,
+        "vds_signed_v": 0.082936761227841,
+        "vg_v": 0.6,
+        "vgs_signed_v": 0.6,
+        "vov_abs_v": 0.009027162947181533,
+        "vs_v": 0.0
+      },
+      "model_point": {
+        "gds_s": 4.314328864962019e-05,
+        "gm_s": 0.00035153110698521033,
+        "id_abs_a": 1.6409798934923652e-05,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "nmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 0.082936761227841,
+        "vdsat_abs_v": 0.058960663146342226,
+        "vgs_abs_v": 0.6,
+        "vth_abs_v": 0.5909728370528184,
+        "width_um": 39.22738644911178
+      },
+      "nodes": {
+        "body": "vss",
+        "drain": "vtail",
+        "gate": "vbias",
+        "source": "vss"
+      }
+    },
+    "M6": {
+      "capacitances": {
+        "cdb_f": 2.8282470027467518e-16,
+        "cgd_f": 7.552694767094438e-18,
+        "cgs_f": 3.086930817767712e-15,
+        "csb_f": 4.2381720485488994e-16,
+        "distance": 1.3680859547449131e-06,
+        "source": "dense_table_nearest_bias_capacitance_density"
+      },
+      "derived": {
+        "current_relative_residual": 4.573401372316273e-08,
+        "current_residual_a": -2.9337339086781813e-13,
+        "gm_over_id_1_v": 6.682948146185277,
+        "ro_ohm": 2594346.78532131,
+        "saturation_margin_v": 0.9324556115701187,
+        "target_current_a": 6.414774627997158e-06,
+        "vb_v": 1.8,
+        "vbs_signed_v": 0.0,
+        "vd_v": 0.6,
+        "vds_signed_v": -1.2000000000000002,
+        "vg_v": 0.5999986319140453,
+        "vgs_signed_v": -1.2000013680859547,
+        "vov_abs_v": 0.26861155161750805,
+        "vs_v": 1.8
+      },
+      "model_point": {
+        "gds_s": 3.854534812608523e-07,
+        "gm_s": 4.2869604247770796e-05,
+        "id_abs_a": 6.414774334623767e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "pmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 1.2000000000000002,
+        "vdsat_abs_v": 0.2675443884298815,
+        "vgs_abs_v": 1.2000013680859547,
+        "vth_abs_v": 0.9313898164684467,
+        "width_um": 1.1867610803780466
+      },
+      "nodes": {
+        "body": "vdd",
+        "drain": "out",
+        "gate": "n2",
+        "source": "vdd"
+      }
+    },
+    "M7": {
+      "capacitances": {
+        "cdb_f": 2.42927776822306e-15,
+        "cgd_f": 3.0905883887531743e-17,
+        "cgs_f": 2.5425744806696118e-14,
+        "csb_f": 3.631707380533762e-15,
+        "distance": 0.0,
+        "source": "dense_table_nearest_bias_capacitance_density"
+      },
+      "derived": {
+        "current_relative_residual": 5.213280529314494e-08,
+        "current_residual_a": 3.344201966807821e-13,
+        "gm_over_id_1_v": 21.777187465826724,
+        "ro_ohm": 708987.7579400842,
+        "saturation_margin_v": 0.54125805143723,
+        "target_current_a": 6.414774627997158e-06,
+        "vb_v": 0.0,
+        "vbs_signed_v": 0.0,
+        "vd_v": 0.6,
+        "vds_signed_v": 0.6,
+        "vg_v": 0.6,
+        "vgs_signed_v": 0.6,
+        "vov_abs_v": -0.0038691344642275416,
+        "vs_v": 0.0
+      },
+      "model_point": {
+        "gds_s": 1.4104615894997003e-06,
+        "gm_s": 0.00013969575690765432,
+        "id_abs_a": 6.414774962417355e-06,
+        "in_domain": true,
+        "length_um": 0.5,
+        "polarity": "nmos",
+        "saturated": true,
+        "source": "mos_mlp",
+        "vbs_abs_v": 0.0,
+        "vds_abs_v": 0.6,
+        "vdsat_abs_v": 0.058741948562769944,
+        "vgs_abs_v": 0.6,
+        "vth_abs_v": 0.6038691344642275,
+        "width_um": 13.55091286731278
+      },
+      "nodes": {
+        "body": "vss",
+        "drain": "out",
+        "gate": "vbias",
+        "source": "vss"
+      }
+    }
+  },
+  "diagnostics": {
+    "kcl_residuals_a": {
+      "n1": 0.0,
+      "n2": 0.0,
+      "out": 0.0,
+      "vtail": 0.0
+    },
+    "max_device_current_relative_residual": 1.598971279407566e-07,
+    "max_device_current_residual_a": 1.3119399450411138e-12,
+    "max_kcl_residual_a": 0.0
+  },
+  "grid_index": 1750,
+  "independent_variables": {
+    "i_m5_a": 1.64098e-05,
+    "vout_v": 0.6,
+    "w_m1_um": 1.0
+  },
+  "schema_version": "3.0"
+}

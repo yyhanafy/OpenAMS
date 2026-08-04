@@ -28,3 +28,13 @@ def test_density_interpolation() -> None:
     assert result is not None
     assert abs(result["vgs_v"] - 0.75) < 1e-12
     assert abs(result["interpolation_fraction"] - 0.5) < 1e-12
+
+
+def test_generic_current_expression_evaluation() -> None:
+    from openams.synthesis.generic_complete_assignments import _eval_expr
+
+    value = _eval_expr(
+        "device.M4.current - device.M1.current",
+        {"i_m4_a": 30e-6, "i_m1_a": 10e-6},
+    )
+    assert abs(value - 20e-6) < 1e-18

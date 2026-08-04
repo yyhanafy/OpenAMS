@@ -1,0 +1,1185 @@
+"""Topology-generic Step 5 complete-assignment enumeration.
+
+The engine is intentionally split into four topology-independent layers:
+
+1. Enumerate independent-variable domains.
+2. Propagate compiled scalar equations.
+3. Ask a pluggable device provider for technology-consistent realizations.
+4. Enforce declarative circuit invariants and emit model-valid assignments.
+
+A device provider may be table-backed, MLP-backed, or any future surrogate.
+The default provider in this module is the characterized-table provider.
+"""
+from __future__ import annotations
+
+import ast
+import csv
+import importlib
+import itertools
+import json
+import math
+import re
+from collections import Counter
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Iterable, Mapping, MutableMapping, Protocol, Sequence
+
+CURRENT_TOKEN_RE = re.compile(r"\bdevice\.([A-Za-z_][A-Za-z0-9_]*)\.current\b")
+
+
+class GenericStep5Error(ValueError):
+    """Raised when generic complete-assignment synthesis cannot proceed."""
+
+
+@dataclass(frozen=True)
+class DeviceRequest:
+    device: str
+    model: str
+    polarity: str
+    length_um: float
+    target_current_a: float
+    fixed_width_um: float | None
+    known_vgs_v: float | None
+    known_vds_v: float | None
+    known_vbs_v: float | None
+    require_saturation: bool
+
+
+@dataclass(frozen=True)
+class DeviceRealization:
+    width_um: float
+    nf: int
+    finger_width_um: float
+    predicted_current_a: float
+    vgs_v: float
+    vds_v: float
+    vbs_v: float
+    vdsat_v: float | None
+    saturated: bool
+    provenance: Mapping[str, Any]
+
+
+class DeviceProvider(Protocol):
+    name: str
+
+    def candidates(
+        self,
+        request: DeviceRequest,
+        *,
+        current_relative_tolerance: float,
+        current_absolute_tolerance_a: float,
+        voltage_tolerance_v: float,
+        width_policy: Mapping[str, float | int],
+        limit: int,
+    ) -> Sequence[DeviceRealization]: ...
+
+
+@dataclass(frozen=True)
+class TableRow:
+    index: int
+    polarity: str
+    model: str
+    length_um: float
+    width_um: float
+    vgs_v: float
+    vds_v: float
+    vbs_v: float
+    id_a: float
+    vdsat_v: float | None
+    saturated: bool
+
+    @property
+    def density_a_per_um(self) -> float:
+        return self.id_a / self.width_um
+
+
+def _number(value: Any, name: str) -> float:
+    try:
+        result = float(value)
+    except (TypeError, ValueError) as exc:
+        raise GenericStep5Error(f"{name} must be numeric: {value!r}") from exc
+    if not math.isfinite(result):
+        raise GenericStep5Error(f"{name} must be finite: {value!r}")
+    return result
+
+
+def _optional_number(row: Mapping[str, Any], *names: str) -> float | None:
+    for name in names:
+        value = row.get(name)
+        if value not in (None, ""):
+            return float(value)
+    return None
+
+
+def _truth(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    return str(value).strip().lower() in {"1", "true", "yes", "y"}
+
+
+def _minimum_nf(width_um: float, policy: Mapping[str, float | int]) -> int | None:
+    if not float(policy["total_min_um"]) <= width_um <= float(policy["total_max_um"]):
+        return None
+    for nf in range(int(policy["nf_min"]), int(policy["nf_max"]) + 1):
+        finger = width_um / nf
+        if float(policy["finger_min_um"]) <= finger <= float(policy["finger_max_um"]):
+            return nf
+    return None
+
+
+class TableDeviceProvider:
+    name = "characterized_table"
+
+    def __init__(self, path: Path):
+        self.path = path.resolve()
+        with self.path.open(newline="", encoding="utf-8") as stream:
+            reader = csv.DictReader(stream)
+            self.rows = tuple(
+                TableRow(
+                    index=index,
+                    polarity=str(row["polarity"]).lower(),
+                    model=str(row["model"]),
+                    length_um=_number(row["length_um"], "length_um"),
+                    width_um=_number(row["width_um"], "width_um"),
+                    vgs_v=_number(row.get("vgs_v", row.get("vgs_abs_v")), "vgs"),
+                    vds_v=_number(row.get("vds_v", row.get("vds_abs_v")), "vds"),
+                    vbs_v=_number(row.get("vbs_v", row.get("vbs_abs_v")), "vbs"),
+                    id_a=_number(row.get("id_abs_a", row.get("id_a", row.get("id"))), "id"),
+                    vdsat_v=_optional_number(row, "vdsat_abs_v", "vdsat_v", "vdsat"),
+                    saturated=_truth(row.get("saturated", True)),
+                )
+                for index, row in enumerate(reader)
+            )
+        if not self.rows:
+            raise GenericStep5Error(f"empty technology table: {self.path}")
+
+    def candidates(
+        self,
+        request: DeviceRequest,
+        *,
+        current_relative_tolerance: float,
+        current_absolute_tolerance_a: float,
+        voltage_tolerance_v: float,
+        width_policy: Mapping[str, float | int],
+        limit: int,
+    ) -> Sequence[DeviceRealization]:
+        scored: list[tuple[tuple[float, float, float, int], DeviceRealization]] = []
+        allowed_current_error = max(
+            current_absolute_tolerance_a,
+            current_relative_tolerance * max(abs(request.target_current_a), 1e-30),
+        )
+        for row in self.rows:
+            if row.model != request.model or row.polarity != request.polarity:
+                continue
+            if not math.isclose(row.length_um, request.length_um, rel_tol=0.0, abs_tol=1e-12):
+                continue
+            if request.require_saturation and not row.saturated:
+                continue
+            width = request.fixed_width_um or request.target_current_a / row.density_a_per_um
+            nf = _minimum_nf(width, width_policy)
+            if nf is None:
+                continue
+            predicted = row.density_a_per_um * width
+            current_error = abs(predicted - request.target_current_a)
+            if current_error > allowed_current_error:
+                continue
+            voltage_errors = [
+                abs(row.vgs_v - request.known_vgs_v) if request.known_vgs_v is not None else 0.0,
+                abs(row.vds_v - request.known_vds_v) if request.known_vds_v is not None else 0.0,
+                abs(row.vbs_v - request.known_vbs_v) if request.known_vbs_v is not None else 0.0,
+            ]
+            max_voltage_error = max(voltage_errors)
+            realization = DeviceRealization(
+                width_um=width,
+                nf=nf,
+                finger_width_um=width / nf,
+                predicted_current_a=predicted,
+                vgs_v=row.vgs_v,
+                vds_v=row.vds_v,
+                vbs_v=row.vbs_v,
+                vdsat_v=row.vdsat_v,
+                saturated=row.saturated,
+                provenance={
+                    "provider": self.name,
+                    "technology_row_index": row.index,
+                    "technology_source": str(self.path),
+                    "current_absolute_error_a": current_error,
+                    "current_relative_error": current_error / max(abs(request.target_current_a), 1e-30),
+                    "maximum_voltage_mismatch_v": max_voltage_error,
+                    "voltage_fit_status": (
+                        "WITHIN_DECLARED_TOLERANCE"
+                        if max_voltage_error <= voltage_tolerance_v
+                        else "PROVISIONAL"
+                    ),
+                },
+            )
+            scored.append(
+                (
+                    (
+                        current_error / max(abs(request.target_current_a), 1e-30),
+                        max_voltage_error,
+                        sum(voltage_errors),
+                        row.index,
+                    ),
+                    realization,
+                )
+            )
+        scored.sort(key=lambda item: item[0])
+        return [item[1] for item in scored[:limit]]
+
+
+class PluginDeviceProvider:
+    """Adapter for an MLP or other external provider.
+
+    The plugin target must be ``module:function``. The function receives a
+    DeviceRequest and keyword arguments identical to ``DeviceProvider.candidates``.
+    It must return DeviceRealization objects or dictionaries with matching keys.
+    """
+
+    def __init__(self, target: str):
+        module_name, separator, function_name = target.partition(":")
+        if not separator:
+            raise GenericStep5Error("provider plugin must use module:function syntax")
+        self._function = getattr(importlib.import_module(module_name), function_name)
+        self.name = f"python_plugin:{target}"
+
+    def candidates(self, request: DeviceRequest, **kwargs: Any) -> Sequence[DeviceRealization]:
+        result = self._function(request=request, **kwargs)
+        return [item if isinstance(item, DeviceRealization) else DeviceRealization(**item) for item in result]
+
+
+def _device_map(model: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
+    result: dict[str, Mapping[str, Any]] = {}
+    for item in model["topology"]["devices"]:
+        if str(item.get("kind", "")).lower() != "mos":
+            continue
+        raw = str(item["name"])
+        name = raw[1:] if raw.upper().startswith("X") else raw
+        result[name.upper()] = item
+    return result
+
+
+def _polarity(model_name: str) -> str:
+    token = model_name.lower()
+    if "pfet" in token or "pmos" in token:
+        return "pmos"
+    if "nfet" in token or "nmos" in token:
+        return "nmos"
+    raise GenericStep5Error(f"cannot infer polarity from {model_name!r}")
+
+
+def _width_policy(model: Mapping[str, Any]) -> dict[str, float | int]:
+    parameterization = model["project_inputs"]["design_intent"]["synthesis_parameterization"]
+    policy = parameterization.get("dependent_width_realization", {})
+    rules = model["project_inputs"]["design_rules"]["device_constraints"]["all_mos"]
+    return {
+        "total_min_um": float(policy.get("total_width_min_um", rules["width_min_um"])),
+        "total_max_um": float(policy.get("total_width_max_um", rules["width_max_um"])),
+        "finger_min_um": float(policy.get("finger_width_min_um", rules["width_min_um"])),
+        "finger_max_um": float(policy.get("finger_width_max_um", rules["width_max_um"])),
+        "nf_min": int(policy.get("nf_min", 1)),
+        "nf_max": int(policy.get("nf_max", 1)),
+    }
+
+
+def _linspace(minimum: float, maximum: float, count: int) -> list[float]:
+    if count <= 0:
+        raise GenericStep5Error("continuous sample count must be positive")
+    if count == 1:
+        return [0.5 * (minimum + maximum)]
+    step = (maximum - minimum) / (count - 1)
+    return [minimum + index * step for index in range(count)]
+
+
+def enumerate_independent_domains(
+    artifact: Mapping[str, Any],
+    *,
+    continuous_samples: Mapping[str, int],
+    range_overrides: Mapping[str, tuple[float, float]],
+) -> tuple[list[str], list[tuple[float, ...]], dict[str, list[float]]]:
+    names: list[str] = []
+    values_by_name: dict[str, list[float]] = {}
+    for name, domain in artifact["domains"].items():
+        candidates = [float(value) for value in domain.get("candidate_values", [])]
+        if candidates:
+            values = candidates
+        else:
+            minimum = float(domain["technology_minimum"])
+            maximum = float(domain["technology_maximum"])
+            if name in range_overrides:
+                requested_minimum, requested_maximum = range_overrides[name]
+                minimum = max(minimum, requested_minimum)
+                maximum = min(maximum, requested_maximum)
+            if minimum > maximum:
+                raise GenericStep5Error(f"empty overridden range for {name!r}")
+            if name not in continuous_samples:
+                raise GenericStep5Error(
+                    f"continuous independent variable {name!r} requires an explicit sample count"
+                )
+            values = _linspace(minimum, maximum, continuous_samples[name])
+        names.append(name)
+        values_by_name[name] = values
+    combinations = list(itertools.product(*(values_by_name[name] for name in names)))
+    return names, combinations, values_by_name
+
+
+def _eval_expression(expression: str, values: Mapping[str, float]) -> float:
+    rewritten = CURRENT_TOKEN_RE.sub(lambda match: f"i_{match.group(1).lower()}_a", expression)
+    tree = ast.parse(rewritten, mode="eval")
+
+    def visit(node: ast.AST) -> float:
+        if isinstance(node, ast.Expression):
+            return visit(node.body)
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return float(node.value)
+        if isinstance(node, ast.Name):
+            if node.id not in values:
+                raise KeyError(node.id)
+            return float(values[node.id])
+        if isinstance(node, ast.UnaryOp):
+            value = visit(node.operand)
+            if isinstance(node.op, ast.UAdd):
+                return value
+            if isinstance(node.op, ast.USub):
+                return -value
+        if isinstance(node, ast.BinOp):
+            left, right = visit(node.left), visit(node.right)
+            if isinstance(node.op, ast.Add):
+                return left + right
+            if isinstance(node.op, ast.Sub):
+                return left - right
+            if isinstance(node.op, ast.Mult):
+                return left * right
+            if isinstance(node.op, ast.Div):
+                return left / right
+        raise GenericStep5Error(f"unsupported expression node {type(node).__name__}")
+
+    return visit(tree)
+
+
+def propagate_compiled_equations(model: Mapping[str, Any], values: dict[str, float]) -> None:
+    pending: list[tuple[str, str]] = []
+    for item in model["constraint_model"].get("canonical_constraints", []):
+        expression = str(item["expression"])
+        separator = "==" if "==" in expression else "=" if "=" in expression else None
+        if separator is None:
+            continue
+        left, right = expression.split(separator, 1)
+        match = CURRENT_TOKEN_RE.fullmatch(left.strip())
+        if match:
+            pending.append((f"i_{match.group(1).lower()}_a", right.strip()))
+    while pending:
+        next_pending: list[tuple[str, str]] = []
+        progress = False
+        for left, right in pending:
+            try:
+                result = _eval_expression(right, values)
+            except KeyError:
+                next_pending.append((left, right))
+                continue
+            if result <= 0.0:
+                raise GenericStep5Error(f"derived non-positive current {left}={result}")
+            values[left] = result
+            progress = True
+        if not progress:
+            raise GenericStep5Error(f"unresolved current equations: {next_pending!r}")
+        pending = next_pending
+
+
+def _matched_width_groups(model: Mapping[str, Any]) -> list[list[str]]:
+    patterns = (
+        model["project_inputs"]["design_intent"]
+        .get("circuit_intent", {})
+        .get("confirmed_patterns", {})
+    )
+    return [[str(item).upper() for item in group] for group in patterns.get("matched_width_groups", [])]
+
+
+def _operating_node_values(model: Mapping[str, Any], values: Mapping[str, float]) -> dict[str, float]:
+    operating = model["project_inputs"]["design_rules"].get("operating_conditions", {})
+    nodes: dict[str, float] = {}
+    aliases = {
+        "vdd": ("vdd_v", "vdd"),
+        "vss": ("vss_v", "vss"),
+        "vip": ("vin_cm_v", "input_common_mode_v", "input_common_mode"),
+        "vin": ("vin_cm_v", "input_common_mode_v", "input_common_mode"),
+        "inp": ("vin_cm_v", "input_common_mode_v", "input_common_mode"),
+        "inn": ("vin_cm_v", "input_common_mode_v", "input_common_mode"),
+    }
+    for node, keys in aliases.items():
+        for key in keys:
+            if key in operating:
+                nodes[node] = float(operating[key])
+                break
+    for key, value in values.items():
+        if not key.endswith("_v"):
+            continue
+        token = key[:-2]
+        nodes[token] = float(value)
+        if token.startswith("v") and len(token) > 1:
+            nodes.setdefault(token[1:], float(value))
+        nodes.setdefault(f"{token}_node", float(value))
+    return nodes
+
+
+def _known_device_voltages(
+    device: Mapping[str, Any], polarity: str, nodes: Mapping[str, float]
+) -> tuple[float | None, float | None, float | None]:
+    terminals = device.get("terminals", {})
+    vd = nodes.get(str(terminals.get("drain", "")).lower())
+    vg = nodes.get(str(terminals.get("gate", "")).lower())
+    vs = nodes.get(str(terminals.get("source", "")).lower())
+    vb = nodes.get(str(terminals.get("bulk", "")).lower())
+    vgs = None if vg is None or vs is None else (vg - vs if polarity == "nmos" else vs - vg)
+    vds = None if vd is None or vs is None else (vd - vs if polarity == "nmos" else vs - vd)
+    vbs = None if vb is None or vs is None else abs(vb - vs)
+    return vgs, vds, vbs
+
+
+def _apply_realization_to_nodes(
+    device: Mapping[str, Any],
+    polarity: str,
+    realization: DeviceRealization,
+    nodes: dict[str, float],
+    tolerance: float,
+) -> bool:
+    """Apply exact VGS and minimum-saturated-VDS constraints.
+
+    VGS is an equality and may derive a missing gate/source node.  The inverse
+    feasible dataset stores the minimum characterized saturated VDS, so VDS is
+    an inequality.  It must never be used to invent an exact drain voltage.
+    """
+
+    terminals = {key: str(value).lower() for key, value in device.get("terminals", {}).items()}
+    if polarity == "nmos":
+        positive, negative = terminals["gate"], terminals["source"]
+        drain, source = terminals["drain"], terminals["source"]
+    else:
+        positive, negative = terminals["source"], terminals["gate"]
+        drain, source = terminals["source"], terminals["drain"]
+
+    positive_value = nodes.get(positive)
+    negative_value = nodes.get(negative)
+    if positive_value is not None and negative_value is not None:
+        if abs((positive_value - negative_value) - realization.vgs_v) > tolerance:
+            return False
+    elif positive_value is not None:
+        nodes[negative] = positive_value - realization.vgs_v
+    elif negative_value is not None:
+        nodes[positive] = negative_value + realization.vgs_v
+
+    drain_value = nodes.get(drain)
+    source_value = nodes.get(source)
+    minimum_vds = float(realization.provenance.get("minimum_saturated_vds_v", realization.vds_v))
+    maximum_vds_raw = realization.provenance.get("maximum_characterized_vds_v")
+    maximum_vds = float(maximum_vds_raw) if maximum_vds_raw is not None else None
+    if drain_value is not None and source_value is not None:
+        actual_vds = drain_value - source_value
+        if actual_vds + tolerance < minimum_vds:
+            return False
+        if maximum_vds is not None and actual_vds - tolerance > maximum_vds:
+            return False
+    return True
+
+
+def _group_order(
+    model: Mapping[str, Any],
+    groups: Sequence[Sequence[str]],
+    independent_ids: set[str],
+) -> list[list[str]]:
+    """Order groups by how strongly the independent variables constrain them."""
+
+    devices = _device_map(model)
+    operating_nodes = set(_operating_node_values(model, {}).keys())
+
+    def score(group: Sequence[str]) -> tuple[int, int, str]:
+        fixed_width = any(f"w_{member.lower()}_um" in independent_ids for member in group)
+        connected_known = 0
+        for member in group:
+            terminals = devices[member].get("terminals", {})
+            connected_known += sum(str(node).lower() in operating_nodes for node in terminals.values())
+        return (0 if fixed_width else 1, -connected_known, ",".join(group))
+
+    return [list(group) for group in sorted(groups, key=score)]
+
+
+def _region_number(value: Any) -> float | None:
+    if value in (None, ""):
+        return None
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(number):
+        return None
+    return round(number, 12)
+
+
+def _realization_region_key(item: DeviceRealization) -> tuple[Any, ...]:
+    """Canonical physical-region key for a provider realization.
+
+    Supporting technology-row identity is intentionally excluded. Two rows
+    describing the same width, terminal voltages, feasible VDS interval, and
+    VDSAT interval represent one physical region.
+    """
+
+    provenance = item.provenance
+    min_vds = provenance.get("minimum_saturated_vds_v", item.vds_v)
+    max_vds = provenance.get("maximum_characterized_vds_v")
+    min_vdsat = provenance.get("minimum_vdsat_v")
+    max_vdsat = provenance.get("maximum_vdsat_v")
+
+    if min_vdsat is None and max_vdsat is None:
+        min_vdsat = item.vdsat_v
+        max_vdsat = item.vdsat_v
+
+    return (
+        _region_number(item.width_um),
+        int(item.nf),
+        _region_number(item.finger_width_um),
+        _region_number(item.vgs_v),
+        _region_number(item.vbs_v),
+        _region_number(min_vds),
+        _region_number(max_vds),
+        # VDSAT samples do not define separate physical regions. They are
+        # merged conservatively inside _collapse_realization_regions().
+        bool(item.saturated),
+    )
+
+
+def _collapse_realization_regions(
+    candidates: Sequence[DeviceRealization],
+) -> list[DeviceRealization]:
+    """Collapse equivalent provider rows before matched-group products.
+
+    The returned realization uses conservative bounds: maximum VDSAT for
+    headroom, maximum minimum-VDS requirement, and minimum maximum-VDS limit.
+    """
+
+    grouped: dict[tuple[Any, ...], list[DeviceRealization]] = {}
+    for item in candidates:
+        grouped.setdefault(_realization_region_key(item), []).append(item)
+
+    collapsed: list[DeviceRealization] = []
+    for key, items in grouped.items():
+        if len(items) == 1:
+            collapsed.append(items[0])
+            continue
+
+        first = items[0]
+        provenances = [dict(item.provenance) for item in items]
+
+        min_vds_values = [
+            float(p.get("minimum_saturated_vds_v", item.vds_v))
+            for p, item in zip(provenances, items, strict=True)
+        ]
+        max_vds_values = [
+            float(p["maximum_characterized_vds_v"])
+            for p in provenances
+            if p.get("maximum_characterized_vds_v") not in (None, "")
+        ]
+        vdsat_values = [
+            float(value)
+            for p, item in zip(provenances, items, strict=True)
+            for value in (
+                p.get("minimum_vdsat_v"),
+                p.get("maximum_vdsat_v"),
+                item.vdsat_v,
+            )
+            if value not in (None, "")
+        ]
+
+        minimum_vds = max(min_vds_values)
+        maximum_vds = min(max_vds_values) if max_vds_values else None
+        minimum_vdsat = min(vdsat_values) if vdsat_values else None
+        maximum_vdsat = max(vdsat_values) if vdsat_values else None
+
+        row_indices = sorted({
+            int(index)
+            for p in provenances
+            for index in (
+                p.get("technology_row_index"),
+                *(p.get("supporting_row_indices") or []),
+            )
+            if index not in (None, "")
+        })
+
+        provenance = dict(first.provenance)
+        provenance.update({
+            "physical_region_aggregated": True,
+            "equivalent_realization_count": len(items),
+            "minimum_saturated_vds_v": minimum_vds,
+            "maximum_characterized_vds_v": maximum_vds,
+            "minimum_vdsat_v": minimum_vdsat,
+            "maximum_vdsat_v": maximum_vdsat,
+            "supporting_row_indices": row_indices,
+            "supporting_row_count": len(row_indices) or len(items),
+        })
+        provenance.pop("technology_row_index", None)
+
+        collapsed.append(DeviceRealization(
+            width_um=first.width_um,
+            nf=first.nf,
+            finger_width_um=first.finger_width_um,
+            predicted_current_a=min(
+                items,
+                key=lambda item: abs(item.predicted_current_a - first.predicted_current_a),
+            ).predicted_current_a,
+            vgs_v=first.vgs_v,
+            vds_v=minimum_vds,
+            vbs_v=first.vbs_v,
+            vdsat_v=maximum_vdsat,
+            saturated=all(item.saturated for item in items),
+            provenance=provenance,
+        ))
+
+    collapsed.sort(key=lambda item: (
+        item.width_um,
+        item.vgs_v,
+        item.vbs_v,
+        float(item.provenance.get("minimum_saturated_vds_v", item.vds_v)),
+        float(item.provenance.get("maximum_vdsat_v", item.vdsat_v or 0.0)),
+    ))
+    return collapsed
+
+
+def _group_choices(
+    model: Mapping[str, Any],
+    provider: DeviceProvider,
+    group: Sequence[str],
+    values: Mapping[str, float],
+    nodes: Mapping[str, float],
+    independent_ids: set[str],
+    *,
+    max_device_candidates: int,
+    max_group_choices: int,
+) -> tuple[list[tuple[dict[str, DeviceRealization], dict[str, float]]], str | None]:
+    devices = _device_map(model)
+    width_policy = _width_policy(model)
+    rules = model["project_inputs"]["design_rules"]
+    all_mos = rules["device_constraints"]["all_mos"]
+    intersection = rules.get("technology_intersection", {})
+    current_rel = float(intersection.get("current_relative_tolerance", 0.1))
+    current_abs = float(intersection.get("current_absolute_tolerance_a", 1e-6))
+    voltage_tol = float(intersection.get("node_voltage_tolerance_v", 0.025))
+
+    fixed_widths = {
+        float(values[f"w_{member.lower()}_um"])
+        for member in group
+        if f"w_{member.lower()}_um" in independent_ids and f"w_{member.lower()}_um" in values
+    }
+    if len(fixed_widths) > 1:
+        return [], f"MATCHED_WIDTH_CONFLICT:{list(group)}"
+    fixed_width = next(iter(fixed_widths)) if fixed_widths else None
+
+    candidate_lists: dict[str, Sequence[DeviceRealization]] = {}
+    for member in group:
+        device = devices[member]
+        polarity = _polarity(str(device["model"]))
+        known_vgs, known_vds, known_vbs = _known_device_voltages(device, polarity, nodes)
+        request = DeviceRequest(
+            device=member,
+            model=str(device["model"]),
+            polarity=polarity,
+            length_um=float(all_mos["length_um"]),
+            target_current_a=float(values[f"i_{member.lower()}_a"]),
+            fixed_width_um=fixed_width,
+            known_vgs_v=known_vgs,
+            known_vds_v=known_vds,
+            known_vbs_v=known_vbs,
+            require_saturation=True,
+        )
+        candidates = provider.candidates(
+            request,
+            current_relative_tolerance=current_rel,
+            current_absolute_tolerance_a=current_abs,
+            voltage_tolerance_v=voltage_tol,
+            width_policy=width_policy,
+            limit=max_device_candidates,
+        )
+        if not candidates:
+            return [], f"NO_DEVICE_REALIZATION:{member}"
+        collapsed_candidates = _collapse_realization_regions(candidates)
+        if not collapsed_candidates:
+            return [], f"NO_DEVICE_REALIZATION:{member}"
+        candidate_lists[member] = collapsed_candidates
+
+    width_sets = [
+        {round(item.width_um, 9) for item in candidate_lists[member]}
+        for member in group
+    ]
+    common_widths = set.intersection(*width_sets) if width_sets else set()
+    if fixed_width is not None:
+        common_widths = {round(fixed_width, 9)} & common_widths
+    if not common_widths:
+        return [], f"NO_MATCHED_GROUP_JOIN:{list(group)}"
+
+    choices: list[tuple[dict[str, DeviceRealization], dict[str, float]]] = []
+    for width_token in sorted(common_widths):
+        per_member = [
+            [item for item in candidate_lists[member] if round(item.width_um, 9) == width_token]
+            for member in group
+        ]
+        for combination in itertools.product(*per_member):
+            trial_nodes = dict(nodes)
+            selection: dict[str, DeviceRealization] = {}
+            valid = True
+            for member, realization in zip(group, combination, strict=True):
+                polarity = _polarity(str(devices[member]["model"]))
+                if not _apply_realization_to_nodes(
+                    devices[member], polarity, realization, trial_nodes, voltage_tol
+                ):
+                    valid = False
+                    break
+                selection[member] = realization
+            if valid:
+                choices.append((selection, trial_nodes))
+                if len(choices) >= max_group_choices:
+                    return choices, None
+    return choices, None if choices else f"NO_MATCHED_GROUP_JOIN:{list(group)}"
+
+def _declarative_headroom_valid(
+    model: Mapping[str, Any],
+    values: MutableMapping[str, float],
+    provenance: Mapping[str, Any],
+) -> bool:
+    """Validate or derive the legal output-voltage window.
+
+    A topology may declare ``vout_v`` as an independent variable, as the
+    two-stage op-amp does.  In that case the exact value is checked against
+    the derived headroom window.
+
+    Other topologies, such as the folded cascode, declare only lower and upper
+    headroom expressions.  In that case Step 5 must retain the feasible output
+    interval instead of inventing or requiring an exact output voltage.
+    """
+
+    specifications = model["project_inputs"]["specifications"]
+    dc_validity = specifications.get("dc_validity", {})
+    headroom = dc_validity.get("topology_headroom")
+    if not headroom:
+        return True
+
+    scope: dict[str, float] = dict(values)
+    operating = model["project_inputs"]["design_rules"].get(
+        "operating_conditions", {}
+    )
+    scope.update(
+        {
+            key: float(value)
+            for key, value in operating.items()
+            if isinstance(value, (int, float))
+        }
+    )
+    for device, item in provenance.items():
+        vdsat = item.get("vdsat_v")
+        if vdsat is not None:
+            scope[f"vdsat_{device.lower()}"] = float(vdsat)
+
+    def simple(expr: str) -> float:
+        tree = ast.parse(expr, mode="eval")
+
+        def visit(node: ast.AST) -> float:
+            if isinstance(node, ast.Expression):
+                return visit(node.body)
+            if isinstance(node, ast.Constant):
+                return float(node.value)
+            if isinstance(node, ast.Name):
+                aliases = {
+                    "vdd": "vdd_v",
+                    "vss": "vss_v",
+                    "vout": "vout_v",
+                }
+                key = aliases.get(node.id, node.id)
+                if key not in scope:
+                    raise KeyError(key)
+                return float(scope[key])
+            if isinstance(node, ast.BinOp):
+                left = visit(node.left)
+                right = visit(node.right)
+                if isinstance(node.op, ast.Add):
+                    return left + right
+                if isinstance(node.op, ast.Sub):
+                    return left - right
+            raise GenericStep5Error("unsupported headroom expression")
+
+        return visit(tree)
+
+    try:
+        lower = simple(str(headroom["lower_bound"]))
+        upper = simple(str(headroom["upper_bound"]))
+    except (KeyError, TypeError, ValueError):
+        return False
+
+    # Intersect topology headroom with any declared output specification.
+    output_spec = dc_validity.get("output_voltage", {})
+    spec_min = output_spec.get("min")
+    spec_max = output_spec.get("max")
+    if isinstance(spec_min, (int, float)):
+        lower = max(lower, float(spec_min))
+    if isinstance(spec_max, (int, float)):
+        upper = min(upper, float(spec_max))
+
+    if not math.isfinite(lower) or not math.isfinite(upper) or lower >= upper:
+        return False
+
+    values["vout_min_v"] = lower
+    values["vout_max_v"] = upper
+
+    # Only validate an exact Vout when the circuit actually supplied one.
+    if "vout_v" in values:
+        try:
+            vout = float(values["vout_v"])
+        except (TypeError, ValueError):
+            return False
+        return lower < vout < upper
+
+    return True
+
+
+def _solve_all_independent_point(
+    model: Mapping[str, Any],
+    provider: DeviceProvider,
+    independent_values: Mapping[str, float],
+    *,
+    max_device_candidates: int,
+    max_group_choices: int = 64,
+    max_solutions: int = 64,
+) -> tuple[list[dict[str, Any]], Counter[str]]:
+    values = {str(key): float(value) for key, value in independent_values.items()}
+    failures: Counter[str] = Counter()
+    try:
+        propagate_compiled_equations(model, values)
+    except GenericStep5Error as exc:
+        failures[f"EQUATION_PROPAGATION:{exc}"] += 1
+        return [], failures
+
+    devices = _device_map(model)
+    matched = _matched_width_groups(model)
+    group_for = {member: group for group in matched for member in group}
+    raw_groups: list[tuple[str, ...]] = []
+    for device in sorted(devices):
+        key = tuple(group_for.get(device, [device]))
+        if key not in raw_groups:
+            raw_groups.append(key)
+    independent_ids = {
+        str(item["id"])
+        for item in model.get("synthesis_interface", {}).get("independent_variables", [])
+    }
+    groups = _group_order(model, raw_groups, independent_ids)
+    starting_nodes = _operating_node_values(model, values)
+    solutions: list[dict[str, Any]] = []
+
+    def visit(
+        index: int,
+        current_values: dict[str, float],
+        current_nodes: dict[str, float],
+        provenance: dict[str, Any],
+    ) -> None:
+        if len(solutions) >= max_solutions:
+            return
+        if index >= len(groups):
+            final_values = dict(current_values)
+            for node, value in current_nodes.items():
+                final_values.setdefault(f"{node}_v", value)
+            if not _declarative_headroom_valid(model, final_values, provenance):
+                failures["HEADROOM_CONSTRAINT"] += 1
+                return
+            exact_vout = "vout_v" in final_values
+            solutions.append(
+                {
+                    **final_values,
+                    "device_technology_provenance": dict(provenance),
+                    "assignment_semantics": (
+                        "model_valid_dc_operating_point"
+                        if exact_vout
+                        else "model_valid_dc_operating_region"
+                    ),
+                    "physical_proof_level": (
+                        "inverse_feasible_dataset_and_compiled_constraint_valid"
+                    ),
+                    "route": (
+                        "ngspice_dc_confirmation"
+                        if exact_vout
+                        else "select_vout_within_feasible_window"
+                    ),
+                }
+            )
+            return
+
+        group = groups[index]
+        choices, failure = _group_choices(
+            model,
+            provider,
+            group,
+            current_values,
+            current_nodes,
+            independent_ids,
+            max_device_candidates=max_device_candidates,
+            max_group_choices=max_group_choices,
+        )
+        if not choices:
+            failures[str(failure)] += 1
+            return
+
+        for selection, trial_nodes in choices:
+            next_values = dict(current_values)
+            next_provenance = dict(provenance)
+            for member, realization in selection.items():
+                width_key = f"w_{member.lower()}_um"
+                if width_key in independent_ids and not math.isclose(
+                    next_values[width_key], realization.width_um, rel_tol=1e-6, abs_tol=1e-9
+                ):
+                    failures[f"INDEPENDENT_WIDTH_OVERWRITE:{member}"] += 1
+                    break
+                next_values[width_key] = realization.width_um
+                next_values[f"nf_{member.lower()}"] = float(realization.nf)
+                next_values[f"w_finger_{member.lower()}_um"] = realization.finger_width_um
+                next_provenance[member] = {
+                    **dict(realization.provenance),
+                    "provider": provider.name,
+                    "width_um": realization.width_um,
+                    "nf": realization.nf,
+                    "finger_width_um": realization.finger_width_um,
+                    "predicted_current_a": realization.predicted_current_a,
+                    "vgs_v": realization.vgs_v,
+                    "minimum_saturated_vds_v": realization.provenance.get(
+                        "minimum_saturated_vds_v", realization.vds_v
+                    ),
+                    "maximum_characterized_vds_v": realization.provenance.get(
+                        "maximum_characterized_vds_v"
+                    ),
+                    "vbs_v": realization.vbs_v,
+                    "vdsat_v": realization.vdsat_v,
+                    "saturated": realization.saturated,
+                }
+            else:
+                visit(index + 1, next_values, trial_nodes, next_provenance)
+
+    visit(0, values, starting_nodes, {})
+    return solutions, failures
+
+
+def _solve_one_independent_point(
+    model: Mapping[str, Any],
+    provider: DeviceProvider,
+    independent_values: Mapping[str, float],
+    *,
+    max_device_candidates: int,
+) -> tuple[dict[str, Any] | None, str | None]:
+    solutions, failures = _solve_all_independent_point(
+        model,
+        provider,
+        independent_values,
+        max_device_candidates=max_device_candidates,
+        max_solutions=1,
+    )
+    if solutions:
+        return solutions[0], None
+    return None, failures.most_common(1)[0][0] if failures else "EMPTY_INTERSECTION"
+
+def build_generic_complete_assignments(
+    compiled_model_path: Path,
+    independent_regions_path: Path,
+    dependent_regions_path: Path,
+    *,
+    continuous_samples: Mapping[str, int],
+    range_overrides: Mapping[str, tuple[float, float]],
+    provider_kind: str = "inverse",
+    provider_plugin: str | None = None,
+    technology_csv_path: Path | None = None,
+    enable_mlp_fallback: bool = False,
+    adaptive_cache_path: Path | None = None,
+    mlp_vgs_count: int = 8,
+    mlp_vds_count: int = 10,
+    max_device_candidates: int = 64,
+    max_group_choices: int = 64,
+    max_solutions_per_independent_point: int = 64,
+    max_assignments: int | None = None,
+) -> Mapping[str, Any]:
+    model = json.loads(compiled_model_path.read_text(encoding="utf-8"))
+    independent = json.loads(independent_regions_path.read_text(encoding="utf-8"))
+    _ = json.loads(dependent_regions_path.read_text(encoding="utf-8"))
+    technology_path = (
+        technology_csv_path.resolve()
+        if technology_csv_path is not None
+        else Path(model["technology"]["source_path"]).resolve()
+    )
+    if provider_kind == "inverse":
+        from openams.synthesis.inverse_feasible_provider import (
+            HybridInverseFeasibleProvider,
+            InverseFeasibleDatasetProvider,
+        )
+        margin = float(
+            model["project_inputs"]["design_rules"]
+            .get("technology_intersection", {})
+            .get("saturation_margin_v", 0.0)
+        )
+        if enable_mlp_fallback:
+            import os
+            from openams.synthesis.mlp_step5_provider import MlpDeviceProvider
+            try:
+                nmos_checkpoint = Path(os.environ["OPENAMS_MLP_NMOS"])
+                pmos_checkpoint = Path(os.environ["OPENAMS_MLP_PMOS"])
+            except KeyError as exc:
+                raise GenericStep5Error(
+                    "MLP fallback requires OPENAMS_MLP_NMOS and OPENAMS_MLP_PMOS"
+                ) from exc
+            cache_path = adaptive_cache_path or (
+                compiled_model_path.parent / "assignment_synthesis" / "adaptive_inverse_mlp_cache.csv"
+            )
+            fallback = MlpDeviceProvider(
+                nmos_checkpoint=nmos_checkpoint,
+                pmos_checkpoint=pmos_checkpoint,
+                adaptive_output=cache_path.with_name(cache_path.stem + "_oracle.csv"),
+                vgs_count=mlp_vgs_count,
+                vds_count=mlp_vds_count,
+            )
+            provider: DeviceProvider = HybridInverseFeasibleProvider(
+                technology_path, fallback_provider=fallback,
+                adaptive_cache_path=cache_path, saturation_margin_v=margin
+            )
+        else:
+            provider = InverseFeasibleDatasetProvider(
+                technology_path, saturation_margin_v=margin
+            )
+    elif provider_kind == "table":
+        provider = TableDeviceProvider(technology_path)
+    elif provider_kind == "plugin" and provider_plugin:
+        provider = PluginDeviceProvider(provider_plugin)
+    else:
+        raise GenericStep5Error(
+            "provider must be inverse, table, or plugin with --provider-plugin"
+        )
+    names, combinations, values_by_name = enumerate_independent_domains(
+        independent,
+        continuous_samples=continuous_samples,
+        range_overrides=range_overrides,
+    )
+    assignments: list[dict[str, Any]] = []
+    rejection_counts: Counter[str] = Counter()
+    for combination_index, combination in enumerate(combinations):
+        independent_values = dict(zip(names, combination, strict=True))
+        point_solutions, point_failures = _solve_all_independent_point(
+            model,
+            provider,
+            independent_values,
+            max_device_candidates=max_device_candidates,
+            max_group_choices=max_group_choices,
+            max_solutions=max_solutions_per_independent_point,
+        )
+        if not point_solutions:
+            rejection_counts.update(point_failures)
+            continue
+        for local_index, assignment in enumerate(point_solutions):
+            assignment["assignment_id"] = f"generic_assignment_{len(assignments):06d}"
+            assignment["independent_combination_index"] = combination_index
+            assignment["solution_index_within_independent_point"] = local_index
+            assignments.append(assignment)
+            if max_assignments is not None and len(assignments) >= max_assignments:
+                break
+        if max_assignments is not None and len(assignments) >= max_assignments:
+            break
+    flush_provider = getattr(provider, "flush", None)
+    if callable(flush_provider):
+        flush_provider()
+    return {
+        "artifact": "openams.complete_dc_assignments",
+        "schema_version": 4,
+        "status": "PASS" if assignments else "FAIL",
+        "circuit_name": model["circuit_name"],
+        "algorithm": "generic_independent_grid_device_provider_constraint_join",
+        "device_provider": provider.name,
+        "compiled_model": str(compiled_model_path.resolve()),
+        "independent_regions": str(independent_regions_path.resolve()),
+        "dependent_regions": str(dependent_regions_path.resolve()),
+        "technology_source": str(technology_path),
+        "independent_variable_names": names,
+        "independent_values": values_by_name,
+        "independent_combination_count": len(combinations),
+        "complete_assignment_count": len(assignments),
+        "rejected_combination_count": len(combinations) - len({
+            int(item["independent_combination_index"]) for item in assignments
+        }),
+        "technology_provider_query_count": int(getattr(provider, "query_count", 0)),
+        "technology_provider_primary_hit_count": int(getattr(provider, "primary_hit_count", 0)),
+        "technology_provider_cache_hit_count": int(getattr(provider, "cache_hit_count", 0)),
+        "technology_provider_fallback_request_count": int(getattr(provider, "fallback_request_count", 0)),
+        "technology_provider_fallback_query_count": int(getattr(provider, "fallback_query_count", 0)),
+        "technology_provider_fallback_result_count": int(getattr(provider, "fallback_result_count", 0)),
+        "adaptive_cache_path": (
+            str(getattr(provider, "adaptive_cache_path", ""))
+            if getattr(provider, "adaptive_cache_path", None) is not None
+            else None
+        ),
+        "fixed_assignment_count": sum(
+            item.get("assignment_semantics") == "model_valid_dc_operating_point"
+            for item in assignments
+        ),
+        "ranged_assignment_count": sum(
+            item.get("assignment_semantics") == "model_valid_dc_operating_region"
+            for item in assignments
+        ),
+        "recommended_route": (
+            "direct_simulation"
+            if assignments
+            and all(
+                item.get("assignment_semantics")
+                == "model_valid_dc_operating_point"
+                for item in assignments
+            )
+            else (
+                "select_vout_within_feasible_window"
+                if assignments
+                else "blocked"
+            )
+        ),
+        "rejection_counts": dict(sorted(rejection_counts.items())),
+        "assignments": assignments,
+        "next_stage": (
+            "ngspice_dc_confirmation"
+            if assignments
+            and all(
+                item.get("assignment_semantics")
+                == "model_valid_dc_operating_point"
+                for item in assignments
+            )
+            else (
+                "select_output_voltage_within_feasible_window"
+                if assignments
+                else "diagnose_empty_intersection"
+            )
+        ),
+    }
+
+
+def write_generic_complete_assignments(
+    compiled_model_path: Path,
+    independent_regions_path: Path,
+    dependent_regions_path: Path,
+    output_json: Path,
+    output_csv: Path,
+    **kwargs: Any,
+) -> Mapping[str, Any]:
+    artifact = build_generic_complete_assignments(
+        compiled_model_path,
+        independent_regions_path,
+        dependent_regions_path,
+        **kwargs,
+    )
+    output_json.parent.mkdir(parents=True, exist_ok=True)
+    output_json.write_text(json.dumps(artifact, indent=2, default=str) + "\n", encoding="utf-8")
+    assignments = artifact["assignments"]
+    if assignments:
+        scalar_rows = [
+            {key: value for key, value in row.items() if isinstance(value, (str, int, float, bool))}
+            for row in assignments
+        ]
+        fields = sorted({key for row in scalar_rows for key in row}, key=lambda key: (key != "assignment_id", key))
+        with output_csv.open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.DictWriter(stream, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(scalar_rows)
+    else:
+        output_csv.write_text("assignment_id\n", encoding="utf-8")
+    return artifact

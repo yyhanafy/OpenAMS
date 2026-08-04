@@ -1,0 +1,49 @@
+
+* Dependent and independent bias sources
+VNB1BIAS vnb1_node vss {vnb1}
+VPB1BIAS vpb1_node vss {vpb1}
+VPB2BIAS vpb2_node vss {vpb2}
+VNB2BIAS vnb2_node vss {vnb2}
+
+* M1-M2: NMOS differential input pair
+XM1 psrc_left vip tail vss sky130_fd_pr__nfet_01v8
++ w={w_m1} l={l_default} nf={nf_m1}
+
+XM2 psrc_right vin tail vss sky130_fd_pr__nfet_01v8
++ w={w_m2} l={l_default} nf={nf_m1}
+
+* M3: NMOS tail-current source
+XM3 tail vnb1_node vss vss sky130_fd_pr__nfet_01v8
++ w={w_m3} l={l_default} nf={nf_m3}
+
+* M4-M5: PMOS upper current-source pair
+XM4 psrc_left vpb1_node vdd vdd sky130_fd_pr__pfet_01v8
++ w={w_m4} l={l_default} nf={nf_m4}
+
+XM5 psrc_right vpb1_node vdd vdd sky130_fd_pr__pfet_01v8
++ w={w_m5} l={l_default} nf={nf_m4}
+
+* M6-M7: PMOS folded-cascode pair
+XM6 x vpb2_node psrc_left vdd sky130_fd_pr__pfet_01v8
++ w={w_m6} l={l_default} nf={nf_m6}
+
+XM7 vout vpb2_node psrc_right vdd sky130_fd_pr__pfet_01v8
++ w={w_m7} l={l_default} nf={nf_m6}
+
+* M8-M9: NMOS cascode pair
+XM8 x vnb2_node nsink_left vss sky130_fd_pr__nfet_01v8
++ w={w_m8} l={l_default} nf={nf_m8}
+
+XM9 vout vnb2_node nsink_right vss sky130_fd_pr__nfet_01v8
++ w={w_m9} l={l_default} nf={nf_m8}
+
+* M10-M11: NMOS lower current-sink pair
+* Their common gate is self-biased by node x.
+XM10 nsink_left x vss vss sky130_fd_pr__nfet_01v8
++ w={w_m10} l={l_default} nf={nf_m10}
+
+XM11 nsink_right x vss vss sky130_fd_pr__nfet_01v8
++ w={w_m11} l={l_default} nf={nf_m10}
+
+CLOAD vout vss {c_load}
+

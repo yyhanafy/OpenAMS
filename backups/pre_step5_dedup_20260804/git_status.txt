@@ -1,0 +1,100 @@
+ M examples/folded_cascode/inputs/folded_cascode.spice
+ M src/openams/synthesis/complete_assignments.py
+ M src/openams/synthesis/dependent_regions.py
+ M src/openams/synthesis/independent_domains.py
+ M tests/synthesis/test_complete_assignments.py
+ M tests/synthesis/test_dependent_regions.py
+ M tools/validation/run_coarse_independent_ac_scan.py
+ M tools/validation/validate_assignment_step_03_independent_domains.py
+ M tools/validation/validate_assignment_step_04_dependent_regions.py
+ M tools/validation/validate_assignment_step_05_complete_assignments.py
+ M tools/validation/validate_gate_02_topology.py
+ M tools/validation/validate_gate_04b_constraint_compiler.py
+?? GENERIC_STEP5_README.md
+?? INSTALL_DENSE_INVERSE_MLP_FALLBACK.md
+?? INSTALL_HEADROOM_INTERVAL_FIX.md
+?? INSTALL_INVERSE_FEASIBLE_STEP5.md
+?? INSTALL_UNIFIED_SCAN.md
+?? STEP4_GENERIC_REFACTOR_README.md
+?? STEP5_GENERIC_REFACTOR_INSTALL.md
+?? all_MVP_scripts.tgz
+?? backups/
+?? docs/reference/
+?? docs/validation/evidence/folded_cascode_gate_02_topology/
+?? docs/validation/evidence/folded_cascode_gate_03_metadata/
+?? docs/validation/evidence/folded_cascode_gate_04_constraints/
+?? docs/validation/evidence/folded_cascode_gate_04b_constraint_compiler/
+?? docs/validation/evidence/folded_cascode_gate_05_technology/
+?? docs/validation/evidence/two_stage_assignment_step_03_regression/
+?? docs/validation/evidence/two_stage_assignment_step_05_regression/
+?? docs/validation/evidence/two_stage_gate_04b_regression/
+?? examples/folded_cascode/inputs/deck_template.spice
+?? examples/folded_cascode/inputs/design_intent.yaml
+?? examples/folded_cascode/inputs/design_intent.yaml.before_linear_syntax_fix
+?? examples/folded_cascode/inputs/design_intent.yaml.before_vnb1_device_context
+?? examples/folded_cascode/inputs/design_rules.yaml
+?? examples/folded_cascode/inputs/folded_cascode.hierarchical.spice
+?? examples/folded_cascode/inputs/simulation.yaml
+?? examples/folded_cascode/inputs/specs.yaml
+?? openams_ac.dat
+?? scripts/audit_folded_assignment_equivalence.py
+?? scripts/benchmark_folded_cascode_branch_counts.py
+?? scripts/run_ngspice_validation_pipeline.sh
+?? src/openams/synthesis/complete_assignments.py.before_generic_step5
+?? src/openams/synthesis/dependent_regions.py.before_generic_step4
+?? src/openams/synthesis/generic_complete_assignments.py
+?? src/openams/synthesis/generic_complete_assignments.py.before_matched_independent_width_fix
+?? src/openams/synthesis/generic_complete_assignments.py.before_physical_consistency_fix
+?? src/openams/synthesis/generic_complete_assignments.py.before_shared_width_correlation
+?? src/openams/synthesis/generic_complete_step5.py
+?? src/openams/synthesis/generic_complete_step5.py.before_bulk_source_fix
+?? src/openams/synthesis/generic_complete_step5.py.before_dense_inverse_fallback
+?? src/openams/synthesis/generic_complete_step5.py.before_final_validation_fix
+?? src/openams/synthesis/generic_complete_step5.py.before_group_region_dedup
+?? src/openams/synthesis/generic_complete_step5.py.before_inverse_feasible
+?? src/openams/synthesis/generic_complete_step5.py.before_output_window_fix
+?? src/openams/synthesis/generic_complete_step5.py.before_vout_interval_fix
+?? src/openams/synthesis/generic_dependency.py
+?? src/openams/synthesis/independent_domains.py.before_bias_voltage_support
+?? src/openams/synthesis/independent_domains.py.before_explicit_device_context
+?? src/openams/synthesis/inverse_feasible_provider.py
+?? src/openams/synthesis/inverse_feasible_provider.py.before_dense_inverse_fallback
+?? src/openams/synthesis/inverse_feasible_provider.py.before_index_fix
+?? src/openams/synthesis/inverse_feasible_provider.py.before_region_aggregation
+?? src/openams/synthesis/mlp_step5_provider.py
+?? sys
+?? tests/synthesis/test_generic_complete_step5.py
+?? tests/synthesis/test_generic_step5_final_validation_fix.py
+?? tests/synthesis/test_generic_step5_output_window.py
+?? tests/synthesis/test_inverse_feasible_provider.py
+?? tests/validation/test_audit_generic_dc_ranged_vout.py
+?? tests/validation/test_unified_coarse_scan_dispatch.py
+?? tools/folded_w1_i3_scan/
+?? tools/migrate_step4_to_generic_dependency.py
+?? tools/technology/analyze_current_conditioned_w_vgs.py
+?? tools/validation/analyze_benchmark_extrema.py
+?? tools/validation/audit_generic_dc_assignments.py
+?? tools/validation/audit_generic_dc_assignments.py.before_ranged_vout_audit_fix
+?? tools/validation/explore_dense_inverse_feasible.py
+?? tools/validation/patch_audit_ranged_vout.py
+?? tools/validation/patch_generic_step5_final_validation.py
+?? tools/validation/patch_generic_step5_output_window.py
+?? tools/validation/run_coarse_independent_ac_scan.py.before_schema_api_fix
+?? tools/validation/run_coarse_independent_ac_scan_two_stage_legacy.py
+?? tools/validation/run_generic_compiled_scan.py
+?? tools/validation/validate_assignment_step_03_independent_domains.py.before_generic_refactor
+?? tools/validation/validate_assignment_step_04_dependent_regions.py.before_generic_step4
+?? tools/validation/validate_assignment_step_05_complete_assignments.py.before_dense_inverse_fallback
+?? tools/validation/validate_assignment_step_05_complete_assignments.py.before_generic_complete_v1
+?? tools/validation/validate_assignment_step_05_complete_assignments.py.before_generic_step5
+?? tools/validation/validate_assignment_step_05_complete_assignments.py.before_inverse_feasible
+?? tools/validation/validate_assignment_step_05_complete_assignments.py.before_vout_interval_fix
+?? tools/validation/validate_gate_02_topology.py.before_generic_refactor
+?? tools/validation/validate_gate_02_topology.py.before_generic_topology
+?? tools/validation/validate_gate_04b_constraint_compiler.py.before_compact_bindings
+?? tools/validation/validate_gate_04b_constraint_compiler.py.before_division_fix
+?? tools/validation/validate_gate_04b_constraint_compiler.py.before_division_normalization
+?? tools/validation/validate_gate_04b_constraint_compiler.py.before_equality_fix
+?? tools/validation/validate_gate_04b_constraint_compiler.py.before_generic_refactor
+?? tools/validation/validate_topology_generic.py
+?? validation/

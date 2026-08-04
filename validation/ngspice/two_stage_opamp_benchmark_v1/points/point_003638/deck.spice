@@ -1,0 +1,67 @@
+* Auto-rendered SKY130 candidate deck
+.lib "/home/yhanafy/pdks/open_pdks/sky130/sky130A/libs.tech/ngspice/sky130.lib.spice" tt
+
+.temp 27.0
+.option savecurrents
+.param VDD=1.8
+.param VSS=0.0
+.param VCM=0.9
+.param VBIAS=0.6
+.param W_INPUT=27.541666666666664
+.param W_LOAD=3.207411598814454
+.param W_TAIL=55.54149072718451
+.param W_STAGE2=1.4773886930996656
+.param W_SINK=12.791675081325327
+.param C_MILLER=3e-12
+.param L_DEFAULT=5e-07
+.param W_M1=27.541666666666664
+.param W_M2=27.541666666666664
+.param W_M3=3.207411598814454
+.param W_M4=3.207411598814454
+.param W_M5=55.54149072718451
+.param W_M6=1.4773886930996656
+.param W_M7=12.791675081325327
+.param L_DEFAULT_UM=0.5
+.param W_M1_UM=27.541666666666664
+.param W_M2_UM=27.541666666666664
+.param W_M3_UM=3.207411598814454
+.param W_M4_UM=3.207411598814454
+.param W_M5_UM=55.54149072718451
+.param W_M6_UM=1.4773886930996656
+.param W_M7_UM=12.791675081325327
+
+.include "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/netlist.spice"
+
+VDD_SRC vdd 0 1.8
+VSS_SRC vss 0 0.0
+VBIAS_SRC vbias 0 0.6
+VINP inp 0 dc 0.9 ac 0.5
+VINN inn 0 dc 0.9 ac -0.5
+XU1 inp inn out vdd vss vbias two_stage_opamp
+CL out 0 1e-11
+
+
+
+* OPENAMS_GENERIC_VALIDATION_CONTROL
+.control
+set noaskquit
+set filetype=ascii
+op
+echo OPENAMS_OP_BEGIN
+print v(xu1.ntail) v(xu1.n1) v(xu1.n2) v(vbias) v(out)
+print vdd_src#branch vss_src#branch vbias_src#branch
+echo OPENAMS_OP_END
+echo OPENAMS_DEVICE_BEGIN
+print @m.xu1.xm1.msky130_fd_pr__nfet_01v8[id] @m.xu1.xm1.msky130_fd_pr__nfet_01v8[gm] @m.xu1.xm1.msky130_fd_pr__nfet_01v8[gds] @m.xu1.xm1.msky130_fd_pr__nfet_01v8[vds] @m.xu1.xm1.msky130_fd_pr__nfet_01v8[vdsat]
+print @m.xu1.xm2.msky130_fd_pr__nfet_01v8[id] @m.xu1.xm2.msky130_fd_pr__nfet_01v8[gm] @m.xu1.xm2.msky130_fd_pr__nfet_01v8[gds] @m.xu1.xm2.msky130_fd_pr__nfet_01v8[vds] @m.xu1.xm2.msky130_fd_pr__nfet_01v8[vdsat]
+print @m.xu1.xm3.msky130_fd_pr__pfet_01v8[id] @m.xu1.xm3.msky130_fd_pr__pfet_01v8[gm] @m.xu1.xm3.msky130_fd_pr__pfet_01v8[gds] @m.xu1.xm3.msky130_fd_pr__pfet_01v8[vds] @m.xu1.xm3.msky130_fd_pr__pfet_01v8[vdsat]
+print @m.xu1.xm4.msky130_fd_pr__pfet_01v8[id] @m.xu1.xm4.msky130_fd_pr__pfet_01v8[gm] @m.xu1.xm4.msky130_fd_pr__pfet_01v8[gds] @m.xu1.xm4.msky130_fd_pr__pfet_01v8[vds] @m.xu1.xm4.msky130_fd_pr__pfet_01v8[vdsat]
+print @m.xu1.xm5.msky130_fd_pr__nfet_01v8[id] @m.xu1.xm5.msky130_fd_pr__nfet_01v8[gm] @m.xu1.xm5.msky130_fd_pr__nfet_01v8[gds] @m.xu1.xm5.msky130_fd_pr__nfet_01v8[vds] @m.xu1.xm5.msky130_fd_pr__nfet_01v8[vdsat]
+print @m.xu1.xm6.msky130_fd_pr__pfet_01v8[id] @m.xu1.xm6.msky130_fd_pr__pfet_01v8[gm] @m.xu1.xm6.msky130_fd_pr__pfet_01v8[gds] @m.xu1.xm6.msky130_fd_pr__pfet_01v8[vds] @m.xu1.xm6.msky130_fd_pr__pfet_01v8[vdsat]
+print @m.xu1.xm7.msky130_fd_pr__nfet_01v8[id] @m.xu1.xm7.msky130_fd_pr__nfet_01v8[gm] @m.xu1.xm7.msky130_fd_pr__nfet_01v8[gds] @m.xu1.xm7.msky130_fd_pr__nfet_01v8[vds] @m.xu1.xm7.msky130_fd_pr__nfet_01v8[vdsat]
+echo OPENAMS_DEVICE_END
+ac dec 100 1 10000000000
+wrdata openams_ac.dat frequency vdb(out) vp(out)
+quit
+.endc
+.end

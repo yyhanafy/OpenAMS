@@ -1,0 +1,138 @@
+[
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M1.id_a",
+      "right": "M3.id_a",
+      "scale": 0.5,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "balanced_input_left"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M2.id_a",
+      "right": "M3.id_a",
+      "scale": 0.5,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "balanced_input_right"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M4.id_a",
+      "right": "M3.id_a",
+      "scale": 1.5,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "upper_source_left"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M5.id_a",
+      "right": "M3.id_a",
+      "scale": 1.5,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "upper_source_right"
+    }
+  },
+  {
+    "class": "SumConstraint",
+    "value": {
+      "target": "M6.id_a",
+      "terms": [
+        [
+          -1.0,
+          "M1.id_a"
+        ],
+        [
+          1.0,
+          "M4.id_a"
+        ]
+      ],
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "folded_branch_left"
+    }
+  },
+  {
+    "class": "SumConstraint",
+    "value": {
+      "target": "M7.id_a",
+      "terms": [
+        [
+          -1.0,
+          "M2.id_a"
+        ],
+        [
+          1.0,
+          "M5.id_a"
+        ]
+      ],
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "folded_branch_right"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M8.id_a",
+      "right": "M6.id_a",
+      "scale": 1.0,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "lower_cascode_left"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M9.id_a",
+      "right": "M7.id_a",
+      "scale": 1.0,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "lower_cascode_right"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M10.id_a",
+      "right": "M8.id_a",
+      "scale": 1.0,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "lower_sink_left"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M11.id_a",
+      "right": "M9.id_a",
+      "scale": 1.0,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "lower_sink_right"
+    }
+  }
+]

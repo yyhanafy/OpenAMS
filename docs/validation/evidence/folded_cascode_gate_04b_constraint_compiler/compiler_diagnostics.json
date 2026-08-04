@@ -1,0 +1,62 @@
+[
+  {
+    "constraint_name": "balanced_input_left",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "balanced_input_right",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "upper_source_left",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "upper_source_right",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "folded_branch_left",
+    "status": "compiled",
+    "message": "SumConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "folded_branch_right",
+    "status": "compiled",
+    "message": "SumConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "lower_cascode_left",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "lower_cascode_right",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "lower_sink_left",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "lower_sink_right",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  }
+]

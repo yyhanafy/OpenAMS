@@ -1,0 +1,170 @@
+deck_template: deck_template.spice
+
+pdk:
+  name: sky130A
+  library_file: AUTO
+  corner: tt
+
+backends:
+  mock:
+    description: deterministic synthetic backend for pipeline tests
+
+  ngspice:
+    dc:
+      command: [ngspice, -b, -o, "{log}", "{deck}"]
+      log_file: dc.log
+
+    ac:
+      command: [ngspice, -b, -o, "{log}", "{deck}"]
+      log_file: ac.log
+
+analyses:
+  dc:
+    type: dc_op
+    enabled: true
+
+  ac:
+    type: ac
+    enabled: true
+
+    sweep:
+      variation: dec
+      points: 40
+      start_hz: 1.0
+      stop_hz: 1.0e10
+
+    stimulus:
+      sources:
+        - name: VIP_SOURCE
+          positive_node: vip
+          negative_node: 0
+          magnitude: 0.5
+          phase_deg: 0.0
+
+        - name: VIN_SOURCE
+          positive_node: vin
+          negative_node: 0
+          magnitude: 0.5
+          phase_deg: 180.0
+
+    response:
+      output: vout
+      differential_input:
+        positive: vip
+        negative: vin
+
+ngspice:
+  output_node: vout
+  supply_source: VDD_SUPPLY
+  saturation_margin_v: 0.0
+
+  devices:
+    M1:
+      polarity: nmos
+      terminals:
+        drain: xota.psrc_left
+        gate: vip
+        source: xota.tail
+      operating_point:
+        vth: '@m.xota.xinput.xm1.msky130_fd_pr__nfet_01v8[vth]'
+        vdsat: '@m.xota.xinput.xm1.msky130_fd_pr__nfet_01v8[vdsat]'
+
+    M2:
+      polarity: nmos
+      terminals:
+        drain: xota.psrc_right
+        gate: vin
+        source: xota.tail
+      operating_point:
+        vth: '@m.xota.xinput.xm2.msky130_fd_pr__nfet_01v8[vth]'
+        vdsat: '@m.xota.xinput.xm2.msky130_fd_pr__nfet_01v8[vdsat]'
+
+    M3:
+      polarity: nmos
+      terminals:
+        drain: xota.tail
+        gate: xota.vnb1_node
+        source: vss
+      operating_point:
+        vth: '@m.xota.xtail.xm3.msky130_fd_pr__nfet_01v8[vth]'
+        vdsat: '@m.xota.xtail.xm3.msky130_fd_pr__nfet_01v8[vdsat]'
+
+    M4:
+      polarity: pmos
+      terminals:
+        drain: xota.psrc_left
+        gate: xota.vpb1_node
+        source: vdd
+      operating_point:
+        vth: '@m.xota.xpcs.xm4.msky130_fd_pr__pfet_01v8[vth]'
+        vdsat: '@m.xota.xpcs.xm4.msky130_fd_pr__pfet_01v8[vdsat]'
+
+    M5:
+      polarity: pmos
+      terminals:
+        drain: xota.psrc_right
+        gate: xota.vpb1_node
+        source: vdd
+      operating_point:
+        vth: '@m.xota.xpcs.xm5.msky130_fd_pr__pfet_01v8[vth]'
+        vdsat: '@m.xota.xpcs.xm5.msky130_fd_pr__pfet_01v8[vdsat]'
+
+    M6:
+      polarity: pmos
+      terminals:
+        drain: xota.x
+        gate: xota.vpb2_node
+        source: xota.psrc_left
+      operating_point:
+        vth: '@m.xota.xpfold.xm6.msky130_fd_pr__pfet_01v8[vth]'
+        vdsat: '@m.xota.xpfold.xm6.msky130_fd_pr__pfet_01v8[vdsat]'
+
+    M7:
+      polarity: pmos
+      terminals:
+        drain: vout
+        gate: xota.vpb2_node
+        source: xota.psrc_right
+      operating_point:
+        vth: '@m.xota.xpfold.xm7.msky130_fd_pr__pfet_01v8[vth]'
+        vdsat: '@m.xota.xpfold.xm7.msky130_fd_pr__pfet_01v8[vdsat]'
+
+    M8:
+      polarity: nmos
+      terminals:
+        drain: xota.x
+        gate: xota.vnb2_node
+        source: xota.nsink_left
+      operating_point:
+        vth: '@m.xota.xncas.xm8.msky130_fd_pr__nfet_01v8[vth]'
+        vdsat: '@m.xota.xncas.xm8.msky130_fd_pr__nfet_01v8[vdsat]'
+
+    M9:
+      polarity: nmos
+      terminals:
+        drain: vout
+        gate: xota.vnb2_node
+        source: xota.nsink_right
+      operating_point:
+        vth: '@m.xota.xncas.xm9.msky130_fd_pr__nfet_01v8[vth]'
+        vdsat: '@m.xota.xncas.xm9.msky130_fd_pr__nfet_01v8[vdsat]'
+
+    M10:
+      polarity: nmos
+      terminals:
+        drain: xota.nsink_left
+        gate: xota.x
+        source: vss
+      operating_point:
+        vth: '@m.xota.xnsink.xm10.msky130_fd_pr__nfet_01v8[vth]'
+        vdsat: '@m.xota.xnsink.xm10.msky130_fd_pr__nfet_01v8[vdsat]'
+
+    M11:
+      polarity: nmos
+      terminals:
+        drain: xota.nsink_right
+        gate: xota.x
+        source: vss
+      operating_point:
+        vth: '@m.xota.xnsink.xm11.msky130_fd_pr__nfet_01v8[vth]'
+        vdsat: '@m.xota.xnsink.xm11.msky130_fd_pr__nfet_01v8[vdsat]'

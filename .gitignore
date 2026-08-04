@@ -45,3 +45,7 @@ technology/sky130_tt_27c_mlp_dense.csv.before_cleanup
 
 # Generated experiment outputs
 examples/*/generated/
+
+# Large generated evidence — retained locally, not stored in Git
+/sys
+/docs/validation/evidence/two_stage_assignment_step_05_regression/complete_assignments.json

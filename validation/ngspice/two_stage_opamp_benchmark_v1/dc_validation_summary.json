@@ -1,0 +1,26 @@
+{
+  "aggregate_csv": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_opamp_benchmark_v1/aggregate_dc_comparison.csv",
+  "classifications": {
+    "PASS_PHYSICAL_AND_MODEL_MATCH": 8,
+    "PASS_PHYSICAL_WITH_MODEL_WARNINGS": 81,
+    "PHYSICALLY_INVALID_DEVICE_REGION": 2,
+    "PHYSICALLY_INVALID_VOUT_WINDOW": 9
+  },
+  "current_model_warnings": 0,
+  "dc_exact_realization_pass": 8,
+  "dc_physical_invalid": 11,
+  "dc_physical_valid": 89,
+  "internal_node_model_warnings": 60,
+  "points_processed": 100,
+  "proceed_to_ac": 89,
+  "status": "PASS",
+  "tolerances": {
+    "current_absolute_tolerance_a": 1e-06,
+    "current_relative_tolerance": 0.1,
+    "internal_node_tolerance_v": 0.025,
+    "vout_allowed_max_v": 2.0,
+    "vout_allowed_min_v": 0.5,
+    "vout_target_tolerance_v": 0.025
+  },
+  "vout_target_warnings": 75
+}

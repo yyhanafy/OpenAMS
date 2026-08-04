@@ -610,3 +610,47 @@ def write_complete_assignments(
     else:
         output_csv.write_text("", encoding="utf-8")
     return artifact
+
+
+def build_complete_assignments_generic(
+    compiled_model_path: Path,
+    independent_regions_path: Path,
+    dependent_regions_path: Path,
+) -> Mapping[str, Any]:
+    """Build topology-generic, technology-backed candidates for DC confirmation."""
+    from .generic_complete_assignments import build_generic_complete_assignments
+
+    return build_generic_complete_assignments(
+        compiled_model_path,
+        independent_regions_path,
+        dependent_regions_path,
+    )
+
+
+def write_complete_assignments_generic(
+    compiled_model_path: Path,
+    independent_regions_path: Path,
+    dependent_regions_path: Path,
+    output_json: Path,
+    output_csv: Path,
+) -> Mapping[str, Any]:
+    artifact = build_complete_assignments_generic(
+        compiled_model_path,
+        independent_regions_path,
+        dependent_regions_path,
+    )
+    output_json.parent.mkdir(parents=True, exist_ok=True)
+    output_json.write_text(json.dumps(artifact, indent=2, default=str) + "\n", encoding="utf-8")
+    assignments = artifact["assignments"]
+    if assignments:
+        flat_rows = []
+        for row in assignments:
+            flat_rows.append({key: value for key, value in row.items() if not isinstance(value, (dict, list))})
+        fields = sorted({key for row in flat_rows for key in row}, key=lambda name: (name != "assignment_id", name))
+        with output_csv.open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.DictWriter(stream, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(flat_rows)
+    else:
+        output_csv.write_text("", encoding="utf-8")
+    return artifact

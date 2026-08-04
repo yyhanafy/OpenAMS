@@ -1,0 +1,274 @@
+schema_version: 3
+
+circuit_intent:
+  topology: folded_cascode_cmos_operational_transconductance_amplifier
+
+  device_roles:
+    M1: differential_input_left
+    M2: differential_input_right
+    M3: differential_pair_tail_current_source
+    M4: upper_pmos_current_source_left
+    M5: upper_pmos_current_source_right
+    M6: folded_pmos_cascode_left
+    M7: folded_pmos_cascode_right
+    M8: lower_nmos_cascode_left
+    M9: lower_nmos_cascode_right
+    M10: lower_nmos_current_sink_left
+    M11: lower_nmos_current_sink_right
+
+  confirmed_patterns:
+    differential_pairs:
+      - [M1, M2]
+
+    matched_width_groups:
+      - [M1, M2]
+      - [M4, M5]
+      - [M6, M7]
+      - [M8, M9, M10, M11]
+
+    balanced_branches:
+      left:
+        devices: [M1, M4, M6, M8, M10]
+      right:
+        devices: [M2, M5, M7, M9, M11]
+
+  current_relations:
+    - id: balanced_input_left
+      equation: i_m1 = 0.5 * i_m3
+
+    - id: balanced_input_right
+      equation: i_m2 = 0.5 * i_m3
+
+    - id: upper_source_left
+      equation: i_m4 = 1.5 * i_m3
+
+    - id: upper_source_right
+      equation: i_m5 = 1.5 * i_m3
+
+    - id: folded_branch_left
+      equation: i_m6 = i_m4 - i_m1
+
+    - id: folded_branch_right
+      equation: i_m7 = i_m5 - i_m2
+
+    - id: lower_cascode_left
+      equation: i_m8 = i_m6
+
+    - id: lower_cascode_right
+      equation: i_m9 = i_m7
+
+    - id: lower_sink_left
+      equation: i_m10 = i_m8
+
+    - id: lower_sink_right
+      equation: i_m11 = i_m9
+
+  size_relations:
+    - id: input_pair_width_match
+      equation: w_m2 = w_m1
+
+    - id: upper_current_source_width_match
+      equation: w_m5 = w_m4
+
+    - id: folded_pmos_width_match
+      equation: w_m7 = w_m6
+
+    - id: lower_nmos_width_match
+      equation: w_m9 = w_m8 and w_m10 = w_m8 and w_m11 = w_m8
+
+  voltage_relations:
+    - id: output_headroom_lower
+      equation: vout > vss + vdsat_m9 + vdsat_m11
+
+    - id: output_headroom_upper
+      equation: vout < vdd - vdsat_m5 - vdsat_m7
+
+  bias_semantics:
+    vnb1_v:
+      role: independent_tail_bias
+      drives: [M3]
+
+    vpb1_v:
+      role: dependent_upper_pmos_bias
+      drives: [M4, M5]
+      selection_policy: maximize_minimum_saturation_margin
+
+    vpb2_v:
+      role: dependent_folded_pmos_bias
+      drives: [M6, M7]
+      selection_policy: maximize_minimum_saturation_margin
+
+    vnb2_v:
+      role: dependent_lower_nmos_cascode_bias
+      drives: [M8, M9]
+      selection_policy: maximize_minimum_saturation_margin
+
+    x_v:
+      role: self_biased_lower_sink_gate_voltage
+      drives: [M10, M11]
+
+synthesis_parameterization:
+  independent_variables:
+    w_m1_um:
+      kind: total_width
+      minimum: 1.0
+      maximum: 100.0
+      sampling: continuous_total_width_with_integer_nf
+      role: m1_operating_point_width
+      finger_realization:
+        enabled: true
+        finger_width_min_um: 0.42
+        finger_width_max_um: 100.0
+        nf_min: 1
+        nf_max: 1
+        scaling_model: linear_current_scaling
+
+    vnb1_v:
+      kind: bias_voltage
+      minimum: 0.5
+      maximum: 1.2
+      sampling: characterized_voltage_grid
+      role: tail_current_source_gate_bias
+
+    i_m3_a:
+      kind: current
+      minimum: 1.0e-05
+      maximum: 1.0e-04
+      sampling: characterized_current_grid
+      role: tail_current
+
+  dependent_quantities:
+    - i_m1_a
+    - i_m2_a
+    - i_m4_a
+    - i_m5_a
+    - i_m6_a
+    - i_m7_a
+    - i_m8_a
+    - i_m9_a
+    - i_m10_a
+    - i_m11_a
+    - w_m2_um
+    - w_m3_um
+    - w_m4_um
+    - w_m5_um
+    - w_m6_um
+    - w_m7_um
+    - w_m8_um
+    - w_m9_um
+    - w_m10_um
+    - w_m11_um
+    - vtail_v
+    - psrc_left_v
+    - psrc_right_v
+    - x_v
+    - nsink_left_v
+    - nsink_right_v
+    - vout_v
+    - vpb1_v
+    - vpb2_v
+    - vnb2_v
+
+  dependent_width_realization:
+    total_width_min_um: 0.42
+    total_width_max_um: 100.0
+    finger_width_min_um: 0.42
+    finger_width_max_um: 100.0
+    nf_min: 1
+    nf_max: 1
+    scaling_model: linear_current_scaling
+
+assignment_synthesis:
+  strategy: intent_declared_dependency_groups
+
+  groups:
+    - id: input_tail_network
+      devices: [M1, M2, M3]
+      solver: folded_cascode_input_tail_adapter
+      synthesis_variables: [w_m1_um, vnb1_v, i_m3_a]
+      constraints:
+        - balanced_input_left
+        - balanced_input_right
+        - input_pair_width_match
+
+    - id: upper_folded_network
+      devices: [M4, M5, M6, M7]
+      depends_on: [input_tail_network]
+      solver: folded_cascode_upper_network_adapter
+      constraints:
+        - upper_source_left
+        - upper_source_right
+        - folded_branch_left
+        - folded_branch_right
+        - upper_current_source_width_match
+        - folded_pmos_width_match
+
+    - id: lower_output_network
+      devices: [M8, M9, M10, M11]
+      depends_on: [upper_folded_network]
+      solver: folded_cascode_lower_output_adapter
+      constraints:
+        - lower_cascode_left
+        - lower_cascode_right
+        - lower_sink_left
+        - lower_sink_right
+        - lower_nmos_width_match
+        - output_headroom_lower
+        - output_headroom_upper
+
+  classification:
+    fixed_assignments: direct_simulation
+    ranged_assignments: extract_optimization_variables_and_build_contract
+
+dependent_derivation_contract:
+  semantics: group_ordered_technology_backed_regions
+  technology_interpolation: linear_total_width_scaling
+
+  groups:
+    input_tail_network:
+      solver: folded_cascode_input_tail_adapter
+      derives:
+        - i_m1_a
+        - i_m2_a
+        - w_m2_um
+        - w_m3_um
+        - vtail_v
+
+    upper_folded_network:
+      solver: folded_cascode_upper_network_adapter
+      depends_on: [input_tail_network]
+      derives:
+        - i_m4_a
+        - i_m5_a
+        - i_m6_a
+        - i_m7_a
+        - w_m4_um
+        - w_m5_um
+        - w_m6_um
+        - w_m7_um
+        - psrc_left_v
+        - psrc_right_v
+        - vpb1_v
+        - vpb2_v
+
+    lower_output_network:
+      solver: folded_cascode_lower_output_adapter
+      depends_on: [upper_folded_network]
+      derives:
+        - i_m8_a
+        - i_m9_a
+        - i_m10_a
+        - i_m11_a
+        - w_m8_um
+        - w_m9_um
+        - w_m10_um
+        - w_m11_um
+        - x_v
+        - nsink_left_v
+        - nsink_right_v
+        - vout_v
+        - vnb2_v
+      deferred_constraints:
+        - output_headroom_lower
+        - output_headroom_upper
+        - complete_assignment_intersection

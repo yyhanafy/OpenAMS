@@ -1,0 +1,70 @@
+{
+  "gate": 3,
+  "proof": "Metadata serialized and normalized into ProjectInputs",
+  "status": "PASS",
+  "input_dir": "examples/folded_cascode/inputs",
+  "pyyaml_version": "6.0.3",
+  "migration": {
+    "performed": false,
+    "reason": "not_requested",
+    "backup": null
+  },
+  "serialization_checks": {
+    "specifications_loaded": true,
+    "specifications_root_is_mapping": true,
+    "design_intent_loaded": true,
+    "design_intent_root_is_mapping": true,
+    "design_rules_loaded": true,
+    "design_rules_root_is_mapping": true,
+    "simulation_loaded": true,
+    "simulation_root_is_mapping": true
+  },
+  "document_keys": {
+    "specifications": [
+      "circuit",
+      "conditions",
+      "dc_validity",
+      "metrics",
+      "reporting_targets"
+    ],
+    "design_intent": [
+      "schema_version",
+      "circuit_intent",
+      "synthesis_parameterization",
+      "assignment_synthesis",
+      "dependent_derivation_contract"
+    ],
+    "design_rules": [
+      "schema_version",
+      "operating_conditions",
+      "device_constraints",
+      "circuit_constraints",
+      "technology_intersection",
+      "assignment_rules",
+      "simulation_constraints",
+      "active_technology_source",
+      "technology_sources"
+    ],
+    "simulation": [
+      "deck_template",
+      "pdk",
+      "backends",
+      "analyses",
+      "ngspice"
+    ]
+  },
+  "normalization_error": null,
+  "technology": {
+    "active_source": "sky130_tt_27c",
+    "provider": "mos_inverse_table",
+    "source": "../../../technology/sky130_tt_27c_inverse_smoke.csv",
+    "options": {
+      "corner": "tt",
+      "temperature_c": 27.0,
+      "models": {
+        "nmos": "sky130_fd_pr__nfet_01v8",
+        "pmos": "sky130_fd_pr__pfet_01v8"
+      }
+    }
+  }
+}

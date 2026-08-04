@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+"""Unified OpenAMS coarse independent scan entry point.
+
+Compatibility contract:
+- Without ``--compiled-model``, run the frozen two-stage implementation exactly.
+- With ``--compiled-model``, run the topology-generic compiled-model MLP backend.
+
+The installer preserves the existing script as
+``run_coarse_independent_ac_scan_two_stage_legacy.py``.
+"""
+from __future__ import annotations
+
+import sys
+
+
+def main() -> int:
+    if "--compiled-model" in sys.argv[1:]:
+        from run_generic_compiled_scan import main as generic_main
+        return generic_main(sys.argv[1:])
+    from run_coarse_independent_ac_scan_two_stage_legacy import main as legacy_main
+    return legacy_main()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

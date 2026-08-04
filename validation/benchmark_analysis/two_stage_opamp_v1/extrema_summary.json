@@ -1,0 +1,293 @@
+{
+  "accepted_rows": 6555,
+  "extrema": {
+    "gain_db": {
+      "highest_grid_indices": [
+        "262",
+        "263",
+        "513",
+        "512",
+        "763",
+        "762",
+        "261",
+        "523",
+        "272",
+        "12"
+      ],
+      "lowest_grid_indices": [
+        "2759",
+        "2509",
+        "2259",
+        "259",
+        "2009",
+        "509",
+        "1759",
+        "1509",
+        "759",
+        "1259"
+      ],
+      "maximum": 64.47790124256373,
+      "minimum": 49.43831280679934,
+      "source_column": "gain_est_db"
+    },
+    "i_m5_a": {
+      "highest_grid_indices": [
+        "6749",
+        "6748",
+        "6747",
+        "6746",
+        "6745",
+        "6744",
+        "6743",
+        "6742",
+        "6741",
+        "6740"
+      ],
+      "lowest_grid_indices": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "10"
+      ],
+      "maximum": 4.84558e-05,
+      "minimum": 1.00164e-05,
+      "source_column": "i_m5_a"
+    },
+    "phase_margin_deg": {
+      "highest_grid_indices": [
+        "6749",
+        "6739",
+        "6729",
+        "6719",
+        "6709",
+        "6699",
+        "6689",
+        "6679",
+        "6669",
+        "6659"
+      ],
+      "lowest_grid_indices": [
+        "750",
+        "1000",
+        "1250",
+        "500",
+        "1500",
+        "1750",
+        "2000",
+        "250",
+        "2250",
+        "751"
+      ],
+      "maximum": 73.58612352719541,
+      "minimum": 24.244128451863162,
+      "source_column": "phase_margin_est_deg"
+    },
+    "power_w": {
+      "highest_grid_indices": [
+        "6740",
+        "6730",
+        "6720",
+        "6710",
+        "6700",
+        "6690",
+        "6680",
+        "6670",
+        "6660",
+        "6650"
+      ],
+      "lowest_grid_indices": [
+        "59",
+        "69",
+        "79",
+        "89",
+        "99",
+        "109",
+        "119",
+        "129",
+        "139",
+        "149"
+      ],
+      "maximum": 0.00011986600552193391,
+      "minimum": 2.4285199251861465e-05,
+      "source_column": "power_est_w"
+    },
+    "ugb_hz": {
+      "highest_grid_indices": [
+        "6740",
+        "6730",
+        "6720",
+        "6710",
+        "6700",
+        "6690",
+        "6680",
+        "6670",
+        "6741",
+        "6660"
+      ],
+      "lowest_grid_indices": [
+        "8",
+        "7",
+        "6",
+        "5",
+        "4",
+        "3",
+        "2",
+        "1",
+        "259",
+        "0"
+      ],
+      "maximum": 10454128.186384182,
+      "minimum": 1250763.8702367484,
+      "source_column": "ugb_est_hz"
+    },
+    "vout_v": {
+      "highest_grid_indices": [
+        "6749",
+        "6739",
+        "6729",
+        "6719",
+        "6709",
+        "6699",
+        "6689",
+        "6679",
+        "6669",
+        "6659"
+      ],
+      "lowest_grid_indices": [
+        "0",
+        "10",
+        "20",
+        "30",
+        "40",
+        "50",
+        "60",
+        "70",
+        "80",
+        "90"
+      ],
+      "maximum": 1.5,
+      "minimum": 0.6,
+      "source_column": "vout_v"
+    },
+    "w_m1_um": {
+      "highest_grid_indices": [
+        "6749",
+        "6748",
+        "6747",
+        "6746",
+        "6745",
+        "6744",
+        "6743",
+        "6742",
+        "6741",
+        "6740"
+      ],
+      "lowest_grid_indices": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "250"
+      ],
+      "maximum": 50.0,
+      "minimum": 1.0,
+      "source_column": "w_m1_um"
+    },
+    "w_m3_um": {
+      "highest_grid_indices": [
+        "6749",
+        "6748",
+        "6747",
+        "6746",
+        "6745",
+        "6744",
+        "6743",
+        "6742",
+        "6741",
+        "6740"
+      ],
+      "lowest_grid_indices": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "10"
+      ],
+      "maximum": 6.06122732142104,
+      "minimum": 0.8139640804083402,
+      "source_column": "w_m3_um"
+    },
+    "w_m6_um": {
+      "highest_grid_indices": [
+        "6740",
+        "6730",
+        "6720",
+        "6710",
+        "6700",
+        "6690",
+        "6680",
+        "6670",
+        "6660",
+        "6650"
+      ],
+      "lowest_grid_indices": [
+        "8",
+        "7",
+        "59",
+        "69",
+        "79",
+        "89",
+        "99",
+        "109",
+        "119",
+        "129"
+      ],
+      "maximum": 4.365005411262269,
+      "minimum": 0.5310650996868183,
+      "source_column": "w_m6_um"
+    }
+  },
+  "input_csv": "/home/yhanafy/AMS-Tutorial/openams/benchmarks/two_stage_opamp_deterministic_constructor_v1/coarse_scan_results.csv",
+  "missing_metrics": [],
+  "notes": {
+    "phase_margin": "These are OpenAMS-estimated phase margins. Current ngspice validation has shown a systematic phase-model disagreement.",
+    "w_m3": "W3 is relevant to active-load and input common-mode behavior; CMRR also depends on tail-source output resistance, symmetry, and mismatch."
+  },
+  "outputs": {
+    "correlation": "/home/yhanafy/AMS-Tutorial/openams/validation/benchmark_analysis/two_stage_opamp_v1/correlation_matrix.csv",
+    "distribution": "/home/yhanafy/AMS-Tutorial/openams/validation/benchmark_analysis/two_stage_opamp_v1/distribution_summary.csv",
+    "extrema": "/home/yhanafy/AMS-Tutorial/openams/validation/benchmark_analysis/two_stage_opamp_v1/extrema_full_rows.csv",
+    "report": "/home/yhanafy/AMS-Tutorial/openams/validation/benchmark_analysis/two_stage_opamp_v1/BENCHMARK_EXTREMA_REPORT.md",
+    "summary": "/home/yhanafy/AMS-Tutorial/openams/validation/benchmark_analysis/two_stage_opamp_v1/extrema_summary.json"
+  },
+  "resolved_columns": {
+    "gain_db": "gain_est_db",
+    "i_m5_a": "i_m5_a",
+    "phase_margin_deg": "phase_margin_est_deg",
+    "power_w": "power_est_w",
+    "ugb_hz": "ugb_est_hz",
+    "vout_v": "vout_v",
+    "w_m1_um": "w_m1_um",
+    "w_m3_um": "w_m3_um",
+    "w_m6_um": "w_m6_um"
+  },
+  "status": "PASS",
+  "top_count": 10,
+  "total_rows": 10000
+}

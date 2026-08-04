@@ -1,0 +1,32 @@
+[
+  {
+    "constraint_name": "balanced_input_left",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "balanced_input_right",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "active_load_left",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "active_load_right",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  },
+  {
+    "constraint_name": "output_node_kcl",
+    "status": "compiled",
+    "message": "FieldRelationConstraint",
+    "source": "design_intent"
+  }
+]

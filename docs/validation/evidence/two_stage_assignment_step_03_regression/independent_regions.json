@@ -1,0 +1,3761 @@
+{
+  "artifact": "openams.independent_variable_regions",
+  "schema_version": 2,
+  "status": "PASS",
+  "circuit_name": "two_stage_opamp",
+  "compiled_model": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/generated/compiled_circuit_model.json",
+  "technology_source": "/home/yhanafy/AMS-Tutorial/openams/technology/sky130_tt_27c_inverse_smoke.csv",
+  "technology_row_count": 3024,
+  "general_rule": "independent domain = design-intent request intersected with applicable rules, specifications, supplies, and technology support",
+  "width_rule": "total electrical width is design-intent controlled and may exceed one-finger width when an integer NF yields a legal finger width",
+  "independent_variable_count": 3,
+  "domains": {
+    "i_m5_a": {
+      "id": "i_m5_a",
+      "kind": "current",
+      "sampling_rule": "characterized_current_grid",
+      "role": "tail_branch_current",
+      "declared_definition": {
+        "kind": "current",
+        "minimum": 1e-05,
+        "maximum": 0.0001,
+        "sampling": "characterized_current_grid",
+        "role": "tail_branch_current"
+      },
+      "bound_sources": {
+        "design_intent": {
+          "minimum": 1e-05,
+          "maximum": 0.0001
+        },
+        "effective_before_technology": {
+          "minimum": 1e-05,
+          "maximum": 0.0001
+        }
+      },
+      "declared_effective_minimum": 1e-05,
+      "declared_effective_maximum": 0.0001,
+      "domain_type": "technology_supported_point_set",
+      "candidate_values": [
+        1.00164e-05,
+        1.0316e-05,
+        1.24957e-05,
+        1.31169e-05,
+        1.36231e-05,
+        1.39191e-05,
+        1.43168e-05,
+        1.47683e-05,
+        1.5237e-05,
+        1.53067e-05,
+        1.5357e-05,
+        1.58824e-05,
+        1.61297e-05,
+        1.61598e-05,
+        1.64098e-05,
+        1.67543e-05,
+        1.67922e-05,
+        1.72086e-05,
+        1.74013e-05,
+        1.77821e-05,
+        1.8468e-05,
+        1.89414e-05,
+        1.93721e-05,
+        2.03997e-05,
+        2.13405e-05,
+        2.23566e-05,
+        2.34791e-05,
+        2.42481e-05,
+        2.57377e-05,
+        2.74812e-05,
+        2.85799e-05,
+        2.88682e-05,
+        2.90617e-05,
+        2.91592e-05,
+        3.01268e-05,
+        3.10283e-05,
+        3.11467e-05,
+        3.17473e-05,
+        3.18959e-05,
+        3.26772e-05,
+        3.32256e-05,
+        3.36183e-05,
+        3.44082e-05,
+        3.46638e-05,
+        3.53801e-05,
+        3.55939e-05,
+        3.63684e-05,
+        3.65753e-05,
+        3.70075e-05,
+        3.76277e-05,
+        3.82713e-05,
+        3.86682e-05,
+        4.66382e-05,
+        4.84558e-05,
+        4.97485e-05,
+        5.08389e-05,
+        5.23162e-05,
+        5.34023e-05,
+        5.53724e-05,
+        5.6244e-05,
+        5.81993e-05,
+        5.89396e-05,
+        6.14473e-05,
+        6.17531e-05,
+        6.2507e-05,
+        6.48065e-05,
+        6.53568e-05,
+        6.65774e-05,
+        6.75895e-05,
+        6.75955e-05,
+        6.87682e-05,
+        7.13247e-05,
+        7.16631e-05,
+        7.52111e-05,
+        7.52313e-05,
+        7.78759e-05,
+        7.83193e-05,
+        8.02048e-05,
+        8.1363e-05,
+        8.16303e-05,
+        8.33163e-05
+      ],
+      "candidate_count": 81,
+      "supporting_row_count": 81,
+      "technology_records": [
+        {
+          "value": 1.24957e-05,
+          "technology_row_index": 128,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 0.42,
+          "vgs_v": 1.0,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.24957e-05
+        },
+        {
+          "value": 1.31169e-05,
+          "technology_row_index": 132,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 0.42,
+          "vgs_v": 1.0,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.31169e-05
+        },
+        {
+          "value": 1.36231e-05,
+          "technology_row_index": 136,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 0.42,
+          "vgs_v": 1.0,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.36231e-05
+        },
+        {
+          "value": 1.39191e-05,
+          "technology_row_index": 140,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 0.42,
+          "vgs_v": 1.0,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.39191e-05
+        },
+        {
+          "value": 2.57377e-05,
+          "technology_row_index": 152,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 0.42,
+          "vgs_v": 1.2,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.57377e-05
+        },
+        {
+          "value": 2.74812e-05,
+          "technology_row_index": 156,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 0.42,
+          "vgs_v": 1.2,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.74812e-05
+        },
+        {
+          "value": 2.85799e-05,
+          "technology_row_index": 160,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 0.42,
+          "vgs_v": 1.2,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.85799e-05
+        },
+        {
+          "value": 2.91592e-05,
+          "technology_row_index": 164,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 0.42,
+          "vgs_v": 1.2,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.91592e-05
+        },
+        {
+          "value": 1.5237e-05,
+          "technology_row_index": 268,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 0.9,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.5237e-05
+        },
+        {
+          "value": 1.61297e-05,
+          "technology_row_index": 272,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 0.9,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.61297e-05
+        },
+        {
+          "value": 1.67922e-05,
+          "technology_row_index": 276,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 0.9,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.67922e-05
+        },
+        {
+          "value": 1.74013e-05,
+          "technology_row_index": 280,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 0.9,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.74013e-05
+        },
+        {
+          "value": 1.77821e-05,
+          "technology_row_index": 284,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 0.9,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.77821e-05
+        },
+        {
+          "value": 2.88682e-05,
+          "technology_row_index": 296,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 1.0,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.88682e-05
+        },
+        {
+          "value": 3.01268e-05,
+          "technology_row_index": 300,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 1.0,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.01268e-05
+        },
+        {
+          "value": 3.11467e-05,
+          "technology_row_index": 304,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 1.0,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.11467e-05
+        },
+        {
+          "value": 3.17473e-05,
+          "technology_row_index": 308,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 1.0,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.17473e-05
+        },
+        {
+          "value": 6.17531e-05,
+          "technology_row_index": 320,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 1.2,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 6.17531e-05
+        },
+        {
+          "value": 6.53568e-05,
+          "technology_row_index": 324,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 1.2,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 6.53568e-05
+        },
+        {
+          "value": 6.75895e-05,
+          "technology_row_index": 328,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 1.2,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 6.75895e-05
+        },
+        {
+          "value": 6.87682e-05,
+          "technology_row_index": 332,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 1.0,
+          "vgs_v": 1.2,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 6.87682e-05
+        },
+        {
+          "value": 1.47683e-05,
+          "technology_row_index": 412,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 0.8,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.47683e-05
+        },
+        {
+          "value": 1.5357e-05,
+          "technology_row_index": 416,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 0.8,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.5357e-05
+        },
+        {
+          "value": 1.58824e-05,
+          "technology_row_index": 420,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 0.8,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.58824e-05
+        },
+        {
+          "value": 1.64098e-05,
+          "technology_row_index": 424,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 0.8,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.64098e-05
+        },
+        {
+          "value": 1.67543e-05,
+          "technology_row_index": 428,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 0.8,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.67543e-05
+        },
+        {
+          "value": 3.36183e-05,
+          "technology_row_index": 436,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 0.9,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.36183e-05
+        },
+        {
+          "value": 3.53801e-05,
+          "technology_row_index": 440,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 0.9,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.53801e-05
+        },
+        {
+          "value": 3.65753e-05,
+          "technology_row_index": 444,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 0.9,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.65753e-05
+        },
+        {
+          "value": 3.76277e-05,
+          "technology_row_index": 448,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 0.9,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.76277e-05
+        },
+        {
+          "value": 3.82713e-05,
+          "technology_row_index": 452,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 0.9,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.82713e-05
+        },
+        {
+          "value": 6.2507e-05,
+          "technology_row_index": 464,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 1.0,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 6.2507e-05
+        },
+        {
+          "value": 6.48065e-05,
+          "technology_row_index": 468,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 1.0,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 6.48065e-05
+        },
+        {
+          "value": 6.65774e-05,
+          "technology_row_index": 472,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 1.0,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 6.65774e-05
+        },
+        {
+          "value": 6.75955e-05,
+          "technology_row_index": 476,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 2.0,
+          "vgs_v": 1.0,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 6.75955e-05
+        },
+        {
+          "value": 1.00164e-05,
+          "technology_row_index": 568,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.7,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.00164e-05
+        },
+        {
+          "value": 1.0316e-05,
+          "technology_row_index": 572,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.7,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.0316e-05
+        },
+        {
+          "value": 3.18959e-05,
+          "technology_row_index": 580,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.8,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.18959e-05
+        },
+        {
+          "value": 3.32256e-05,
+          "technology_row_index": 584,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.8,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.32256e-05
+        },
+        {
+          "value": 3.44082e-05,
+          "technology_row_index": 588,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.8,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.44082e-05
+        },
+        {
+          "value": 3.55939e-05,
+          "technology_row_index": 592,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.8,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.55939e-05
+        },
+        {
+          "value": 3.63684e-05,
+          "technology_row_index": 596,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.8,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.63684e-05
+        },
+        {
+          "value": 7.13247e-05,
+          "technology_row_index": 604,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.9,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 7.13247e-05
+        },
+        {
+          "value": 7.52313e-05,
+          "technology_row_index": 608,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.9,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 7.52313e-05
+        },
+        {
+          "value": 7.78759e-05,
+          "technology_row_index": 612,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.9,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 7.78759e-05
+        },
+        {
+          "value": 8.02048e-05,
+          "technology_row_index": 616,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.9,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 8.02048e-05
+        },
+        {
+          "value": 8.16303e-05,
+          "technology_row_index": 620,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 4.0,
+          "vgs_v": 0.9,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 8.16303e-05
+        },
+        {
+          "value": 1.89414e-05,
+          "technology_row_index": 720,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.7,
+          "vds_v": 0.15,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.89414e-05
+        },
+        {
+          "value": 2.03997e-05,
+          "technology_row_index": 724,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.7,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.03997e-05
+        },
+        {
+          "value": 2.13405e-05,
+          "technology_row_index": 728,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.7,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.13405e-05
+        },
+        {
+          "value": 2.23566e-05,
+          "technology_row_index": 732,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.7,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.23566e-05
+        },
+        {
+          "value": 2.34791e-05,
+          "technology_row_index": 736,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.7,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.34791e-05
+        },
+        {
+          "value": 2.42481e-05,
+          "technology_row_index": 740,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.7,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.42481e-05
+        },
+        {
+          "value": 7.16631e-05,
+          "technology_row_index": 748,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.8,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 7.16631e-05
+        },
+        {
+          "value": 7.52111e-05,
+          "technology_row_index": 752,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.8,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 7.52111e-05
+        },
+        {
+          "value": 7.83193e-05,
+          "technology_row_index": 756,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.8,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 7.83193e-05
+        },
+        {
+          "value": 8.1363e-05,
+          "technology_row_index": 760,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.8,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 8.1363e-05
+        },
+        {
+          "value": 8.33163e-05,
+          "technology_row_index": 764,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 8.0,
+          "vgs_v": 0.8,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 8.33163e-05
+        },
+        {
+          "value": 4.84558e-05,
+          "technology_row_index": 892,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 16.0,
+          "vgs_v": 0.7,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 4.84558e-05
+        },
+        {
+          "value": 5.08389e-05,
+          "technology_row_index": 896,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 16.0,
+          "vgs_v": 0.7,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 5.08389e-05
+        },
+        {
+          "value": 5.34023e-05,
+          "technology_row_index": 900,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 16.0,
+          "vgs_v": 0.7,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 5.34023e-05
+        },
+        {
+          "value": 5.6244e-05,
+          "technology_row_index": 904,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 16.0,
+          "vgs_v": 0.7,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 5.6244e-05
+        },
+        {
+          "value": 5.81993e-05,
+          "technology_row_index": 908,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 16.0,
+          "vgs_v": 0.7,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 5.81993e-05
+        },
+        {
+          "value": 1.43168e-05,
+          "technology_row_index": 1032,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 32.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.15,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.43168e-05
+        },
+        {
+          "value": 1.53067e-05,
+          "technology_row_index": 1036,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 32.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.53067e-05
+        },
+        {
+          "value": 1.61598e-05,
+          "technology_row_index": 1040,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 32.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.61598e-05
+        },
+        {
+          "value": 1.72086e-05,
+          "technology_row_index": 1044,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 32.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.72086e-05
+        },
+        {
+          "value": 1.8468e-05,
+          "technology_row_index": 1048,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 32.0,
+          "vgs_v": 0.6,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.8468e-05
+        },
+        {
+          "value": 1.93721e-05,
+          "technology_row_index": 1052,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 32.0,
+          "vgs_v": 0.6,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 1.93721e-05
+        },
+        {
+          "value": 2.90617e-05,
+          "technology_row_index": 1200,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 63.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.15,
+          "vbs_v": 0.0,
+          "id_abs_a": 2.90617e-05
+        },
+        {
+          "value": 3.10283e-05,
+          "technology_row_index": 1204,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 63.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.10283e-05
+        },
+        {
+          "value": 3.26772e-05,
+          "technology_row_index": 1208,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 63.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.26772e-05
+        },
+        {
+          "value": 3.46638e-05,
+          "technology_row_index": 1212,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 63.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.46638e-05
+        },
+        {
+          "value": 3.70075e-05,
+          "technology_row_index": 1216,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 63.0,
+          "vgs_v": 0.6,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.70075e-05
+        },
+        {
+          "value": 3.86682e-05,
+          "technology_row_index": 1220,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 63.0,
+          "vgs_v": 0.6,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 3.86682e-05
+        },
+        {
+          "value": 4.66382e-05,
+          "technology_row_index": 1368,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 100.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.15,
+          "vbs_v": 0.0,
+          "id_abs_a": 4.66382e-05
+        },
+        {
+          "value": 4.97485e-05,
+          "technology_row_index": 1372,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 100.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.3,
+          "vbs_v": 0.0,
+          "id_abs_a": 4.97485e-05
+        },
+        {
+          "value": 5.23162e-05,
+          "technology_row_index": 1376,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 100.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 5.23162e-05
+        },
+        {
+          "value": 5.53724e-05,
+          "technology_row_index": 1380,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 100.0,
+          "vgs_v": 0.6,
+          "vds_v": 0.8,
+          "vbs_v": 0.0,
+          "id_abs_a": 5.53724e-05
+        },
+        {
+          "value": 5.89396e-05,
+          "technology_row_index": 1384,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 100.0,
+          "vgs_v": 0.6,
+          "vds_v": 1.2,
+          "vbs_v": 0.0,
+          "id_abs_a": 5.89396e-05
+        },
+        {
+          "value": 6.14473e-05,
+          "technology_row_index": 1388,
+          "model": "sky130_fd_pr__nfet_01v8",
+          "polarity": "nmos",
+          "length_um": 0.5,
+          "width_um": 100.0,
+          "vgs_v": 0.6,
+          "vds_v": 1.5,
+          "vbs_v": 0.0,
+          "id_abs_a": 6.14473e-05
+        }
+      ],
+      "technology_quantity_fields": [
+        "id_abs_a",
+        "id_a",
+        "id"
+      ],
+      "technology_minimum": 1.00164e-05,
+      "technology_maximum": 8.33163e-05,
+      "device": "M5",
+      "filters": {
+        "required_region": "saturation",
+        "length_um": 0.5,
+        "body_voltage_abs_max_v": 1e-09,
+        "device_model": "sky130_fd_pr__nfet_01v8",
+        "polarity": "nmos"
+      }
+    },
+    "w_m1_um": {
+      "id": "w_m1_um",
+      "kind": "total_width",
+      "sampling_rule": "continuous_total_width_with_integer_nf",
+      "role": "input_pair_width",
+      "declared_definition": {
+        "kind": "total_width",
+        "minimum": 1.0,
+        "maximum": 100.0,
+        "sampling": "continuous_total_width_with_integer_nf",
+        "role": "input_pair_width",
+        "finger_realization": {
+          "enabled": true,
+          "finger_width_min_um": 0.42,
+          "finger_width_max_um": 100.0,
+          "nf_min": 1,
+          "scaling_model": "linear_current_scaling",
+          "nf_max": 1
+        }
+      },
+      "bound_sources": {
+        "design_intent": {
+          "minimum": 1.0,
+          "maximum": 100.0
+        },
+        "effective_before_technology": {
+          "minimum": 1.0,
+          "maximum": 100.0
+        }
+      },
+      "declared_effective_minimum": 1.0,
+      "declared_effective_maximum": 100.0,
+      "domain_type": "technology_realizable_continuous_total_width",
+      "candidate_values": [],
+      "candidate_count": 0,
+      "technology_minimum": 1.0,
+      "technology_maximum": 100.0,
+      "finger_width_min_um": 0.42,
+      "finger_width_max_um": 100.0,
+      "nf_min": 1,
+      "nf_max": 1,
+      "realizable_nf_intervals": [
+        {
+          "nf": 1,
+          "total_width_min_um": 1.0,
+          "total_width_max_um": 100.0,
+          "finger_width_min_um": 1.0,
+          "finger_width_max_um": 100.0
+        }
+      ],
+      "width_semantics": "total_effective_width",
+      "scaling_model": "linear_current_scaling",
+      "sampling": "deferred_to_assignment_synthesis",
+      "device": "M1",
+      "filters": {
+        "required_region": "saturation",
+        "length_um": 0.5,
+        "body_voltage_abs_max_v": 1e-09,
+        "device_model": "sky130_fd_pr__nfet_01v8",
+        "polarity": "nmos"
+      }
+    },
+    "vout_v": {
+      "id": "vout_v",
+      "kind": "node_voltage",
+      "sampling_rule": "characterized_voltage_grid",
+      "role": "output_dc_voltage",
+      "declared_definition": {
+        "kind": "node_voltage",
+        "minimum": 0.5,
+        "maximum": 1.8,
+        "sampling": "characterized_voltage_grid",
+        "role": "output_dc_voltage"
+      },
+      "bound_sources": {
+        "design_intent": {
+          "minimum": 0.5,
+          "maximum": 1.8
+        },
+        "specifications": {
+          "minimum": 0.2,
+          "maximum": 1.6
+        },
+        "supply": {
+          "minimum": 0.0,
+          "maximum": 1.8
+        },
+        "effective_before_technology": {
+          "minimum": 0.5,
+          "maximum": 1.6
+        }
+      },
+      "declared_effective_minimum": 0.5,
+      "declared_effective_maximum": 1.6,
+      "domain_type": "technology_supported_continuous_interval",
+      "candidate_values": [],
+      "candidate_count": 0,
+      "technology_minimum": 0.6,
+      "technology_maximum": 1.5,
+      "minimum": 0.6,
+      "maximum": 1.5,
+      "node": "out",
+      "device_domains": [
+        {
+          "device": "M6",
+          "polarity": "pmos",
+          "minimum": 0.6,
+          "maximum": 1.5,
+          "sample_values": [
+            0.6,
+            1.0,
+            1.3,
+            1.5
+          ],
+          "supporting_row_count": 250,
+          "records": [
+            {
+              "technology_row_index": 1516,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1520,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1524,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1528,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1540,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1544,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1548,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1552,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1564,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1568,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1572,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1576,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1588,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1592,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1596,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1600,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1612,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1616,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1620,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1624,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1636,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1640,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1644,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1648,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1664,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1668,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1672,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1684,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1688,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1692,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1696,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1708,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1712,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1716,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1720,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1732,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1736,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1740,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1744,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1756,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1760,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1764,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1768,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1780,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1784,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1788,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1792,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1804,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1808,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1812,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1816,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1832,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1836,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1840,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1852,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1856,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1860,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1864,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1876,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1880,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1884,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1888,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1900,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1904,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1908,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1912,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1924,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1928,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1932,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1936,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1948,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1952,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1956,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1960,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1972,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 1976,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1980,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1984,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1996,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2000,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2004,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2008,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2020,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2024,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2028,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2032,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2044,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2048,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2052,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2056,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2068,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2072,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2076,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2080,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2092,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2096,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2100,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2104,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2116,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2120,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2124,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2128,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2140,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2144,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2148,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2152,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2164,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2168,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2172,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2176,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2188,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2192,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2196,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2200,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2212,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2216,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2220,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2224,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2236,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2240,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2244,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2248,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2260,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2264,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2268,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2272,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2284,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2288,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2292,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2296,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2308,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2312,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2316,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2320,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2332,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2336,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2340,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2344,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2356,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2360,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2364,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2368,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2380,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2384,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2388,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2392,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2404,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2408,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2412,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2416,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2428,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2432,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2436,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2440,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2452,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2456,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2460,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2464,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2476,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2480,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2484,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2488,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2500,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2504,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2508,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2512,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2524,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2528,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2532,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2536,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2548,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2552,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2556,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2560,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2572,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2576,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2580,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2584,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2596,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2600,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2604,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2608,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2620,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2624,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2628,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2632,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2644,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2648,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2652,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2656,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2668,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2672,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2676,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2680,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2692,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2696,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2700,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2704,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2716,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2720,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2724,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2728,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2740,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2744,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2748,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2752,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2764,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2768,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2772,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2776,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2788,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2792,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2796,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2800,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2812,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2816,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2820,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2824,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2836,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2840,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2844,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2848,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2860,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2864,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2868,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2872,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2884,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2888,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2892,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2896,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2908,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2912,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2916,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2920,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2932,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2936,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2940,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2944,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2956,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2960,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2964,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2968,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 2980,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 2984,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 2988,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 2992,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 3004,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 0.3
+            },
+            {
+              "technology_row_index": 3008,
+              "node_voltage_v": 1.3,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 3012,
+              "node_voltage_v": 1.0,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 3016,
+              "node_voltage_v": 0.6000000000000001,
+              "vds_abs_v": 1.2
+            }
+          ]
+        },
+        {
+          "device": "M7",
+          "polarity": "nmos",
+          "minimum": 0.5,
+          "maximum": 1.5,
+          "sample_values": [
+            0.5,
+            0.8,
+            1.2,
+            1.5
+          ],
+          "supporting_row_count": 252,
+          "records": [
+            {
+              "technology_row_index": 8,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 12,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 16,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 20,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 32,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 36,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 40,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 44,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 56,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 60,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 64,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 68,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 80,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 84,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 88,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 92,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 104,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 108,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 112,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 116,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 128,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 132,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 136,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 140,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 152,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 156,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 160,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 164,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 176,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 180,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 184,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 188,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 200,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 204,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 208,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 212,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 224,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 228,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 232,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 236,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 248,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 252,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 256,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 260,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 272,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 276,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 280,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 284,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 296,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 300,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 304,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 308,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 320,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 324,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 328,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 332,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 344,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 348,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 352,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 356,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 368,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 372,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 376,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 380,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 392,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 396,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 400,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 404,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 416,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 420,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 424,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 428,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 440,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 444,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 448,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 452,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 464,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 468,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 472,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 476,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 488,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 492,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 496,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 500,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 512,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 516,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 520,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 524,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 536,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 540,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 544,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 548,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 560,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 564,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 568,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 572,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 584,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 588,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 592,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 596,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 608,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 612,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 616,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 620,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 632,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 636,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 640,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 644,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 656,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 660,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 664,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 668,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 680,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 684,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 688,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 692,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 704,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 708,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 712,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 716,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 728,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 732,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 736,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 740,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 752,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 756,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 760,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 764,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 776,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 780,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 784,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 788,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 800,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 804,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 808,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 812,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 824,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 828,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 832,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 836,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 848,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 852,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 856,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 860,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 872,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 876,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 880,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 884,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 896,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 900,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 904,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 908,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 920,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 924,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 928,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 932,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 944,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 948,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 952,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 956,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 968,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 972,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 976,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 980,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 992,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 996,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1000,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1004,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1016,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1020,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1024,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1028,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1040,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1044,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1048,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1052,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1064,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1068,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1072,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1076,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1088,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1092,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1096,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1100,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1112,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1116,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1120,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1124,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1136,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1140,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1144,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1148,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1160,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1164,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1168,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1172,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1184,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1188,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1192,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1196,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1208,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1212,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1216,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1220,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1232,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1236,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1240,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1244,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1256,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1260,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1264,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1268,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1280,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1284,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1288,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1292,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1304,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1308,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1312,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1316,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1328,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1332,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1336,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1340,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1352,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1356,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1360,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1364,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1376,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1380,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1384,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1388,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1400,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1404,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1408,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1412,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1424,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1428,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1432,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1436,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1448,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1452,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1456,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1460,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1472,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1476,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1480,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1484,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            },
+            {
+              "technology_row_index": 1496,
+              "node_voltage_v": 0.5,
+              "vds_abs_v": 0.5
+            },
+            {
+              "technology_row_index": 1500,
+              "node_voltage_v": 0.8,
+              "vds_abs_v": 0.8
+            },
+            {
+              "technology_row_index": 1504,
+              "node_voltage_v": 1.2,
+              "vds_abs_v": 1.2
+            },
+            {
+              "technology_row_index": 1508,
+              "node_voltage_v": 1.5,
+              "vds_abs_v": 1.5
+            }
+          ]
+        }
+      ],
+      "sampling": "deferred_to_assignment_synthesis"
+    }
+  },
+  "next_stage": "derive_dependent_regions"
+}

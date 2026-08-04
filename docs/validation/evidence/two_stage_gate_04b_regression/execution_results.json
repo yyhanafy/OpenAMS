@@ -1,0 +1,100 @@
+{
+  "gate": "4B",
+  "validator": "generic_constraint_compiler",
+  "mode": "two_stage_regression",
+  "proof": "Design-intent constraints compile and execute",
+  "status": "PASS",
+  "constraint_artifact": "examples/two_stage_opamp/generated/compiler_constraints.json",
+  "constraint_count": 5,
+  "compiled_constraint_count": 5,
+  "diagnostic_count": 5,
+  "discovered_devices": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "M7"
+  ],
+  "retained_count": 2,
+  "checks": {
+    "constraints_loaded": true,
+    "all_constraints_compiled": true,
+    "diagnostic_count_matches": true,
+    "all_diagnostics_compiled": true,
+    "all_canonical_devices_bound": true,
+    "execution_completed": true,
+    "at_least_one_row_retained": true,
+    "two_expected_rows_retained": true,
+    "retained_rows_match_expected": true,
+    "invalid_rows_rejected": true
+  },
+  "retained_rows": [
+    {
+      "M1": 2e-05,
+      "M2": 2e-05,
+      "M3": 2e-05,
+      "M4": 2e-05,
+      "M5": 4e-05,
+      "M6": 1e-05,
+      "M7": 1e-05
+    },
+    {
+      "M1": 3e-05,
+      "M2": 3e-05,
+      "M3": 3e-05,
+      "M4": 3e-05,
+      "M5": 6e-05,
+      "M6": 1e-05,
+      "M7": 1e-05
+    }
+  ],
+  "expected_rows": [
+    {
+      "M1": 2e-05,
+      "M2": 2e-05,
+      "M3": 2e-05,
+      "M4": 2e-05,
+      "M5": 4e-05,
+      "M6": 1e-05,
+      "M7": 1e-05
+    },
+    {
+      "M1": 3e-05,
+      "M2": 3e-05,
+      "M3": 3e-05,
+      "M4": 3e-05,
+      "M5": 6e-05,
+      "M6": 1e-05,
+      "M7": 1e-05
+    }
+  ],
+  "intersection_metadata": {
+    "candidate_combination_count": 972,
+    "retained_combination_count": 2,
+    "rejected_combination_count": 970,
+    "retained_rejection_record_count": 970,
+    "constraint_failure_counts": {
+      "balanced_input_left": 648,
+      "balanced_input_right": 756,
+      "active_load_left": 756,
+      "active_load_right": 756,
+      "output_node_kcl": 729
+    },
+    "source_correlations_preserved": true,
+    "intersection_method": "explicit_cartesian_filter",
+    "interpolation_used": false,
+    "planned_intersection": true,
+    "plan_fallback_reason": "not all input regions are connected by exact equality constraints",
+    "planned_input_order": [
+      "M6",
+      "M7",
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5"
+    ]
+  }
+}

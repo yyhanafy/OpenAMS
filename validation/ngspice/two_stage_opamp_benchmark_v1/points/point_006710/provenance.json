@@ -1,0 +1,33 @@
+{
+  "ac_analysis": {
+    "hierarchy_prefix": "xu1",
+    "points_per_decade": 100,
+    "start_hz": 1.0,
+    "stop_hz": 10000000000.0
+  },
+  "artifacts": {
+    "assignment": "assignment.json",
+    "assignment_sha256": "21749dd65a2805e35484d76bc0d245bb75f398956400b266950a8dc32972c83f",
+    "deck": "deck.spice",
+    "deck_sha256": "fbd1ba66a38b6a2381d3a33ded87c2b2790572ffe8043aec364fd67d02bcfd90"
+  },
+  "assignment_id": "deterministic_dependency_assignment_006710",
+  "benchmark_assignments_sha256": "84c14c1a12212dab20263c741af0e19403cffcc95903dd5695ca181887aa0a60",
+  "benchmark_directory": "/home/yhanafy/AMS-Tutorial/openams/benchmarks/two_stage_opamp_deterministic_constructor_v1",
+  "compiled_model": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/generated/compiled_circuit_model.json",
+  "compiled_model_sha256": "1c5c934bb614b8314b5bb44305bb9d7115b9f67a531d3cfce43e6c569031940f",
+  "created_at_utc": "2026-08-02T23:38:46.240099+00:00",
+  "deck_template": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/deck_template.spice",
+  "deck_template_sha256": "3e781250681a628877852be060baa704c8c1606729078b8671b3061aa00bb894",
+  "grid_index": 6710,
+  "rendering_conventions": {
+    "finger_count_policy": "use explicit nf_mN if present; otherwise nf=1",
+    "length_policy": "use device-point length_um",
+    "width_semantics": "total_device_width_um"
+  },
+  "schema_version": "1.0",
+  "selection_csv": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_opamp_benchmark_v1/selected_points.csv",
+  "selection_csv_sha256": "e5aa56996872f747916cb24c1bd2a6745dd41378faf1bddb7f50defefe3862b1",
+  "selection_order": 54,
+  "selection_reasons": "ugb_high"
+}

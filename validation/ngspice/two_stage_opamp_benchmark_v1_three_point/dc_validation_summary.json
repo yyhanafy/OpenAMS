@@ -1,0 +1,12 @@
+{
+  "aggregate_csv": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_opamp_benchmark_v1_three_point/aggregate_dc_comparison.csv",
+  "dc_validation_failed": 0,
+  "dc_validation_passed": 3,
+  "points_processed": 3,
+  "status": "PASS",
+  "tolerances": {
+    "current_absolute_tolerance_a": 1e-06,
+    "current_relative_tolerance": 0.1,
+    "voltage_tolerance_v": 0.025
+  }
+}

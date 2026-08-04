@@ -1,0 +1,99 @@
+schema_version: 3
+
+operating_conditions:
+  vdd_v: 1.8
+  vss_v: 0.0
+  vin_cm_v: 0.9
+  c_load_f: 1.0e-11
+
+device_constraints:
+  all_mos:
+    required_region: saturation
+    length_um: 0.5
+    width_min_um: 0.42
+    width_max_um: 100.0
+    body_voltage_abs_max_v: 1.0e-09
+
+  matched_width_groups:
+    - devices: [M1, M2]
+      relation: equal_total_width
+    - devices: [M4, M5]
+      relation: equal_total_width
+    - devices: [M6, M7]
+      relation: equal_total_width
+    - devices: [M8, M9, M10, M11]
+      relation: equal_total_width
+
+circuit_constraints:
+  current_relations:
+    - id: id_m1_from_tail
+      equation: i_m1_a = 0.5 * i_m3_a
+    - id: id_m2_from_tail
+      equation: i_m2_a = 0.5 * i_m3_a
+    - id: id_m4_from_tail
+      equation: i_m4_a = 1.5 * i_m3_a
+    - id: id_m5_from_tail
+      equation: i_m5_a = 1.5 * i_m3_a
+    - id: id_m6_from_kcl
+      equation: i_m6_a = i_m4_a - i_m1_a
+    - id: id_m7_from_kcl
+      equation: i_m7_a = i_m5_a - i_m2_a
+    - id: id_m8_from_branch
+      equation: i_m8_a = i_m6_a
+    - id: id_m9_from_branch
+      equation: i_m9_a = i_m7_a
+    - id: id_m10_from_branch
+      equation: i_m10_a = i_m8_a
+    - id: id_m11_from_branch
+      equation: i_m11_a = i_m9_a
+
+  output_headroom:
+    lower_bound:
+      equation: vout_v > vss_v + vdsat_m9_v + vdsat_m11_v
+    upper_bound:
+      equation: vout_v < vdd_v - vdsat_m5_v - vdsat_m7_v
+    require_nonempty_window: true
+
+  dependent_biases:
+    - name: vpb1_v
+      devices: [M4, M5]
+      objective: maximize_minimum_saturation_margin
+    - name: vpb2_v
+      devices: [M6, M7]
+      objective: maximize_minimum_saturation_margin
+    - name: vnb2_v
+      devices: [M8, M9]
+      objective: maximize_minimum_saturation_margin
+
+technology_intersection:
+  require_saturated: true
+  current_relative_tolerance: 0.1
+  current_absolute_tolerance_a: 1.0e-06
+  node_voltage_tolerance_v: 0.025
+  diode_voltage_tolerance_v: 0.025
+  electrical_voltage_match_tolerance_v: 1.0e-09
+  width_relation_relative_tolerance: 1.0e-08
+  max_assignments: 100000
+
+assignment_rules:
+  assignment_semantics: complete_correlated_circuit_assignment
+  representation: normalized_point_cloud
+  cartesian_product_allowed: false
+
+simulation_constraints:
+  dc_convergence_required: true
+  enforce_device_regions: true
+  enforce_output_window_from_specs: true
+  enforce_output_headroom_rule: true
+
+active_technology_source: sky130_tt_27c
+
+technology_sources:
+  sky130_tt_27c:
+    provider: mos_inverse_table
+    source: ../../../technology/sky130_tt_27c_inverse_smoke.csv
+    corner: tt
+    temperature_c: 27.0
+    models:
+      nmos: sky130_fd_pr__nfet_01v8
+      pmos: sky130_fd_pr__pfet_01v8

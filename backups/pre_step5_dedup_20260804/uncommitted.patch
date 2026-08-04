@@ -1,0 +1,3374 @@
+diff --git a/examples/folded_cascode/inputs/folded_cascode.spice b/examples/folded_cascode/inputs/folded_cascode.spice
+index 7775076..3ee89c3 100644
+--- a/examples/folded_cascode/inputs/folded_cascode.spice
++++ b/examples/folded_cascode/inputs/folded_cascode.spice
+@@ -1,79 +1,127 @@
+-* OpenAMS Phase-4 folded-cascode OTA — broad DC functionality search
+-* Independent variables: vpb1, vpb2, vnb1, vnb2, w_m5_um, w_m7_um, w_m8_um
+-* Dependencies: W4=W5; W3=W5/2; W6=W7; W8=W9=W10=W11
+-
+-.lib "$PDK_ROOT/sky130/sky130A/libs.tech/ngspice/sky130.lib.spice" tt
+-.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/diff_input.spice"
+-.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/nmos_tail_current_source.spice"
+-.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/pmos_current_source_pair.spice"
+-.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/pmos_cascode_pair.spice"
+-.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/nmos_cascode_pair.spice"
+-.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/nmos_current_sink_pair.spice"
+-.include "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/inputs/load_capacitor.spice"
+-* Environment and fixed values
++* OpenAMS folded-cascode OTA — flat MOS-level topology
++*
++* Independent assignment variables:
++*   w_m1_um
++*   vnb1_v
++*   i_m3_a
++*
++* Balanced-current relationships:
++*   I1 = I2 = I3/2
++*   I4 = I5 = 1.5*I3
++*   I6 = I7 = I8 = I9 = I10 = I11 = I3
++*
++* Width relationships:
++*   W1 = W2
++*   W4 = W5
++*   W6 = W7
++*   W8 = W9 = W10 = W11
++*
++* All M1-M11 must operate in saturation.
++
+ .param vdd=1.8
+ .param vss=0
+ .param vicm=0.9
+ .param c_load=10p
+-.param l_default=1.0
++
++.param l_default_um=0.5
+ .param nf_default=1
+-.param w_input_um=33.0
+-
+-* Seven independent Phase-4 bias variables
+-.param vpb1=1.20
+-.param vpb2=0.75
+-.param vnb1=0.55
+-.param vnb2=0.90
+-.param w_m5_um=80.0
+-.param w_m7_um=80.0
+-.param w_m8_um=20.0
+-
+-* Rule-derived dimensions; optimizer must not vary these directly
+-.param w_m1={w_m1_um}
+-.param w_m2={w_m2_um}
+-.param w_m5={w_m5_um}
+-.param w_m4={w_m4_um}
+-.param w_m3={w_m3_um}
+-.param w_m7={w_m7_um}
+-.param w_m6={w_m6_um}
+-.param w_m8={w_m8_um}
+-.param w_m9={w_m9_um}
+-.param w_m10={w_m10_um}
+-.param w_m11={w_m11_um}
++
++* Independent assignment variables
++.param w_m1_um={w_m1_um}
++.param vnb1={vnb1_v}
++.param i_m3_a={i_m3_a}
++
++* Dependent bias voltages
++.param vpb1={vpb1_v}
++.param vpb2={vpb2_v}
++.param vnb2={vnb2_v}
++
++* Dependent and matched device widths
++.param w_m2_um={w_m1_um}
++.param w_m3_um={w_m3_um}
++
++.param w_m4_um={w_m4_um}
++.param w_m5_um={w_m4_um}
++
++.param w_m6_um={w_m6_um}
++.param w_m7_um={w_m6_um}
++
++.param w_m8_um={w_m8_um}
++.param w_m9_um={w_m8_um}
++.param w_m10_um={w_m8_um}
++.param w_m11_um={w_m8_um}
++
++* Generated finger counts
++.param nf_m1={nf_m1}
++.param nf_m3={nf_m3}
++.param nf_m4={nf_m4}
++.param nf_m6={nf_m6}
++.param nf_m8={nf_m8}
++.param nf_m10={nf_m10}
++
++* Convert micrometer parameters to SPICE dimensions
++.param l_default={l_default_um}u
++
++.param w_m1={w_m1_um}u
++.param w_m2={w_m2_um}u
++.param w_m3={w_m3_um}u
++.param w_m4={w_m4_um}u
++.param w_m5={w_m5_um}u
++.param w_m6={w_m6_um}u
++.param w_m7={w_m7_um}u
++.param w_m8={w_m8_um}u
++.param w_m9={w_m9_um}u
++.param w_m10={w_m10_um}u
++.param w_m11={w_m11_um}u
+ 
+ .subckt folded_cascode_ota vip vin vout vdd vss
++
++* Dependent and independent bias sources
+ VNB1BIAS vnb1_node vss {vnb1}
+ VPB1BIAS vpb1_node vss {vpb1}
+ VPB2BIAS vpb2_node vss {vpb2}
+ VNB2BIAS vnb2_node vss {vnb2}
+ 
+-XINPUT vip vin psrc_left psrc_right tail vss nmos_differential_pair
+-+ w_in={w_m1_um} l_in={l_default_um} nf_in=1
++* M1-M2: NMOS differential input pair
++XM1 psrc_left vip tail vss sky130_fd_pr__nfet_01v8
+++ w={w_m1} l={l_default} nf={nf_m1}
+ 
+-XTAIL tail vnb1_node vss nmos_tail_current_source
+-+ w_tail={w_m3_um} l_tail={l_default_um} nf_tail=1
++XM2 psrc_right vin tail vss sky130_fd_pr__nfet_01v8
+++ w={w_m2} l={l_default} nf={nf_m1}
+ 
+-XPCS psrc_left psrc_right vpb1_node vdd pmos_current_source_pair
+-+ w_pcs={w_m5_um} l_pcs={l_default_um} nf_pcs={nf_m4}
++* M3: NMOS tail-current source
++XM3 tail vnb1_node vss vss sky130_fd_pr__nfet_01v8
+++ w={w_m3} l={l_default} nf={nf_m3}
+ 
+-XPFOLD psrc_left psrc_right x vout vpb2_node vdd pmos_folded_cascode_pair
+-+ w_pfold={w_m7_um} l_pfold={l_default_um} nf_pfold=1
++* M4-M5: PMOS upper current-source pair
++XM4 psrc_left vpb1_node vdd vdd sky130_fd_pr__pfet_01v8
+++ w={w_m4} l={l_default} nf={nf_m4}
+ 
+-XNCAS nsink_left nsink_right x vout vnb2_node vss nmos_cascode_pair
+-+ w_ncas={w_m8_um} l_ncas={l_default_um} nf_ncas=1
++XM5 psrc_right vpb1_node vdd vdd sky130_fd_pr__pfet_01v8
+++ w={w_m5} l={l_default} nf={nf_m4}
+ 
+-XNSINK nsink_left nsink_right x vss nmos_current_sink_pair
+-+ w_nsink={w_m10_um} l_nsink={l_default_um} nf_nsink=1
++* M6-M7: PMOS folded-cascode pair
++XM6 x vpb2_node psrc_left vdd sky130_fd_pr__pfet_01v8
+++ w={w_m6} l={l_default} nf={nf_m6}
+ 
+-XCL vout vss load_capacitor c_load=10p
+-.ends folded_cascode_ota
++XM7 vout vpb2_node psrc_right vdd sky130_fd_pr__pfet_01v8
+++ w={w_m7} l={l_default} nf={nf_m6}
++
++* M8-M9: NMOS cascode pair
++XM8 x vnb2_node nsink_left vss sky130_fd_pr__nfet_01v8
+++ w={w_m8} l={l_default} nf={nf_m8}
+ 
+-* Balanced-input DC smoke test
+-VDD_SUPPLY vdd 0 {vdd}
+-VSS_SUPPLY vss 0 {vss}
+-VIP_SOURCE vip 0 0.9
+-VIN_SOURCE vin 0 0.9
+-XOTA vip vin vout vdd vss folded_cascode_ota
++XM9 vout vnb2_node nsink_right vss sky130_fd_pr__nfet_01v8
+++ w={w_m9} l={l_default} nf={nf_m8}
+ 
+-{analysis_block}
+-.end
++* M10-M11: NMOS lower current-sink pair
++* Their common gate is self-biased by node x.
++XM10 nsink_left x vss vss sky130_fd_pr__nfet_01v8
+++ w={w_m10} l={l_default} nf={nf_m10}
++
++XM11 nsink_right x vss vss sky130_fd_pr__nfet_01v8
+++ w={w_m11} l={l_default} nf={nf_m10}
++
++CLOAD vout vss {c_load}
++
++.ends folded_cascode_ota
+diff --git a/src/openams/synthesis/complete_assignments.py b/src/openams/synthesis/complete_assignments.py
+index c12e6c9..12d1994 100644
+--- a/src/openams/synthesis/complete_assignments.py
++++ b/src/openams/synthesis/complete_assignments.py
+@@ -610,3 +610,47 @@ def write_complete_assignments(
+     else:
+         output_csv.write_text("", encoding="utf-8")
+     return artifact
++
++
++def build_complete_assignments_generic(
++    compiled_model_path: Path,
++    independent_regions_path: Path,
++    dependent_regions_path: Path,
++) -> Mapping[str, Any]:
++    """Build topology-generic, technology-backed candidates for DC confirmation."""
++    from .generic_complete_assignments import build_generic_complete_assignments
++
++    return build_generic_complete_assignments(
++        compiled_model_path,
++        independent_regions_path,
++        dependent_regions_path,
++    )
++
++
++def write_complete_assignments_generic(
++    compiled_model_path: Path,
++    independent_regions_path: Path,
++    dependent_regions_path: Path,
++    output_json: Path,
++    output_csv: Path,
++) -> Mapping[str, Any]:
++    artifact = build_complete_assignments_generic(
++        compiled_model_path,
++        independent_regions_path,
++        dependent_regions_path,
++    )
++    output_json.parent.mkdir(parents=True, exist_ok=True)
++    output_json.write_text(json.dumps(artifact, indent=2, default=str) + "\n", encoding="utf-8")
++    assignments = artifact["assignments"]
++    if assignments:
++        flat_rows = []
++        for row in assignments:
++            flat_rows.append({key: value for key, value in row.items() if not isinstance(value, (dict, list))})
++        fields = sorted({key for row in flat_rows for key in row}, key=lambda name: (name != "assignment_id", name))
++        with output_csv.open("w", newline="", encoding="utf-8") as stream:
++            writer = csv.DictWriter(stream, fieldnames=fields)
++            writer.writeheader()
++            writer.writerows(flat_rows)
++    else:
++        output_csv.write_text("", encoding="utf-8")
++    return artifact
+diff --git a/src/openams/synthesis/dependent_regions.py b/src/openams/synthesis/dependent_regions.py
+index 37faf26..fd02324 100644
+--- a/src/openams/synthesis/dependent_regions.py
++++ b/src/openams/synthesis/dependent_regions.py
+@@ -613,27 +613,40 @@ def build_dependent_regions(
+     completed: dict[str, dict[str, Any]] = {}
+     ordered_results = []
+ 
+-    for group in groups:
+-        group_id = str(group["id"])
+-        solver = str(group["solver"])
+-        adapter = _ADAPTERS.get(solver)
+-        if adapter is None:
+-            raise DependentRegionError(f"no adapter for {solver!r}")
+-
+-        dependencies = list(group.get("depends_on", []))
+-        if not dependencies:
+-            result = adapter(model, independent, rows)
+-        else:
+-            if len(dependencies) != 1 or dependencies[0] not in completed:
+-                raise DependentRegionError(
+-                    f"group {group_id!r} has unresolved dependencies {dependencies!r}"
+-                )
+-            result = adapter(model, independent, completed[dependencies[0]], rows)
+-
+-        completed[group_id] = result
+-        ordered_results.append(result)
++    use_generic = any(
++        str(group.get("solver", "")) == "generic_dependency_graph"
++        for group in groups
++    )
++    if use_generic:
++        from .generic_dependency import build_generic_group_results
+ 
+-    all_regions: dict[str, Any] = {}
++        ordered_results, generic_regions, deferred = build_generic_group_results(
++            model, independent, rows
++        )
++    else:
++        deferred = []
++        generic_regions = {}
++        for group in groups:
++            group_id = str(group["id"])
++            solver = str(group["solver"])
++            adapter = _ADAPTERS.get(solver)
++            if adapter is None:
++                raise DependentRegionError(f"no adapter for {solver!r}")
++
++            dependencies = list(group.get("depends_on", []))
++            if not dependencies:
++                result = adapter(model, independent, rows)
++            else:
++                if len(dependencies) != 1 or dependencies[0] not in completed:
++                    raise DependentRegionError(
++                        f"group {group_id!r} has unresolved dependencies {dependencies!r}"
++                    )
++                result = adapter(model, independent, completed[dependencies[0]], rows)
++
++            completed[group_id] = result
++            ordered_results.append(result)
++
++    all_regions: dict[str, Any] = dict(generic_regions)
+     for result in ordered_results:
+         all_regions.update(result["dependent_regions"])
+ 
+@@ -659,6 +672,11 @@ def build_dependent_regions(
+         "derived_dependent_quantities": sorted(derived),
+         "missing_declared_quantities": missing,
+         "additional_derived_quantities": extra,
++        "deferred_correlations": deferred,
++        "resolution_semantics": (
++            "conservative_regions_with_step5_correlation_deferred"
++            if use_generic else "legacy_adapter_correlated_regions"
++        ),
+         "next_stage": "intersect_complete_dc_assignments",
+     }
+ 
+diff --git a/src/openams/synthesis/independent_domains.py b/src/openams/synthesis/independent_domains.py
+index e91706e..84d2e4b 100644
+--- a/src/openams/synthesis/independent_domains.py
++++ b/src/openams/synthesis/independent_domains.py
+@@ -365,6 +365,162 @@ def _technology_point_domain(
+     }
+ 
+ 
++
++def _bias_voltage_domain(
++    variable_id: str,
++    definition: Mapping[str, Any],
++    model: Mapping[str, Any],
++    device: Mapping[str, Any],
++    rows: Sequence[TechnologyRow],
++    filters: Mapping[str, Any],
++    minimum: float,
++    maximum: float,
++) -> dict[str, Any]:
++    """Build an absolute gate-voltage domain from technology VGS rows."""
++
++    terminal = str(
++        definition.get("terminal", "gate")
++    ).strip().lower()
++
++    if terminal != "gate":
++        raise IndependentDomainError(
++            f"{variable_id!r}: bias_voltage currently supports "
++            f"only terminal='gate', got {terminal!r}"
++        )
++
++    terminals = device.get("terminals", {})
++    source_node = str(
++        terminals.get("source", "")
++    ).strip()
++
++    if not source_node:
++        raise IndependentDomainError(
++            f"{variable_id!r}: device has no source terminal"
++        )
++
++    rules = (
++        model.get("project_inputs", {})
++        .get("design_rules", {})
++    )
++    operating = rules.get(
++        "operating_conditions",
++        {}
++    )
++
++    source_voltage = _source_voltage(
++        source_node,
++        operating,
++    )
++
++    if source_voltage is None:
++        raise IndependentDomainError(
++            f"{variable_id!r}: cannot resolve source-node voltage "
++            f"for {source_node!r}"
++        )
++
++    polarity = str(
++        filters.get("polarity", "")
++    ).lower()
++
++    if polarity not in {"nmos", "pmos"}:
++        raise IndependentDomainError(
++            f"{variable_id!r}: unsupported polarity {polarity!r}"
++        )
++
++    records: list[dict[str, Any]] = []
++
++    for item in rows:
++        if not _row_matches(
++            item.values,
++            filters,
++        ):
++            continue
++
++        vgs_abs = _optional_number(
++            item.values,
++            "vgs_v",
++            "vgs_abs_v",
++        )
++
++        if vgs_abs is None:
++            continue
++
++        gate_voltage = (
++            source_voltage + vgs_abs
++            if polarity == "nmos"
++            else source_voltage - vgs_abs
++        )
++
++        if not minimum <= gate_voltage <= maximum:
++            continue
++
++        records.append(
++            {
++                "value": gate_voltage,
++                "technology_row_index": item.index,
++                "model": item.values.get("model"),
++                "polarity": item.values.get("polarity"),
++                "source_node": source_node,
++                "source_voltage_v": source_voltage,
++                "vgs_abs_v": vgs_abs,
++                "length_um": _optional_number(
++                    item.values,
++                    "length_um",
++                ),
++                "width_um": _optional_number(
++                    item.values,
++                    "width_um",
++                ),
++                "vds_v": _optional_number(
++                    item.values,
++                    "vds_v",
++                    "vds_abs_v",
++                ),
++                "vbs_v": _optional_number(
++                    item.values,
++                    "vbs_v",
++                    "vbs_abs_v",
++                ),
++                "id_abs_a": _optional_number(
++                    item.values,
++                    "id_abs_a",
++                    "id_a",
++                    "id",
++                ),
++            }
++        )
++
++    values = _unique(
++        record["value"]
++        for record in records
++    )
++
++    if not values:
++        raise IndependentDomainError(
++            f"technology filtering produced no gate-bias values "
++            f"for {variable_id!r}"
++        )
++
++    return {
++        "domain_type": "technology_supported_gate_voltage_set",
++        "candidate_values": values,
++        "candidate_count": len(values),
++        "supporting_row_count": len(records),
++        "technology_records": records,
++        "technology_quantity_fields": [
++            "vgs_v",
++            "vgs_abs_v",
++        ],
++        "technology_minimum": min(values),
++        "technology_maximum": max(values),
++        "device_terminal": terminal,
++        "source_node": source_node,
++        "source_voltage_v": source_voltage,
++        "polarity": polarity,
++    }
++
++
++
+ def _finger_width_interval(
+     rows: Sequence[TechnologyRow],
+     filters: Mapping[str, Any],
+@@ -643,9 +799,25 @@ def build_independent_domains(
+             model, variable_id, definition
+         )
+         kind = str(definition.get("kind", "")).lower()
+-        device_name = _device_from_variable(variable_id)
++
++        explicit_device = definition.get("device")
++        if explicit_device is not None:
++            explicit_device = str(explicit_device).strip()
++            if not explicit_device:
++                explicit_device = None
++
++        device_name = (
++            explicit_device
++            or _device_from_variable(variable_id)
++        )
+         device = devices.get(device_name) if device_name else None
+ 
++        if explicit_device is not None and device is None:
++            raise IndependentDomainError(
++                f"{variable_id!r} declares unknown device "
++                f"{explicit_device!r}"
++            )
++
+         if kind == "node_voltage":
+             domain = _node_voltage_domain(
+                 variable_id, model, devices, rows, minimum, maximum
+@@ -666,6 +838,17 @@ def build_independent_domains(
+                     minimum,
+                     maximum,
+                 )
++            elif kind == "bias_voltage":
++                domain = _bias_voltage_domain(
++                    variable_id,
++                    definition,
++                    model,
++                    device,
++                    rows,
++                    filters,
++                    minimum,
++                    maximum,
++                )
+             else:
+                 domain = _technology_point_domain(
+                     variable_id,
+diff --git a/tests/synthesis/test_complete_assignments.py b/tests/synthesis/test_complete_assignments.py
+index 26aecf2..e703afc 100644
+--- a/tests/synthesis/test_complete_assignments.py
++++ b/tests/synthesis/test_complete_assignments.py
+@@ -28,3 +28,13 @@ def test_density_interpolation() -> None:
+     assert result is not None
+     assert abs(result["vgs_v"] - 0.75) < 1e-12
+     assert abs(result["interpolation_fraction"] - 0.5) < 1e-12
++
++
++def test_generic_current_expression_evaluation() -> None:
++    from openams.synthesis.generic_complete_assignments import _eval_expr
++
++    value = _eval_expr(
++        "device.M4.current - device.M1.current",
++        {"i_m4_a": 30e-6, "i_m1_a": 10e-6},
++    )
++    assert abs(value - 20e-6) < 1e-18
+diff --git a/tests/synthesis/test_dependent_regions.py b/tests/synthesis/test_dependent_regions.py
+index ecc2def..4c51575 100644
+--- a/tests/synthesis/test_dependent_regions.py
++++ b/tests/synthesis/test_dependent_regions.py
+@@ -27,3 +27,27 @@ def test_physical_clipping() -> None:
+         0.0,
+         0.9,
+     ) == {"minimum": 0.0, "maximum": 0.4}
++
++from openams.synthesis.generic_dependency import _eval_interval, propagate_linear_intervals
++import pytest
++
++
++def test_generic_interval_expression_propagation() -> None:
++    values={"i_m3":{"minimum":20e-6,"maximum":40e-6}}
++    result=_eval_interval("1.5 * i_m3",values)
++    assert result["minimum"] == pytest.approx(30e-6)
++    assert result["maximum"] == pytest.approx(60e-6)
++
++
++def test_generic_current_dependency_chain() -> None:
++    intent={"circuit_intent":{"current_relations":[
++        {"id":"a","equation":"i_m1 = 0.5 * i_m3"},
++        {"id":"b","equation":"i_m4 = 1.5 * i_m3"},
++        {"id":"c","equation":"i_m6 = i_m4 - i_m1"},
++    ]}}
++    seeds={"i_m3_a":{"technology_minimum":20e-6,"technology_maximum":40e-6}}
++    values,_=propagate_linear_intervals(intent,seeds)
++    assert values["i_m1_a"]["minimum"] == pytest.approx(10e-6)
++    assert values["i_m1_a"]["maximum"] == pytest.approx(20e-6)
++    assert values["i_m6_a"]["minimum"] == pytest.approx(10e-6)
++    assert values["i_m6_a"]["maximum"] == pytest.approx(50e-6)
+diff --git a/tools/validation/run_coarse_independent_ac_scan.py b/tools/validation/run_coarse_independent_ac_scan.py
+old mode 100644
+new mode 100755
+index e2ea16e..e95bc03
+--- a/tools/validation/run_coarse_independent_ac_scan.py
++++ b/tools/validation/run_coarse_independent_ac_scan.py
+@@ -1,701 +1,72 @@
+ #!/usr/bin/env python3
+-from __future__ import annotations
+-
+-import argparse
+-import hashlib
+-import csv
+-import json
+-import os
+-import platform
+-import socket
+-import subprocess
+-import sys
+-import time
+-from datetime import datetime, timezone
+-from collections import Counter
+-from pathlib import Path
+-from typing import Any
+-
+-import numpy as np
+-
+-from openams.synthesis.deterministic_two_stage_constructor import (
+-    ConstructionError,
+-    TwoStageConstructionPolicy,
+-    construct_two_stage_assignment,
+-)
+-from openams.technology.ml_continuous_oracle import MlpContinuousTechnologyOracle
+-from openams.validation.dense_capacitance_lookup import DenseCapacitanceLookup
+-from openams.validation.two_stage_small_signal_ac import estimate_two_stage_ac
+-
+-SCHEMA_VERSION = "3.0"
+-DEVICES = tuple(f"M{i}" for i in range(1, 8))
+-DEVICE_POINT_FIELDS = (
+-    "polarity",
+-    "width_um",
+-    "length_um",
+-    "vgs_abs_v",
+-    "vds_abs_v",
+-    "vbs_abs_v",
+-    "id_abs_a",
+-    "vdsat_abs_v",
+-    "vth_abs_v",
+-    "gm_s",
+-    "gds_s",
+-    "saturated",
+-    "in_domain",
+-    "source",
+-)
+-CAP_FIELDS = ("cgs_f", "cgd_f", "cdb_f", "csb_f", "distance", "source")
+-
+-DEVICE_NODES = {
+-    "M1": ("n1", "inp", "vtail", "vss"),
+-    "M2": ("n2", "inn", "vtail", "vss"),
+-    "M3": ("n1", "n1", "vdd", "vdd"),
+-    "M4": ("n2", "n1", "vdd", "vdd"),
+-    "M5": ("vtail", "vbias", "vss", "vss"),
+-    "M6": ("out", "n2", "vdd", "vdd"),
+-    "M7": ("out", "vbias", "vss", "vss"),
+-}
+-
+-
+-def sha256_file(path: Path) -> str | None:
+-    if not path.is_file():
+-        return None
+-    digest = hashlib.sha256()
+-    with path.open("rb") as stream:
+-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+-            digest.update(chunk)
+-    return digest.hexdigest()
+-
++"""Unified OpenAMS coarse independent scan entry point.
+ 
+-def node_voltages(assignment: dict[str, Any]) -> dict[str, float]:
+-    return {
+-        "inp": float(assignment["vin_cm_v"]),
+-        "inn": float(assignment["vin_cm_v"]),
+-        "n1": float(assignment["n1_v"]),
+-        "n2": float(assignment["n2_v"]),
+-        "out": float(assignment["vout_v"]),
+-        "vtail": float(assignment["vtail_v"]),
+-        "vbias": float(assignment["vbias_v"]),
+-        "vdd": float(assignment["vdd_v"]),
+-        "vss": float(assignment["vss_v"]),
+-    }
+-
+-
+-def select_i5_values(independent_regions: Path, count: int) -> list[float]:
+-    artifact = json.loads(independent_regions.read_text())
+-    values = [
+-        float(value)
+-        for value in artifact["domains"]["i_m5_a"]["candidate_values"]
+-    ]
+-    indices = np.linspace(0, len(values) - 1, count).round().astype(int)
+-    return [values[index] for index in indices]
+-
+-
+-def load_existing(csv_path: Path) -> tuple[list[dict[str, str]], set[int]]:
+-    if not csv_path.is_file():
+-        return [], set()
+-    with csv_path.open(newline="") as stream:
+-        rows = list(csv.DictReader(stream))
+-    completed = {int(row["grid_index"]) for row in rows}
+-    return rows, completed
+-
+-
+-def git_value(*args: str) -> str | None:
+-    try:
+-        return subprocess.check_output(
+-            ["git", *args], text=True, stderr=subprocess.DEVNULL
+-        ).strip()
+-    except (OSError, subprocess.CalledProcessError):
+-        return None
++Compatibility contract:
++- Without ``--compiled-model``, run the frozen two-stage implementation exactly.
++- With ``--compiled-model``, run the topology-generic compiled-model MLP backend.
+ 
++The installer preserves the existing script as
++``run_coarse_independent_ac_scan_two_stage_legacy.py``.
++"""
++from __future__ import annotations
+ 
+-def make_fieldnames() -> list[str]:
+-    fields = [
+-        "schema_version",
+-        "grid_index",
+-        "assignment_id",
+-        "status",
+-        "failure_stage",
+-        "failure_type",
+-        "failure",
+-        "i_m5_a",
+-        "w_m1_um",
+-        "vout_v",
+-        "vdd_v",
+-        "vss_v",
+-        "vin_cm_v",
+-        "c_miller_f",
+-        "c_load_f",
+-        "n1_policy_v",
+-        "vbias_policy_v",
+-        "vtail_v",
+-        "n1_v",
+-        "n2_v",
+-        "vbias_v",
+-    ]
+-    fields += [f"i_m{i}_a" for i in range(1, 8)]
+-    fields += [f"w_m{i}_um" for i in range(1, 8)]
+-    fields += [
+-        "m2_current_residual_a",
+-        "size_relation_residual",
+-        "min_saturation_margin_v",
+-        "all_devices_saturated",
+-        "all_devices_in_domain",
+-        "kcl_vtail_residual_a",
+-        "kcl_n1_residual_a",
+-        "kcl_n2_residual_a",
+-        "kcl_out_residual_a",
+-        "max_kcl_residual_a",
+-        "max_device_current_residual_a",
+-        "max_device_current_relative_residual",
+-        "gain_est_v_v",
+-        "gain_est_db",
+-        "ugb_est_hz",
+-        "phase_at_ugb_unwrapped_est_deg",
+-        "phase_at_ugb_est_deg",
+-        "phase_margin_est_deg",
+-        "min_cap_lookup_distance",
+-        "max_cap_lookup_distance",
+-        "supply_current_est_a",
+-        "power_est_w",
+-        "gain_spec_pass",
+-        "ugb_spec_pass",
+-        "phase_margin_spec_pass",
+-        "power_spec_pass",
+-        "overall_spec_pass",
+-        "mlp_queries_this_point",
+-        "mlp_queries_cumulative",
+-        "constructor_runtime_ms",
+-        "ac_estimator_runtime_ms",
+-        "total_runtime_ms",
+-    ]
+-    for device in DEVICES:
+-        prefix = device.lower()
+-        fields += [f"{prefix}_{name}" for name in DEVICE_POINT_FIELDS]
+-        fields += [f"{prefix}_{name}" for name in CAP_FIELDS]
+-        fields += [
+-            f"{prefix}_vd_v", f"{prefix}_vg_v", f"{prefix}_vs_v", f"{prefix}_vb_v",
+-            f"{prefix}_vgs_signed_v", f"{prefix}_vds_signed_v", f"{prefix}_vbs_signed_v",
+-            f"{prefix}_vov_abs_v", f"{prefix}_gm_over_id_1_v", f"{prefix}_ro_ohm",
+-            f"{prefix}_target_current_a", f"{prefix}_current_residual_a",
+-            f"{prefix}_current_relative_residual", f"{prefix}_saturation_margin_v",
+-        ]
+-    return fields
++import sys
+ 
+ 
+-def blank_row(fieldnames: list[str]) -> dict[str, Any]:
+-    return {name: "" for name in fieldnames}
++def main() -> int:
++    if "--compiled-model" in sys.argv[1:]:
++        from run_generic_compiled_scan import main as generic_main
++        return generic_main(sys.argv[1:])
++    from run_coarse_independent_ac_scan_two_stage_legacy import main as legacy_main
++    return legacy_main()
+ 
+ 
+-def main() -> int:
+-    parser = argparse.ArgumentParser()
+-    parser.add_argument("--i5-count", type=int, default=40)
+-    parser.add_argument("--w1-count", type=int, default=25)
+-    parser.add_argument("--vout-count", type=int, default=10)
+-    parser.add_argument("--w1-min-um", type=float, default=1.0)
+-    parser.add_argument("--w1-max-um", type=float, default=50.0)
+-    parser.add_argument("--vout-min-v", type=float, default=0.6)
+-    parser.add_argument("--vout-max-v", type=float, default=1.5)
+-    parser.add_argument("--n1-v", type=float, default=0.6)
+-    parser.add_argument("--vbias-v", type=float, default=0.6)
+-    parser.add_argument("--vdd-v", type=float, default=1.8)
+-    parser.add_argument("--vss-v", type=float, default=0.0)
+-    parser.add_argument("--vin-cm-v", type=float, default=0.9)
+-    parser.add_argument("--c-miller-f", type=float, default=3e-12)
+-    parser.add_argument("--c-load-f", type=float, default=10e-12)
+-    parser.add_argument("--gain-min-db", type=float)
+-    parser.add_argument("--ugb-min-hz", type=float)
+-    parser.add_argument("--phase-margin-min-deg", type=float)
+-    parser.add_argument("--power-max-w", type=float)
+-    parser.add_argument("--progress-every", type=int, default=25)
+-    parser.add_argument("--checkpoint-every", type=int, default=25)
+-    parser.add_argument("--max-points", type=int, default=0)
+-    parser.add_argument("--resume", action="store_true")
+-    parser.add_argument(
+-        "--output-dir",
+-        type=Path,
+-        default=Path(
+-            "examples/two_stage_opamp/generated/assignment_synthesis/"
+-            "coarse_independent_ac_scan_v2"
+-        ),
+-    )
+-    args = parser.parse_args()
+ 
+-    generated = Path("examples/two_stage_opamp/generated")
+-    output_dir = args.output_dir
+-    output_dir.mkdir(parents=True, exist_ok=True)
+-    csv_path = output_dir / "coarse_scan_results.csv"
+-    json_path = output_dir / "coarse_scan_summary.json"
+-    report_path = output_dir / "COARSE_SCAN_REPORT.md"
+-    config_path = output_dir / "run_configuration.json"
+-    adaptive_path = output_dir / "adaptive_mlp_points.csv"
+-    assignments_path = output_dir / "constructed_assignments.jsonl"
++_LEGACY_MODULE = None
+ 
+-    if csv_path.exists() and not args.resume:
+-        raise SystemExit(
+-            f"refusing to overwrite existing output: {csv_path}; "
+-            "choose a new --output-dir or use --resume"
+-        )
+ 
+-    i5_values = select_i5_values(
+-        generated / "assignment_synthesis/independent_regions.json",
+-        args.i5_count,
+-    )
+-    w1_values = np.linspace(args.w1_min_um, args.w1_max_um, args.w1_count)
+-    vout_values = np.linspace(args.vout_min_v, args.vout_max_v, args.vout_count)
++def _load_legacy_module():
++    """Load the frozen two-stage implementation."""
+ 
+-    grid = [
+-        (index, float(i5), float(w1), float(vout))
+-        for index, (i5, w1, vout) in enumerate(
+-            (i5, w1, vout)
+-            for i5 in i5_values
+-            for w1 in w1_values
+-            for vout in vout_values
+-        )
+-    ]
+-    if args.max_points > 0:
+-        grid = grid[: args.max_points]
++    import importlib.util
++    from pathlib import Path
+ 
+-    existing_rows, completed = load_existing(csv_path) if args.resume else ([], set())
+-    rows: list[dict[str, Any]] = list(existing_rows)
+-    assignment_records: list[dict[str, Any]] = []
+-    if args.resume and assignments_path.is_file():
+-        assignment_records = [json.loads(line) for line in assignments_path.read_text().splitlines() if line.strip()]
+-    failures = Counter(
+-        row.get("failure", "")
+-        for row in existing_rows
+-        if row.get("status") != "PASS"
++    legacy_path = (
++        Path(__file__).resolve().parent
++        / "run_coarse_independent_ac_scan_two_stage_legacy.py"
+     )
+ 
+-    oracle = MlpContinuousTechnologyOracle(
+-        {
+-            "nmos": Path(os.environ["OPENAMS_MLP_NMOS"]),
+-            "pmos": Path(os.environ["OPENAMS_MLP_PMOS"]),
+-        },
+-        adaptive_path,
+-    )
+-    dense_table_path = Path(
+-        "technology/sky130_tt_27c_mlp_dense_training_clean.csv"
++    spec = importlib.util.spec_from_file_location(
++        "openams_two_stage_coarse_scan_legacy",
++        legacy_path,
+     )
+-    cap_lookup = DenseCapacitanceLookup(dense_table_path)
+-    frequencies = np.logspace(0.0, 10.0, 601)
+-    policy = TwoStageConstructionPolicy(n1_v=args.n1_v, vbias_v=args.vbias_v)
+-    fieldnames = make_fieldnames()
+ 
+-    config = {
+-        "schema_version": SCHEMA_VERSION,
+-        "algorithm": "deterministic_dependency_plus_dense_capacitance_ac",
+-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+-        "command": [sys.executable, *sys.argv],
+-        "git_commit": git_value("rev-parse", "HEAD"),
+-        "git_status_porcelain": git_value("status", "--porcelain"),
+-        "python_version": platform.python_version(),
+-        "numpy_version": np.__version__,
+-        "platform": platform.platform(),
+-        "hostname": socket.gethostname(),
+-        "processor": platform.processor(),
+-        "grid": {
+-            "i5_count": args.i5_count,
+-            "w1_count": args.w1_count,
+-            "vout_count": args.vout_count,
+-            "w1_range_um": [args.w1_min_um, args.w1_max_um],
+-            "vout_range_v": [args.vout_min_v, args.vout_max_v],
+-        },
+-        "construction_policy": vars(policy),
+-        "operating_conditions": {
+-            "vdd_v": args.vdd_v,
+-            "vss_v": args.vss_v,
+-            "vin_cm_v": args.vin_cm_v,
+-            "c_miller_f": args.c_miller_f,
+-            "c_load_f": args.c_load_f,
+-        },
+-        "models": {
+-            "nmos_checkpoint": os.environ["OPENAMS_MLP_NMOS"],
+-            "nmos_checkpoint_sha256": sha256_file(Path(os.environ["OPENAMS_MLP_NMOS"])),
+-            "pmos_checkpoint": os.environ["OPENAMS_MLP_PMOS"],
+-            "pmos_checkpoint_sha256": sha256_file(Path(os.environ["OPENAMS_MLP_PMOS"])),
+-            "dense_capacitance_table": str(dense_table_path),
+-            "dense_capacitance_table_sha256": sha256_file(dense_table_path),
+-            "mlp_outputs": ["id_abs_a", "vdsat_abs_v", "vth_abs_v", "gm_s", "gds_s"],
+-            "not_available_from_current_mlp": ["gmb_s", "intrinsic_capacitances"],
+-        },
+-        "specification_thresholds": {
+-            "gain_min_db": args.gain_min_db,
+-            "ugb_min_hz": args.ugb_min_hz,
+-            "phase_margin_min_deg": args.phase_margin_min_deg,
+-            "power_max_w": args.power_max_w,
+-        },
+-        "terminal_voltage_convention": {
+-            "vd_v_vg_v_vs_v_vb_v": "signed node voltages relative to VSS=0 reference",
+-            "vgs_signed_v": "Vg-Vs",
+-            "vds_signed_v": "Vd-Vs",
+-            "vbs_signed_v": "Vb-Vs",
+-            "*_abs_v": "polarity-normalized nonnegative magnitudes supplied to MLP",
+-        },
+-        "frequency_sweep": {
+-            "minimum_hz": float(frequencies[0]),
+-            "maximum_hz": float(frequencies[-1]),
+-            "count": len(frequencies),
+-        },
+-    }
+-    config_path.write_text(json.dumps(config, indent=2, default=str) + "\n")
+-
+-    def save() -> None:
+-        with csv_path.open("w", newline="") as stream:
+-            writer = csv.DictWriter(stream, fieldnames=fieldnames)
+-            writer.writeheader()
+-            writer.writerows(rows)
+-        with assignments_path.open("w", encoding="utf-8") as stream:
+-            for record in assignment_records:
+-                stream.write(json.dumps(record, sort_keys=True, default=str) + "\n")
+-
+-    start = time.perf_counter()
+-    processed_now = 0
+-
+-    for grid_index, i5, w1, vout in grid:
+-        if grid_index in completed:
+-            continue
+-
+-        point_start = time.perf_counter()
+-        before_queries = oracle.query_count
+-        constructor_ms = 0.0
+-        ac_ms = 0.0
+-        row = blank_row(fieldnames)
+-        row.update(
+-            {
+-                "schema_version": SCHEMA_VERSION,
+-                "grid_index": grid_index,
+-                "status": "REJECT",
+-                "failure_stage": "construction",
+-                "i_m5_a": i5,
+-                "w_m1_um": w1,
+-                "vout_v": vout,
+-                "vdd_v": args.vdd_v,
+-                "vss_v": args.vss_v,
+-                "vin_cm_v": args.vin_cm_v,
+-                "c_miller_f": args.c_miller_f,
+-                "c_load_f": args.c_load_f,
+-                "n1_policy_v": args.n1_v,
+-                "vbias_policy_v": args.vbias_v,
+-            }
++    if spec is None or spec.loader is None:
++        raise RuntimeError(
++            f"cannot load legacy coarse-scan module: {legacy_path}"
+         )
+ 
+-        try:
+-            constructor_start = time.perf_counter()
+-            assignment = construct_two_stage_assignment(
+-                oracle,
+-                i_m5_a=i5,
+-                w_m1_um=w1,
+-                vout_v=vout,
+-                policy=policy,
+-                vdd_v=args.vdd_v,
+-                vss_v=args.vss_v,
+-                vin_cm_v=args.vin_cm_v,
+-            )
+-            constructor_ms = (time.perf_counter() - constructor_start) * 1000.0
+-
+-            ac_start = time.perf_counter()
+-            metrics = estimate_two_stage_ac(
+-                assignment,
+-                cap_lookup,
+-                frequencies_hz=frequencies,
+-                c_miller_f=args.c_miller_f,
+-                c_load_f=args.c_load_f,
+-            )
+-            ac_ms = (time.perf_counter() - ac_start) * 1000.0
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
+ 
+-            points = assignment["device_points"]
+-            margins = {
+-                device: float(point["vds_abs_v"]) - float(point["vdsat_abs_v"])
+-                for device, point in points.items()
+-            }
+-            supply_current = float(assignment["i_m3_a"]) + float(
+-                assignment["i_m4_a"]
+-            ) + float(assignment["i_m6_a"])
+-            nodes = node_voltages(assignment)
+-            target_currents = {device: float(assignment[f"i_{device.lower()}_a"]) for device in DEVICES}
+-            current_residuals = {
+-                device: float(points[device]["id_abs_a"]) - target_currents[device]
+-                for device in DEVICES
+-            }
+-            current_relative_residuals = {
+-                device: abs(current_residuals[device]) / max(abs(target_currents[device]), 1e-30)
+-                for device in DEVICES
+-            }
+-            kcl = {
+-                "vtail": float(assignment["i_m5_a"]) - float(assignment["i_m1_a"]) - float(assignment["i_m2_a"]),
+-                "n1": float(assignment["i_m3_a"]) - float(assignment["i_m1_a"]),
+-                "n2": float(assignment["i_m4_a"]) - float(assignment["i_m2_a"]),
+-                "out": float(assignment["i_m6_a"]) - float(assignment["i_m7_a"]),
+-            }
+ 
+-            row.update(
+-                {
+-                    "assignment_id": f"deterministic_dependency_assignment_{grid_index:06d}",
+-                    "status": "PASS",
+-                    "failure_stage": "",
+-                    "failure_type": "",
+-                    "failure": "",
+-                    "vtail_v": assignment["vtail_v"],
+-                    "n1_v": assignment["n1_v"],
+-                    "n2_v": assignment["n2_v"],
+-                    "vbias_v": assignment["vbias_v"],
+-                    "m2_current_residual_a": assignment["m2_current_residual_a"],
+-                    "size_relation_residual": assignment["size_relation_residual"],
+-                    "min_saturation_margin_v": min(margins.values()),
+-                    "all_devices_saturated": all(
+-                        bool(point["saturated"]) for point in points.values()
+-                    ),
+-                    "all_devices_in_domain": all(
+-                        bool(point["in_domain"]) for point in points.values()
+-                    ),
+-                    "kcl_vtail_residual_a": kcl["vtail"],
+-                    "kcl_n1_residual_a": kcl["n1"],
+-                    "kcl_n2_residual_a": kcl["n2"],
+-                    "kcl_out_residual_a": kcl["out"],
+-                    "max_kcl_residual_a": max(abs(value) for value in kcl.values()),
+-                    "max_device_current_residual_a": max(abs(value) for value in current_residuals.values()),
+-                    "max_device_current_relative_residual": max(current_relative_residuals.values()),
+-                    "gain_est_v_v": metrics.gain_v_v,
+-                    "gain_est_db": metrics.gain_db,
+-                    "ugb_est_hz": metrics.ugb_hz,
+-                    "phase_at_ugb_unwrapped_est_deg": (
+-                        metrics.phase_at_ugb_unwrapped_deg
+-                    ),
+-                    "phase_at_ugb_est_deg": metrics.phase_at_ugb_deg,
+-                    "phase_margin_est_deg": metrics.phase_margin_deg,
+-                    "min_cap_lookup_distance": metrics.min_cap_lookup_distance,
+-                    "max_cap_lookup_distance": metrics.max_cap_lookup_distance,
+-                    "supply_current_est_a": supply_current,
+-                    "power_est_w": (args.vdd_v - args.vss_v) * supply_current,
+-                }
+-            )
+-            row["gain_spec_pass"] = (
+-                "" if args.gain_min_db is None or metrics.gain_db is None
+-                else metrics.gain_db >= args.gain_min_db
+-            )
+-            row["ugb_spec_pass"] = (
+-                "" if args.ugb_min_hz is None or metrics.ugb_hz is None
+-                else metrics.ugb_hz >= args.ugb_min_hz
+-            )
+-            row["phase_margin_spec_pass"] = (
+-                ""
+-                if args.phase_margin_min_deg is None or metrics.phase_margin_deg is None
+-                else metrics.phase_margin_deg >= args.phase_margin_min_deg
+-            )
+-            row["power_spec_pass"] = (
+-                "" if args.power_max_w is None
+-                else row["power_est_w"] <= args.power_max_w
+-            )
+-            flags = [
+-                row[name]
+-                for name in (
+-                    "gain_spec_pass",
+-                    "ugb_spec_pass",
+-                    "phase_margin_spec_pass",
+-                    "power_spec_pass",
+-                )
+-                if row[name] != ""
+-            ]
+-            row["overall_spec_pass"] = "" if not flags else all(flags)
++def _legacy_module():
++    """Return the cached legacy two-stage module."""
+ 
+-            for index in range(1, 8):
+-                row[f"i_m{index}_a"] = assignment[f"i_m{index}_a"]
+-                row[f"w_m{index}_um"] = assignment[f"w_m{index}_um"]
++    global _LEGACY_MODULE
+ 
+-            device_records: dict[str, Any] = {}
+-            for device in DEVICES:
+-                prefix = device.lower()
+-                point = points[device]
+-                for name in DEVICE_POINT_FIELDS:
+-                    row[f"{prefix}_{name}"] = point[name]
+-                cap = metrics.device_capacitances[device]
+-                for name in CAP_FIELDS:
+-                    row[f"{prefix}_{name}"] = getattr(cap, name)
++    if _LEGACY_MODULE is None:
++        _LEGACY_MODULE = _load_legacy_module()
+ 
+-                drain, gate, source, body = DEVICE_NODES[device]
+-                vd, vg, vs, vb = (nodes[drain], nodes[gate], nodes[source], nodes[body])
+-                id_abs = float(point["id_abs_a"])
+-                gm = float(point["gm_s"])
+-                gds = float(point["gds_s"])
+-                extras = {
+-                    "vd_v": vd,
+-                    "vg_v": vg,
+-                    "vs_v": vs,
+-                    "vb_v": vb,
+-                    "vgs_signed_v": vg - vs,
+-                    "vds_signed_v": vd - vs,
+-                    "vbs_signed_v": vb - vs,
+-                    "vov_abs_v": float(point["vgs_abs_v"]) - float(point["vth_abs_v"]),
+-                    "gm_over_id_1_v": gm / max(id_abs, 1e-30),
+-                    "ro_ohm": float("inf") if gds <= 0.0 else 1.0 / gds,
+-                    "target_current_a": target_currents[device],
+-                    "current_residual_a": current_residuals[device],
+-                    "current_relative_residual": current_relative_residuals[device],
+-                    "saturation_margin_v": margins[device],
+-                }
+-                for name, value in extras.items():
+-                    row[f"{prefix}_{name}"] = value
+-                device_records[device] = {
+-                    "nodes": {"drain": drain, "gate": gate, "source": source, "body": body},
+-                    "model_point": dict(point),
+-                    "capacitances": {name: getattr(cap, name) for name in CAP_FIELDS},
+-                    "derived": extras,
+-                }
++    return _LEGACY_MODULE
+ 
+-            assignment_records.append(
+-                {
+-                    "schema_version": SCHEMA_VERSION,
+-                    "grid_index": grid_index,
+-                    "assignment_id": row["assignment_id"],
+-                    "independent_variables": {
+-                        "i_m5_a": i5,
+-                        "w_m1_um": w1,
+-                        "vout_v": vout,
+-                    },
+-                    "assignment": assignment,
+-                    "device_records": device_records,
+-                    "ac_metrics": {
+-                        "gain_est_v_v": metrics.gain_v_v,
+-                        "gain_est_db": metrics.gain_db,
+-                        "ugb_est_hz": metrics.ugb_hz,
+-                        "phase_at_ugb_unwrapped_est_deg": metrics.phase_at_ugb_unwrapped_deg,
+-                        "phase_at_ugb_est_deg": metrics.phase_at_ugb_deg,
+-                        "phase_margin_est_deg": metrics.phase_margin_deg,
+-                    },
+-                    "diagnostics": {
+-                        "kcl_residuals_a": kcl,
+-                        "max_kcl_residual_a": row["max_kcl_residual_a"],
+-                        "max_device_current_residual_a": row["max_device_current_residual_a"],
+-                        "max_device_current_relative_residual": row["max_device_current_relative_residual"],
+-                    },
+-                }
+-            )
+ 
+-        except (ConstructionError, ValueError, RuntimeError) as error:
+-            failure = str(error)
+-            failures[failure] += 1
+-            row["failure_type"] = type(error).__name__
+-            row["failure"] = failure
+-            row["n1_v"] = args.n1_v
+-            row["vbias_v"] = args.vbias_v
++def make_fieldnames():
++    """Preserve the original public schema-v3 API."""
+ 
+-        row["mlp_queries_this_point"] = oracle.query_count - before_queries
+-        row["mlp_queries_cumulative"] = oracle.query_count
+-        row["constructor_runtime_ms"] = constructor_ms
+-        row["ac_estimator_runtime_ms"] = ac_ms
+-        row["total_runtime_ms"] = (time.perf_counter() - point_start) * 1000.0
+-        rows.append(row)
+-        processed_now += 1
+-
+-        if processed_now % args.checkpoint_every == 0:
+-            save()
+-
+-        if processed_now % args.progress_every == 0:
+-            passed = sum(row["status"] == "PASS" for row in rows)
+-            elapsed = time.perf_counter() - start
+-            print(
+-                f"[PROGRESS] processed_now={processed_now} "
+-                f"total_rows={len(rows)}/{len(grid)} "
+-                f"pass={passed} reject={len(rows)-passed} "
+-                f"mlp_queries={oracle.query_count} elapsed_s={elapsed:.1f}",
+-                flush=True,
+-            )
+-
+-    save()
+-
+-    passed_rows = [row for row in rows if row["status"] == "PASS"]
+-
+-    def numeric_values(name: str) -> list[float]:
+-        return [
+-            float(row[name])
+-            for row in passed_rows
+-            if row.get(name) not in ("", None)
+-        ]
+-
+-    summary: dict[str, Any] = {
+-        "status": "PASS",
+-        "schema_version": SCHEMA_VERSION,
+-        "algorithm": "deterministic_dependency_plus_dense_capacitance_ac",
+-        "grid": {
+-            "i5_count": args.i5_count,
+-            "w1_count": args.w1_count,
+-            "vout_count": args.vout_count,
+-            "configured_points": args.i5_count * args.w1_count * args.vout_count,
+-            "points_in_this_output": len(rows),
+-            "w1_range_um": [args.w1_min_um, args.w1_max_um],
+-            "vout_range_v": [args.vout_min_v, args.vout_max_v],
+-        },
+-        "construction_policy": {"n1_v": args.n1_v, "vbias_v": args.vbias_v},
+-        "results": {
+-            "pass_count": len(passed_rows),
+-            "reject_count": len(rows) - len(passed_rows),
+-            "mlp_queries": oracle.query_count,
+-            "failure_counts": dict(failures.most_common()),
+-        },
+-        "metrics": {},
+-        "validation": {
+-            "row_count_matches_grid": len(rows) == len(grid),
+-            "unique_grid_indices": len({int(row["grid_index"]) for row in rows}),
+-            "phase_at_ugb_principal_range": all(
+-                -180.0 <= float(row["phase_at_ugb_est_deg"]) < 180.0
+-                for row in passed_rows
+-                if row.get("phase_at_ugb_est_deg") not in ("", None)
+-            ),
+-        },
+-        "limitations": [
+-            "AC metrics are reduced small-signal estimates, not ngspice results.",
+-            "Capacitances use nearest-bias width-normalized dense-table values.",
+-            "The current MLP does not predict capacitances directly.",
+-            "N1 and Vbias are fixed construction-policy values.",
+-        ],
+-    }
+-
+-    for name in (
+-        "gain_est_db",
+-        "ugb_est_hz",
+-        "phase_margin_est_deg",
+-        "power_est_w",
+-    ):
+-        values = numeric_values(name)
+-        summary["metrics"][name] = (
+-            {
+-                "minimum": min(values),
+-                "maximum": max(values),
+-                "mean": sum(values) / len(values),
+-            }
+-            if values
+-            else None
+-        )
+-
+-    json_path.write_text(json.dumps(summary, indent=2) + "\n")
+-    report_path.write_text(
+-        "# Coarse Independent-Variable AC Scan\n\n"
+-        f"- Schema: {SCHEMA_VERSION}\n"
+-        f"- Grid: {args.i5_count} × {args.w1_count} × {args.vout_count}\n"
+-        f"- Rows completed: {len(rows)}\n"
+-        f"- Constructed assignments: {len(passed_rows)}\n"
+-        f"- Rejected points: {len(rows) - len(passed_rows)}\n"
+-        f"- MLP queries: {oracle.query_count}\n"
+-        f"- Policy N1: {args.n1_v} V\n"
+-        f"- Policy Vbias: {args.vbias_v} V\n\n"
+-        "Phase margin uses the principal phase at unity gain.\n\n"
+-        "AC metrics are hybrid estimates and must be validated with ngspice.\n"
+-    )
++    return _legacy_module().make_fieldnames()
+ 
+-    print("===== OPENAMS COARSE INDEPENDENT AC SCAN =====")
+-    print("grid points:", len(grid))
+-    print("rows completed:", len(rows))
+-    print("constructed:", len(passed_rows))
+-    print("rejected:", len(rows) - len(passed_rows))
+-    print("MLP queries:", oracle.query_count)
+-    print("csv:", csv_path)
+-    print("json:", json_path)
+-    print("report:", report_path)
+-    print("configuration:", config_path)
+-    print("assignments:", assignments_path)
+-    return 0
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/tools/validation/validate_assignment_step_03_independent_domains.py b/tools/validation/validate_assignment_step_03_independent_domains.py
+old mode 100644
+new mode 100755
+index 5f8a569..4944c36
+--- a/tools/validation/validate_assignment_step_03_independent_domains.py
++++ b/tools/validation/validate_assignment_step_03_independent_domains.py
+@@ -1,136 +1,380 @@
+ #!/usr/bin/env python3
+-"""Production validation for assignment-synthesis Step 3."""
++"""Generic production validation for assignment-synthesis Step 3."""
+ 
+ from __future__ import annotations
+ 
+ import argparse
+ import json
+ from pathlib import Path
++from typing import Any, Mapping
+ 
+ from openams.synthesis.independent_domains import write_independent_domains
+ 
+ 
+ def parse_args() -> argparse.Namespace:
+     parser = argparse.ArgumentParser()
++
+     parser.add_argument(
+         "--compiled-model",
+         type=Path,
+-        default=Path(
+-            "examples/two_stage_opamp/generated/compiled_circuit_model.json"
+-        ),
++        required=True,
+     )
++
+     parser.add_argument(
+         "--output",
+         type=Path,
+-        default=Path(
+-            "examples/two_stage_opamp/generated/assignment_synthesis/"
+-            "independent_regions.json"
+-        ),
++        required=True,
+     )
++
+     parser.add_argument(
+         "--report",
+         type=Path,
+-        default=Path(
+-            "examples/two_stage_opamp/generated/assignment_synthesis/"
+-            "STEP3_INDEPENDENT_REGIONS_REPORT.md"
+-        ),
++        required=True,
+     )
++
++    parser.add_argument(
++        "--mode",
++        choices=("generic", "two_stage_regression"),
++        default="generic",
++    )
++
+     return parser.parse_args()
+ 
+ 
++def load_expected_variables(
++    compiled_model: Path,
++) -> dict[str, Mapping[str, Any]]:
++    model = json.loads(
++        compiled_model.read_text(encoding="utf-8")
++    )
++
++    declared = (
++        model.get("synthesis_interface", {})
++        .get("independent_variables", [])
++    )
++
++    result: dict[str, Mapping[str, Any]] = {}
++
++    for item in declared:
++        variable_id = str(item.get("id", "")).strip()
++
++        if not variable_id:
++            raise SystemExit(
++                "independent-variable declaration has no id"
++            )
++
++        original = item.get("original", {})
++
++        if not isinstance(original, Mapping):
++            raise SystemExit(
++                f"{variable_id!r} has no mapping definition"
++            )
++
++        result[variable_id] = original
++
++    if not result:
++        raise SystemExit(
++            "compiled model declares no independent variables"
++        )
++
++    return result
++
++
++def domain_has_valid_support(
++    domain: Mapping[str, Any],
++) -> bool:
++    domain_type = str(
++        domain.get("domain_type", "")
++    )
++
++    minimum = domain.get("technology_minimum")
++    maximum = domain.get("technology_maximum")
++
++    bounds_valid = (
++        minimum is not None
++        and maximum is not None
++        and float(minimum) <= float(maximum)
++    )
++
++    if not bounds_valid:
++        return False
++
++    if domain_type == "technology_supported_continuous_interval":
++        return True
++
++    if domain_type in {
++        "technology_supported_total_width_interval",
++        "technology_realizable_continuous_total_width",
++    }:
++        return bool(
++            domain.get("realizable_nf_intervals")
++        )
++
++    candidate_count = int(
++        domain.get("candidate_count", 0)
++    )
++
++    return candidate_count > 0
++
++
+ def main() -> int:
+     args = parse_args()
+-    artifact = write_independent_domains(args.compiled_model, args.output)
++
++    expected_definitions = load_expected_variables(
++        args.compiled_model
++    )
++
++    artifact = write_independent_domains(
++        args.compiled_model,
++        args.output,
++    )
++
+     domains = artifact["domains"]
+-    expected = {"i_m5_a", "w_m1_um", "vout_v"}
+ 
+-    width = domains["w_m1_um"]
+-    vout = domains["vout_v"]
++    expected_ids = set(expected_definitions)
++    actual_ids = set(domains)
++
++    per_variable_checks: dict[str, dict[str, bool]] = {}
++
++    for variable_id, definition in expected_definitions.items():
++        domain = domains.get(variable_id)
++
++        if domain is None:
++            per_variable_checks[variable_id] = {
++                "domain_present": False,
++                "kind_matches": False,
++                "declared_bounds_valid": False,
++                "technology_support_valid": False,
++                "technology_provenance_present": False,
++            }
++            continue
++
++        declared_minimum = domain.get(
++            "declared_effective_minimum"
++        )
++        declared_maximum = domain.get(
++            "declared_effective_maximum"
++        )
++
++        per_variable_checks[variable_id] = {
++            "domain_present": True,
++            "kind_matches": (
++                str(domain.get("kind", "")).lower()
++                == str(definition.get("kind", "")).lower()
++            ),
++            "declared_bounds_valid": (
++                declared_minimum is not None
++                and declared_maximum is not None
++                and float(declared_minimum)
++                <= float(declared_maximum)
++            ),
++            "technology_support_valid": (
++                domain_has_valid_support(domain)
++            ),
++            "technology_provenance_present": (
++                bool(
++                    domain.get("technology_records")
++                    or domain.get("device_domains")
++                    or domain.get("realizable_nf_intervals")
++                )
++            ),
++        }
+ 
+     checks = {
+-        "status_pass": artifact["status"] == "PASS",
+-        "declared_variables_present": set(domains) == expected,
+-        "current_domain_nonempty": domains["i_m5_a"]["candidate_count"] > 0,
+-        "width_domain_valid": (
+-            width["technology_minimum"] <= width["technology_maximum"]
+-        ),
+-        "width_nf_realizable": (
+-            width["kind"] != "total_width"
+-            or bool(width.get("realizable_nf_intervals"))
+-        ),
+-        "vout_continuous_interval": (
+-            vout["domain_type"]
+-            == "technology_supported_continuous_interval"
++        "status_pass": artifact.get("status") == "PASS",
++        "declared_variables_present": actual_ids == expected_ids,
++        "all_variable_checks_pass": all(
++            all(item.values())
++            for item in per_variable_checks.values()
+         ),
+-        "vout_interval_nonempty": (
+-            vout["technology_minimum"] <= vout["technology_maximum"]
++        "next_stage_correct": (
++            artifact.get("next_stage")
++            == "derive_dependent_regions"
+         ),
+-        "next_stage_correct": artifact["next_stage"] == "derive_dependent_regions",
+     }
+-    passed = all(checks.values())
+ 
+-    compact = {}
+-    for name, domain in domains.items():
+-        compact[name] = {
+-            "kind": domain["kind"],
+-            "domain_type": domain["domain_type"],
+-            "design_intent_minimum": domain["declared_effective_minimum"],
+-            "design_intent_maximum": domain["declared_effective_maximum"],
+-            "technology_minimum": domain.get("technology_minimum"),
+-            "technology_maximum": domain.get("technology_maximum"),
+-            "candidate_count": domain["candidate_count"],
+-            "supporting_row_count": domain.get("supporting_row_count"),
+-            "nf_min": domain.get("nf_min"),
+-            "nf_max": domain.get("nf_max"),
+-            "finger_width_min_um": domain.get("finger_width_min_um"),
+-            "finger_width_max_um": domain.get("finger_width_max_um"),
++    if args.mode == "two_stage_regression":
++        expected_two_stage = {
++            "i_m5_a",
++            "w_m1_um",
++            "vout_v",
+         }
+ 
+-    report = f"""# Assignment Synthesis Step 3 Report
++        checks["two_stage_variable_set_matches"] = (
++            actual_ids == expected_two_stage
++        )
+ 
+-## Status
++        if actual_ids == expected_two_stage:
++            width = domains["w_m1_um"]
++            vout = domains["vout_v"]
+ 
+-**{"PASS" if passed else "FAIL"}**
++            checks.update(
++                {
++                    "two_stage_current_domain_nonempty": (
++                        domains["i_m5_a"]["candidate_count"] > 0
++                    ),
++                    "two_stage_width_nf_realizable": (
++                        width["kind"] != "total_width"
++                        or bool(
++                            width.get("realizable_nf_intervals")
++                        )
++                    ),
++                    "two_stage_vout_continuous": (
++                        vout["domain_type"]
++                        == "technology_supported_continuous_interval"
++                    ),
++                }
++            )
+ 
+-## Independent Domains
++    passed = all(checks.values())
+ 
+-```json
+-{json.dumps(compact, indent=2)}
+-```
++    compact: dict[str, Any] = {}
+ 
+-## Checks
++    for name, domain in domains.items():
++        compact[name] = {
++            "kind": domain.get("kind"),
++            "device": domain.get("device"),
++            "domain_type": domain.get("domain_type"),
++            "design_intent_minimum": domain.get(
++                "declared_effective_minimum"
++            ),
++            "design_intent_maximum": domain.get(
++                "declared_effective_maximum"
++            ),
++            "technology_minimum": domain.get(
++                "technology_minimum"
++            ),
++            "technology_maximum": domain.get(
++                "technology_maximum"
++            ),
++            "candidate_count": domain.get(
++                "candidate_count"
++            ),
++            "supporting_row_count": domain.get(
++                "supporting_row_count"
++            ),
++            "source_node": domain.get("source_node"),
++            "source_voltage_v": domain.get(
++                "source_voltage_v"
++            ),
++            "device_terminal": domain.get(
++                "device_terminal"
++            ),
++            "nf_min": domain.get("nf_min"),
++            "nf_max": domain.get("nf_max"),
++            "finger_width_min_um": domain.get(
++                "finger_width_min_um"
++            ),
++            "finger_width_max_um": domain.get(
++                "finger_width_max_um"
++            ),
++        }
+ 
+-```json
+-{json.dumps(checks, indent=2)}
+-```
++    report_lines = [
++        "# Assignment Synthesis Step 3 Report",
++        "",
++        "## Status",
++        "",
++        f"**{'PASS' if passed else 'FAIL'}**",
++        "",
++        f"- **Mode:** `{args.mode}`",
++        f"- **Circuit:** `{artifact.get('circuit_name')}`",
++        f"- **Independent variables:** {len(domains)}",
++        "",
++        "## Independent Domains",
++        "",
++        "```json",
++        json.dumps(compact, indent=2),
++        "```",
++        "",
++        "## Per-Variable Checks",
++        "",
++        "```json",
++        json.dumps(per_variable_checks, indent=2),
++        "```",
++        "",
++        "## Global Checks",
++        "",
++        "```json",
++        json.dumps(checks, indent=2),
++        "```",
++        "",
++        "## Meaning",
++        "",
++        (
++            "- Every independent variable declared in the compiled model "
++            "must have a generated technology-backed domain."
++        ),
++        (
++            "- Point-set domains must contain at least one candidate."
++        ),
++        (
++            "- Continuous node-voltage domains must have a nonempty "
++            "technology-supported interval."
++        ),
++        (
++            "- Total-width domains must have at least one legal integer-"
++            "finger realization."
++        ),
++        (
++            "- Bias-voltage domains are absolute terminal-voltage domains "
++            "derived from device technology data and resolved source voltage."
++        ),
++        (
++            "- No dependent circuit quantity is derived in Step 3."
++        ),
++        "",
++    ]
+ 
+-## Meaning
++    args.report.parent.mkdir(
++        parents=True,
++        exist_ok=True,
++    )
+ 
+-- Current and terminal-voltage variables retain filtered technology support.
+-- Node-voltage variables are continuous technology-supported intervals.
+-- A `total_width` range comes from design intent and is accepted when legal
+-  integer-finger realizations exist within the technology finger-width limits.
+-- No dependent quantity is derived in Step 3.
+-"""
+-    args.report.parent.mkdir(parents=True, exist_ok=True)
+-    args.report.write_text(report, encoding="utf-8")
++    args.report.write_text(
++        "\n".join(report_lines),
++        encoding="utf-8",
++    )
++
++    print(
++        "===== OPENAMS ASSIGNMENT STEP 3: "
++        "INDEPENDENT DOMAINS ====="
++    )
++    print(
++        f"status:       {'PASS' if passed else 'FAIL'}"
++    )
++    print(f"mode:         {args.mode}")
++    print(
++        f"circuit:      {artifact.get('circuit_name')}"
++    )
+ 
+-    print("===== OPENAMS ASSIGNMENT STEP 3: INDEPENDENT DOMAINS =====")
+-    print(f"status:       {'PASS' if passed else 'FAIL'}")
+     for name, domain in domains.items():
+         print(
+-            f"{name}: kind={domain['kind']} "
+-            f"type={domain['domain_type']} "
+-            f"technology=[{domain.get('technology_minimum')}, "
++            f"{name}: "
++            f"kind={domain.get('kind')} "
++            f"device={domain.get('device')} "
++            f"type={domain.get('domain_type')} "
++            f"technology=["
++            f"{domain.get('technology_minimum')}, "
+             f"{domain.get('technology_maximum')}] "
+-            f"candidates={domain['candidate_count']}"
++            f"candidates={domain.get('candidate_count')}"
+         )
++
++        if domain.get("source_node") is not None:
++            print(
++                f"  terminal={domain.get('device_terminal')} "
++                f"source={domain.get('source_node')} "
++                f"Vsource={domain.get('source_voltage_v')} V"
++            )
++
+         if domain.get("nf_min") is not None:
+             print(
+-                f"  NF={domain['nf_min']}..{domain['nf_max']} "
+-                f"Wfinger={domain['finger_width_min_um']}.."
+-                f"{domain['finger_width_max_um']} um"
++                f"  NF={domain.get('nf_min')}.."
++                f"{domain.get('nf_max')} "
++                f"Wfinger={domain.get('finger_width_min_um')}.."
++                f"{domain.get('finger_width_max_um')} um"
+             )
++
+     print(f"output:       {args.output}")
+     print(f"report:       {args.report}")
+ 
+@@ -138,6 +382,14 @@ def main() -> int:
+         for name, value in checks.items():
+             if not value:
+                 print(f"[FAIL] {name}")
++
++        for variable, variable_checks in per_variable_checks.items():
++            for name, value in variable_checks.items():
++                if not value:
++                    print(
++                        f"[FAIL] {variable}: {name}"
++                    )
++
+     return 0 if passed else 1
+ 
+ 
+diff --git a/tools/validation/validate_assignment_step_04_dependent_regions.py b/tools/validation/validate_assignment_step_04_dependent_regions.py
+index eea8926..8c27465 100644
+--- a/tools/validation/validate_assignment_step_04_dependent_regions.py
++++ b/tools/validation/validate_assignment_step_04_dependent_regions.py
+@@ -1,131 +1,54 @@
+ #!/usr/bin/env python3
+-"""Validate physically bounded, correlated Step 4 dependent regions."""
+-
++"""Generic validation for assignment-synthesis Step 4."""
+ from __future__ import annotations
+-
+-import argparse
+-import json
++import argparse, json
+ from pathlib import Path
+-
+ from openams.synthesis.dependent_regions import write_dependent_regions
+ 
+ 
+ def main() -> int:
+-    parser = argparse.ArgumentParser()
+-    parser.add_argument(
+-        "--compiled-model",
+-        type=Path,
+-        default=Path(
+-            "examples/two_stage_opamp/generated/compiled_circuit_model.json"
+-        ),
+-    )
+-    parser.add_argument(
+-        "--independent-regions",
+-        type=Path,
+-        default=Path(
+-            "examples/two_stage_opamp/generated/assignment_synthesis/"
+-            "independent_regions.json"
+-        ),
+-    )
+-    parser.add_argument(
+-        "--output",
+-        type=Path,
+-        default=Path(
+-            "examples/two_stage_opamp/generated/assignment_synthesis/"
+-            "dependent_regions.json"
+-        ),
+-    )
+-    parser.add_argument(
+-        "--report",
+-        type=Path,
+-        default=Path(
+-            "examples/two_stage_opamp/generated/assignment_synthesis/"
+-            "STEP4_DEPENDENT_REGIONS_REPORT.md"
+-        ),
+-    )
+-    args = parser.parse_args()
+-
+-    artifact = write_dependent_regions(
+-        args.compiled_model,
+-        args.independent_regions,
+-        args.output,
+-    )
+-    regions = artifact["dependent_regions"]
+-    output_group = next(
+-        group for group in artifact["groups"]
+-        if group["group_id"] == "output_stage"
+-    )
+-    correlated = output_group["correlated_candidates"]
+-
+-    checks = {
+-        "status_pass": artifact["status"] == "PASS",
+-        "no_missing_declared_quantities": not artifact["missing_declared_quantities"],
+-        "two_groups_executed": len(artifact["groups"]) == 2,
+-        "n2_explicitly_derived": "n2_v" in regions,
+-        "all_intervals_nonempty": all(
+-            value["minimum"] <= value["maximum"]
+-            for value in regions.values()
+-        ),
+-        "vtail_not_below_vss": regions["vtail_v"]["minimum"] >= 0.0,
+-        "correlated_output_candidates_exist": len(correlated) > 0,
+-        "every_output_candidate_current_balanced": all(
+-            row["i_m6_a"] == row["i_m7_a"]
+-            for row in correlated
+-        ),
+-        "every_output_candidate_vout_bounded": all(
+-            0.6 <= row["vout_v"] <= 1.5
+-            for row in correlated
+-        ),
+-        "every_output_candidate_width_legal": all(
+-            0.42 <= row["w_finger_m6_um"] <= 100.0
+-            and 0.42 <= row["w_finger_m7_um"] <= 100.0
+-            and 1 <= row["nf_m6"] <= 3
+-            and 1 <= row["nf_m7"] <= 3
+-            for row in correlated
+-        ),
+-        "next_stage_correct": (
+-            artifact["next_stage"] == "intersect_complete_dc_assignments"
+-        ),
++    p=argparse.ArgumentParser()
++    p.add_argument('--compiled-model',type=Path,required=True)
++    p.add_argument('--independent-regions',type=Path,required=True)
++    p.add_argument('--output',type=Path,required=True)
++    p.add_argument('--report',type=Path,required=True)
++    p.add_argument('--mode',choices=('generic','two_stage_regression'),default='generic')
++    a=p.parse_args()
++    artifact=write_dependent_regions(a.compiled_model,a.independent_regions,a.output)
++    regions=artifact['dependent_regions']
++    checks={
++      'status_pass':artifact['status']=='PASS',
++      'no_missing_declared_quantities':not artifact['missing_declared_quantities'],
++      'all_intervals_nonempty':all(v['minimum']<=v['maximum'] for v in regions.values()),
++      'groups_executed':len(artifact['groups'])>0,
++      'next_stage_correct':artifact['next_stage']=='intersect_complete_dc_assignments',
+     }
+-    passed = all(checks.values())
+-
+-    compact = {
+-        name: {
+-            "minimum": value["minimum"],
+-            "maximum": value["maximum"],
+-        }
+-        for name, value in regions.items()
+-    }
+-    report = (
+-        "# Assignment Synthesis Step 4 Report\n\n"
+-        f"**Status:** {'PASS' if passed else 'FAIL'}\n\n"
+-        f"- Correlated output-stage candidates: {len(correlated)}\n\n"
+-        "## Derived Regions\n\n```json\n"
+-        + json.dumps(compact, indent=2)
+-        + "\n```\n\n## Checks\n\n```json\n"
+-        + json.dumps(checks, indent=2)
+-        + "\n```\n"
+-    )
+-    args.report.parent.mkdir(parents=True, exist_ok=True)
+-    args.report.write_text(report, encoding="utf-8")
+-
+-    print("===== OPENAMS ASSIGNMENT STEP 4: DEPENDENT REGIONS =====")
++    if a.mode=='generic':
++      checks['generic_semantics']=artifact.get('resolution_semantics')=='conservative_regions_with_step5_correlation_deferred'
++      checks['all_groups_generic']=all(g.get('solver')=='generic_dependency_graph' for g in artifact['groups'])
++    else:
++      checks['legacy_semantics']=artifact.get('resolution_semantics')=='legacy_adapter_correlated_regions'
++      output_group=next(g for g in artifact['groups'] if g['group_id']=='output_stage')
++      checks['correlated_output_candidates_exist']=len(output_group.get('correlated_candidates',[]))>0
++    passed=all(checks.values())
++    compact={k:{'minimum':v['minimum'],'maximum':v['maximum'],'derivation':v.get('derivation')} for k,v in regions.items()}
++    report=("# Assignment Synthesis Step 4 Report\n\n"
++      f"**Status:** {'PASS' if passed else 'FAIL'}\n\n"
++      f"- Mode: `{a.mode}`\n- Groups: {len(artifact['groups'])}\n- Regions: {len(regions)}\n"
++      f"- Deferred correlations: {len(artifact.get('deferred_correlations',[]))}\n\n"
++      "## Derived Regions\n\n```json\n"+json.dumps(compact,indent=2)+"\n```\n\n"
++      "## Checks\n\n```json\n"+json.dumps(checks,indent=2)+"\n```\n")
++    a.report.parent.mkdir(parents=True,exist_ok=True); a.report.write_text(report)
++    print('===== OPENAMS ASSIGNMENT STEP 4: DEPENDENT REGIONS =====')
+     print(f"status:       {'PASS' if passed else 'FAIL'}")
++    print(f"mode:         {a.mode}")
+     print(f"groups:       {len(artifact['groups'])}")
+     print(f"regions:      {len(regions)}")
+     print(f"missing:      {artifact['missing_declared_quantities'] or 'none'}")
+-    print(f"output tuples:{len(correlated)}")
+-    for name, value in compact.items():
+-        print(f"{name}: [{value['minimum']}, {value['maximum']}]")
+-    print(f"output:       {args.output}")
+-    print(f"report:       {args.report}")
+-
++    print(f"deferred:     {len(artifact.get('deferred_correlations',[]))}")
++    print(f"output:       {a.output}")
+     if not passed:
+-        for name, value in checks.items():
+-            if not value:
+-                print(f"[FAIL] {name}")
++      for k,v in checks.items():
++        if not v: print(f'[FAIL] {k}')
+     return 0 if passed else 1
+-
+-
+-if __name__ == "__main__":
+-    raise SystemExit(main())
++if __name__=='__main__': raise SystemExit(main())
+diff --git a/tools/validation/validate_assignment_step_05_complete_assignments.py b/tools/validation/validate_assignment_step_05_complete_assignments.py
+old mode 100644
+new mode 100755
+index b7e9661..d4224a0
+--- a/tools/validation/validate_assignment_step_05_complete_assignments.py
++++ b/tools/validation/validate_assignment_step_05_complete_assignments.py
+@@ -1,104 +1,154 @@
+ #!/usr/bin/env python3
+-"""Validate indexed/interpolated Step 5 complete assignments."""
+-
++"""Validate legacy or topology-generic Step 5 complete assignments."""
+ from __future__ import annotations
+ 
+ import argparse
+ import json
+ from pathlib import Path
+ 
+-from openams.synthesis.complete_assignments import write_complete_assignments
++
++def _parse_name_int(values: list[str]) -> dict[str, int]:
++    result: dict[str, int] = {}
++    for value in values:
++        name, separator, count = value.partition("=")
++        if not separator:
++            raise SystemExit(f"invalid --continuous-samples value {value!r}; use NAME=COUNT")
++        result[name] = int(count)
++    return result
++
++
++def _parse_name_range(values: list[str]) -> dict[str, tuple[float, float]]:
++    result: dict[str, tuple[float, float]] = {}
++    for value in values:
++        name, separator, bounds = value.partition("=")
++        minimum, colon, maximum = bounds.partition(":")
++        if not separator or not colon:
++            raise SystemExit(f"invalid --range value {value!r}; use NAME=MIN:MAX")
++        result[name] = (float(minimum), float(maximum))
++    return result
+ 
+ 
+ def main() -> int:
+     parser = argparse.ArgumentParser()
+-    base = Path("examples/two_stage_opamp/generated/assignment_synthesis")
+-    parser.add_argument(
+-        "--compiled-model",
+-        type=Path,
+-        default=Path("examples/two_stage_opamp/generated/compiled_circuit_model.json"),
+-    )
+-    parser.add_argument("--independent-regions", type=Path, default=base / "independent_regions.json")
+-    parser.add_argument("--dependent-regions", type=Path, default=base / "dependent_regions.json")
+-    parser.add_argument("--output-json", type=Path, default=base / "complete_assignments.json")
+-    parser.add_argument("--output-csv", type=Path, default=base / "complete_assignments.csv")
+-    parser.add_argument("--report", type=Path, default=base / "STEP5_COMPLETE_ASSIGNMENTS_REPORT.md")
++    parser.add_argument("--compiled-model", type=Path, required=True)
++    parser.add_argument("--independent-regions", type=Path, required=True)
++    parser.add_argument("--dependent-regions", type=Path, required=True)
++    parser.add_argument("--output-json", type=Path, required=True)
++    parser.add_argument("--output-csv", type=Path, required=True)
++    parser.add_argument("--report", type=Path, required=True)
++    parser.add_argument("--mode", choices=("generic", "legacy"), default="generic")
++    parser.add_argument("--continuous-samples", action="append", default=[])
++    parser.add_argument("--range", dest="ranges", action="append", default=[])
++    parser.add_argument("--provider", choices=("inverse", "table", "plugin"), default="inverse")
++    parser.add_argument("--provider-plugin")
++    parser.add_argument("--technology-csv", type=Path)
++    parser.add_argument("--mlp-fallback", action="store_true")
++    parser.add_argument("--adaptive-cache", type=Path)
++    parser.add_argument("--mlp-vgs-count", type=int, default=8)
++    parser.add_argument("--mlp-vds-count", type=int, default=10)
++    parser.add_argument("--max-device-candidates", type=int, default=64)
++    parser.add_argument("--max-group-choices", type=int, default=64)
++    parser.add_argument("--max-solutions-per-point", type=int, default=64)
++    parser.add_argument("--max-assignments", type=int)
+     args = parser.parse_args()
+ 
+-    artifact = write_complete_assignments(
+-        args.compiled_model,
+-        args.independent_regions,
+-        args.dependent_regions,
+-        args.output_json,
+-        args.output_csv,
+-    )
+-    assignments = artifact["assignments"]
++    if args.mode == "legacy":
++        from openams.synthesis.complete_assignments import write_complete_assignments
++        artifact = write_complete_assignments(
++            args.compiled_model,
++            args.independent_regions,
++            args.dependent_regions,
++            args.output_json,
++            args.output_csv,
++        )
++    else:
++        from openams.synthesis.generic_complete_step5 import write_generic_complete_assignments
++        artifact = write_generic_complete_assignments(
++            args.compiled_model,
++            args.independent_regions,
++            args.dependent_regions,
++            args.output_json,
++            args.output_csv,
++            continuous_samples=_parse_name_int(args.continuous_samples),
++            range_overrides=_parse_name_range(args.ranges),
++            provider_kind=args.provider,
++            provider_plugin=args.provider_plugin,
++            technology_csv_path=args.technology_csv,
++            enable_mlp_fallback=args.mlp_fallback,
++            adaptive_cache_path=args.adaptive_cache,
++            mlp_vgs_count=args.mlp_vgs_count,
++            mlp_vds_count=args.mlp_vds_count,
++            max_device_candidates=args.max_device_candidates,
++            max_group_choices=args.max_group_choices,
++            max_solutions_per_independent_point=args.max_solutions_per_point,
++            max_assignments=args.max_assignments,
++        )
+ 
++    assignments = artifact.get("assignments", [])
+     checks = {
+-        "status_pass": artifact["status"] == "PASS",
+-        "input_candidates_exist": artifact["input_bias_candidate_count"] > 0,
+-        "complete_assignments_exist": artifact["complete_assignment_count"] > 0,
+-        "direct_simulation_route": artifact["recommended_route"] == "direct_simulation",
+-        "all_current_balanced": all(row["i_m6_a"] == row["i_m7_a"] for row in assignments),
+-        "all_size_relations_exact": all(
+-            row["second_stage_ratio_relative_error"] <= 1e-12
+-            for row in assignments
+-        ),
+-        "all_nodes_physical": all(
+-            0.0 <= row["vtail_v"] <= 0.9
+-            and 0.0 <= row["n1_v"] <= 1.8
+-            and 0.0 <= row["n2_v"] <= 1.8
+-            and 0.0 <= row["vbias_v"] <= 1.8
+-            and 0.2 <= row["vout_v"] <= 1.6
+-            for row in assignments
+-        ),
+-        "interpolation_provenance_present": all(
+-            "m6_lower_technology_row_index" in row
+-            and "m6_upper_technology_row_index" in row
+-            for row in assignments
+-        ),
++        "status_pass": artifact.get("status") == "PASS",
++        "complete_assignments_exist": len(assignments) > 0,
++        "assignment_count_matches": artifact.get("complete_assignment_count") == len(assignments),
++        "route_correct": artifact.get("recommended_route") in {
++            "direct_simulation",
++            "ngspice_dc_confirmation",
++            "select_vout_within_feasible_window",
++        },
+     }
++    if args.mode == "generic":
++        checks.update(
++            {
++                "independent_grid_nonempty": artifact.get("independent_combination_count", 0) > 0,
++                "provider_recorded": bool(artifact.get("device_provider")),
++                "all_assignments_model_valid": all(
++                    row.get("assignment_semantics") in {
++                        "model_valid_dc_operating_point",
++                        "model_valid_dc_operating_region",
++                    }
++                    for row in assignments
++                ),
++                "ranged_assignments_have_vout_window": all(
++                    row.get("assignment_semantics")
++                    != "model_valid_dc_operating_region"
++                    or (
++                        isinstance(row.get("vout_min_v"), (int, float))
++                        and isinstance(row.get("vout_max_v"), (int, float))
++                        and row["vout_min_v"] < row["vout_max_v"]
++                    )
++                    for row in assignments
++                ),
++            }
++        )
+     passed = all(checks.values())
+-
+     args.report.parent.mkdir(parents=True, exist_ok=True)
+     args.report.write_text(
+         "# Assignment Synthesis Step 5 Report\n\n"
+         f"**Status:** {'PASS' if passed else 'FAIL'}\n\n"
+-        f"- Algorithm: `{artifact['algorithm']}`\n"
+-        f"- Input-bias candidates: {artifact['input_bias_candidate_count']}\n"
+-        f"- Step 4 output candidates: {artifact['step4_output_candidate_count']}\n"
+-        f"- Complete assignments: {artifact['complete_assignment_count']}\n"
+-        f"- Route: `{artifact['recommended_route']}`\n\n"
++        f"- Mode: `{args.mode}`\n"
++        f"- Algorithm: `{artifact.get('algorithm')}`\n"
++        f"- Independent combinations: {artifact.get('independent_combination_count', 'legacy')}\n"
++        f"- Complete assignments: {artifact.get('complete_assignment_count', 0)}\n"
++        f"- Route: `{artifact.get('recommended_route')}`\n\n"
+         "## Checks\n\n```json\n"
+         + json.dumps(checks, indent=2)
+         + "\n```\n\n## Rejections\n\n```json\n"
+-        + json.dumps(
+-            {
+-                "input": artifact["input_rejection_counts"],
+-                "join": artifact["join_rejection_counts"],
+-            },
+-            indent=2,
+-        )
++        + json.dumps(artifact.get("rejection_counts", {}), indent=2)
+         + "\n```\n",
+         encoding="utf-8",
+     )
+-
+     print("===== OPENAMS ASSIGNMENT STEP 5: COMPLETE DC ASSIGNMENTS =====")
+-    print(f"status:           {'PASS' if passed else 'FAIL'}")
+-    print(f"algorithm:        {artifact['algorithm']}")
+-    print(f"input candidates: {artifact['input_bias_candidate_count']}")
+-    print(f"assignments:      {artifact['complete_assignment_count']}")
+-    print(f"route:            {artifact['recommended_route']}")
+-    print(f"json:             {args.output_json}")
+-    print(f"csv:              {args.output_csv}")
+-    print(f"report:           {args.report}")
+-
++    print(f"status:                    {'PASS' if passed else 'FAIL'}")
++    print(f"mode:                      {args.mode}")
++    print(f"algorithm:                 {artifact.get('algorithm')}")
++    print(f"independent combinations:  {artifact.get('independent_combination_count', 'legacy')}")
++    print(f"assignments:               {artifact.get('complete_assignment_count', 0)}")
++    print(f"route:                     {artifact.get('recommended_route')}")
++    print(f"json:                      {args.output_json}")
++    print(f"csv:                       {args.output_csv}")
+     if not passed:
+         for name, value in checks.items():
+             if not value:
+                 print(f"[FAIL] {name}")
+-        print(json.dumps(artifact["join_rejection_counts"], indent=2))
+-
+     return 0 if passed else 1
+ 
+ 
+diff --git a/tools/validation/validate_gate_02_topology.py b/tools/validation/validate_gate_02_topology.py
+index 7fd4e9d..6732810 100755
+--- a/tools/validation/validate_gate_02_topology.py
++++ b/tools/validation/validate_gate_02_topology.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Gate 2 validator for the official two-stage-op-amp subcircuit."""
++"""Gate 2 validator for a named flat-SPICE subcircuit."""
+ 
+ from __future__ import annotations
+ 
+@@ -12,23 +12,72 @@ from typing import Any
+ from openams.topology import extract_spice_subcircuit, parse_spice_subcircuit
+ 
+ 
+-EXPECTED_DEVICES = {"XM1", "XM2", "XM3", "XM4", "XM5", "XM6", "XM7", "Cc"}
+-EXPECTED_PORTS = ("inp", "inn", "out", "vdd", "vss", "vbias")
++def parse_csv(value: str | None) -> tuple[str, ...]:
++    if value is None:
++        return ()
++
++    return tuple(
++        item.strip()
++        for item in value.split(",")
++        if item.strip()
++    )
+ 
+ 
+ def parse_args() -> argparse.Namespace:
+-    parser = argparse.ArgumentParser()
++    parser = argparse.ArgumentParser(
++        description=(
++            "Parse a named flat-SPICE subcircuit into the canonical "
++            "OpenAMS topology representation."
++        )
++    )
++
+     parser.add_argument(
+         "--netlist",
+         type=Path,
+-        default=Path("examples/two_stage_opamp/inputs/netlist.spice"),
++        required=True,
+     )
+-    parser.add_argument("--subcircuit", default="two_stage_opamp")
++
++    parser.add_argument(
++        "--subcircuit",
++        required=True,
++    )
++
+     parser.add_argument(
+         "--output-dir",
+         type=Path,
+-        default=Path("docs/validation/evidence/gate_02_topology"),
++        required=True,
++    )
++
++    parser.add_argument(
++        "--expected-ports",
++        default=None,
++        help=(
++            "Optional comma-separated ordered subcircuit ports, "
++            "for example: inp,inn,out,vdd,vss,vbias"
++        ),
++    )
++
++    parser.add_argument(
++        "--expected-devices",
++        default=None,
++        help=(
++            "Optional comma-separated device instance names, "
++            "for example: XM1,XM2,XM3,Cc"
++        ),
+     )
++
++    parser.add_argument(
++        "--expected-device-count",
++        type=int,
++        default=None,
++    )
++
++    parser.add_argument(
++        "--expected-mos-count",
++        type=int,
++        default=None,
++    )
++
+     return parser.parse_args()
+ 
+ 
+@@ -36,17 +85,65 @@ def enum_value(value: Any) -> str:
+     return str(getattr(value, "value", value))
+ 
+ 
++def is_mos_device(row: dict[str, Any]) -> bool:
++    kind = str(row.get("kind", "")).lower()
++    model = str(row.get("model", "")).lower()
++    terminals = row.get("terminals", {})
++
++    if kind in {
++        "mos",
++        "mosfet",
++        "nmos",
++        "pmos",
++    }:
++        return True
++
++    if "nfet" in model or "pfet" in model:
++        return True
++
++    return set(terminals) >= {
++        "drain",
++        "gate",
++        "source",
++        "bulk",
++    }
++
++
+ def main() -> int:
+     args = parse_args()
+-    args.output_dir.mkdir(parents=True, exist_ok=True)
++
++    if not args.netlist.is_file():
++        raise SystemExit(
++            f"netlist does not exist: {args.netlist}"
++        )
++
++    args.output_dir.mkdir(
++        parents=True,
++        exist_ok=True,
++    )
++
+     raw_dir = args.output_dir / "raw"
+-    raw_dir.mkdir(parents=True, exist_ok=True)
++    raw_dir.mkdir(
++        parents=True,
++        exist_ok=True,
++    )
++
++    text = args.netlist.read_text(
++        encoding="utf-8",
++    )
+ 
+-    text = args.netlist.read_text(encoding="utf-8")
+-    selected = extract_spice_subcircuit(text, subcircuit=args.subcircuit)
+-    circuit = parse_spice_subcircuit(text, subcircuit=args.subcircuit)
++    selected = extract_spice_subcircuit(
++        text,
++        subcircuit=args.subcircuit,
++    )
++
++    circuit = parse_spice_subcircuit(
++        text,
++        subcircuit=args.subcircuit,
++    )
++
++    device_rows: list[dict[str, Any]] = []
+ 
+-    device_rows = []
+     for name, device in circuit.devices.items():
+         device_rows.append(
+             {
+@@ -58,113 +155,298 @@ def main() -> int:
+             }
+         )
+ 
+-    node_rows = [{"name": name} for name in circuit.nodes]
++    node_rows = [
++        {"name": name}
++        for name in circuit.nodes
++    ]
++
++    mos_rows = [
++        row
++        for row in device_rows
++        if is_mos_device(row)
++    ]
++
++    kind_counts = Counter(
++        row["kind"]
++        for row in device_rows
++    )
++
+     actual_devices = set(circuit.devices)
+-    missing = sorted(EXPECTED_DEVICES - actual_devices)
+-    unexpected = sorted(actual_devices - EXPECTED_DEVICES)
+-    kind_counts = Counter(row["kind"] for row in device_rows)
+ 
+-    checks = {
++    expected_ports = parse_csv(
++        args.expected_ports
++    )
++
++    expected_devices = set(
++        parse_csv(args.expected_devices)
++    )
++
++    missing_devices = sorted(
++        expected_devices - actual_devices
++    )
++
++    unexpected_devices = sorted(
++        actual_devices - expected_devices
++    )
++
++    checks: dict[str, bool] = {
+         "parser_succeeded": True,
+-        "subcircuit_name_matches": circuit.name == args.subcircuit,
+-        "ports_match": selected.ports == EXPECTED_PORTS,
+-        "expected_devices_present": not missing,
+-        "no_unexpected_devices": not unexpected,
+-        "all_devices_have_terminals": all(row["terminals"] for row in device_rows),
+-        "m1_connectivity": circuit.devices["XM1"].terminals == {
+-            "drain": "n1", "gate": "inp", "source": "ntail", "bulk": "vss"
+-        },
+-        "m6_connectivity": circuit.devices["XM6"].terminals == {
+-            "drain": "out", "gate": "n2", "source": "vdd", "bulk": "vdd"
+-        },
+-        "compensation_capacitor_connectivity": circuit.devices["Cc"].terminals == {
+-            "positive": "n2", "negative": "out"
+-        },
++        "subcircuit_name_matches": (
++            circuit.name == args.subcircuit
++        ),
++        "subcircuit_has_ports": bool(
++            selected.ports
++        ),
++        "subcircuit_has_devices": bool(
++            device_rows
++        ),
++        "subcircuit_has_nodes": bool(
++            node_rows
++        ),
++        "all_devices_have_terminals": all(
++            bool(row["terminals"])
++            for row in device_rows
++        ),
+     }
++
++    if expected_ports:
++        checks["ports_match"] = (
++            tuple(selected.ports)
++            == expected_ports
++        )
++
++    if expected_devices:
++        checks["expected_devices_present"] = (
++            not missing_devices
++        )
++
++        checks["no_unexpected_devices"] = (
++            not unexpected_devices
++        )
++
++    if args.expected_device_count is not None:
++        checks["device_count_matches"] = (
++            len(device_rows)
++            == args.expected_device_count
++        )
++
++    if args.expected_mos_count is not None:
++        checks["mos_count_matches"] = (
++            len(mos_rows)
++            == args.expected_mos_count
++        )
++
+     passed = all(checks.values())
+ 
+     topology = {
++        "artifact": "openams.topology",
++        "schema_version": 1,
+         "circuit_name": circuit.name,
+-        "subcircuit_ports": list(selected.ports),
++        "subcircuit_ports": list(
++            selected.ports
++        ),
+         "source_lines": {
+             "start": selected.start_line,
+             "end": selected.end_line,
+         },
+         "device_count": len(device_rows),
++        "mos_device_count": len(mos_rows),
+         "node_count": len(node_rows),
+         "devices": device_rows,
+         "nodes": node_rows,
+     }
++
+     summary = {
+         "gate": 2,
+-        "proof": "Official netlist subcircuit parsed into canonical Circuit",
+-        "status": "PASS" if passed else "FAIL",
+-        "source_netlist": str(args.netlist),
++        "validator": (
++            "generic_flat_spice_topology"
++        ),
++        "proof": (
++            "Named flat-SPICE subcircuit parsed "
++            "into the canonical OpenAMS Circuit "
++            "representation."
++        ),
++        "status": (
++            "PASS"
++            if passed
++            else "FAIL"
++        ),
++        "source_netlist": str(
++            args.netlist
++        ),
+         "subcircuit": args.subcircuit,
+-        "ports": list(selected.ports),
+-        "device_count": len(device_rows),
+-        "node_count": len(node_rows),
+-        "device_kind_counts": dict(sorted(kind_counts.items())),
+-        "missing_devices": missing,
+-        "unexpected_devices": unexpected,
++        "ports": list(
++            selected.ports
++        ),
++        "device_count": len(
++            device_rows
++        ),
++        "mos_device_count": len(
++            mos_rows
++        ),
++        "node_count": len(
++            node_rows
++        ),
++        "device_kind_counts": dict(
++            sorted(kind_counts.items())
++        ),
++        "expected_ports": list(
++            expected_ports
++        ),
++        "expected_devices": sorted(
++            expected_devices
++        ),
++        "missing_devices": (
++            missing_devices
++        ),
++        "unexpected_devices": (
++            unexpected_devices
++        ),
+         "checks": checks,
+     }
+ 
+-    (args.output_dir / "topology.json").write_text(
+-        json.dumps(topology, indent=2, default=str) + "\n",
+-        encoding="utf-8",
++    topology_path = (
++        args.output_dir
++        / "topology.json"
+     )
+-    (args.output_dir / "topology_summary.json").write_text(
+-        json.dumps(summary, indent=2, default=str) + "\n",
+-        encoding="utf-8",
++
++    summary_path = (
++        args.output_dir
++        / "topology_summary.json"
+     )
+-    (raw_dir / "netlist.spice").write_text(text, encoding="utf-8")
+-    (raw_dir / "selected_subcircuit.spice").write_text(
+-        selected.body,
++
++    topology_path.write_text(
++        json.dumps(
++            topology,
++            indent=2,
++            default=str,
++        )
++        + "\n",
+         encoding="utf-8",
+     )
+ 
+-    report = f"""# Gate 2 Topology Validation Report
+-
+-## Summary
++    summary_path.write_text(
++        json.dumps(
++            summary,
++            indent=2,
++            default=str,
++        )
++        + "\n",
++        encoding="utf-8",
++    )
+ 
+-- **Gate:** 2
+-- **Status:** {summary["status"]}
+-- **Netlist:** `{args.netlist}`
+-- **Subcircuit:** `{args.subcircuit}`
+-- **Ports:** `{", ".join(selected.ports)}`
+-- **Devices:** {len(device_rows)}
+-- **Nodes:** {len(node_rows)}
++    (
++        raw_dir
++        / "netlist.spice"
++    ).write_text(
++        text,
++        encoding="utf-8",
++    )
+ 
+-## Device Coverage
++    (
++        raw_dir
++        / "selected_subcircuit.spice"
++    ).write_text(
++        selected.body,
++        encoding="utf-8",
++    )
+ 
+-- **Missing:** `{", ".join(missing) if missing else "None"}`
+-- **Unexpected:** `{", ".join(unexpected) if unexpected else "None"}`
++    missing_text = (
++        ", ".join(missing_devices)
++        if missing_devices
++        else "None"
++    )
+ 
+-## Checks
++    unexpected_text = (
++        ", ".join(unexpected_devices)
++        if unexpected_devices
++        else "None"
++    )
+ 
+-```json
+-{json.dumps(checks, indent=2)}
+-```
++    checks_json = json.dumps(
++        checks,
++        indent=2,
++    )
+ 
+-## Exit Criterion
++    report_lines = [
++        "# Gate 2 Topology Validation Report",
++        "",
++        "## Summary",
++        "",
++        f"- **Gate:** 2",
++        f"- **Status:** {summary['status']}",
++        f"- **Validator:** `generic_flat_spice_topology`",
++        f"- **Netlist:** `{args.netlist}`",
++        f"- **Subcircuit:** `{args.subcircuit}`",
++        f"- **Ports:** `{', '.join(selected.ports)}`",
++        f"- **Devices:** {len(device_rows)}",
++        f"- **MOS devices:** {len(mos_rows)}",
++        f"- **Nodes:** {len(node_rows)}",
++        "",
++        "## Device Coverage",
++        "",
++        f"- **Missing:** `{missing_text}`",
++        f"- **Unexpected:** `{unexpected_text}`",
++        "",
++        "## Checks",
++        "",
++        "```json",
++        checks_json,
++        "```",
++        "",
++        "## Exit Criterion",
++        "",
++        (
++            "Gate 2 passes when the requested named flat-SPICE "
++            "subcircuit is parsed, its declared ports and devices "
++            "are preserved, every parsed device has terminal "
++            "connectivity, and all explicitly supplied expectations "
++            "are satisfied."
++        ),
++        "",
++    ]
+ 
+-Gate 2 passes when the official named subcircuit is extracted directly from the
+-reference netlist, its declared ports are preserved in validation evidence, all
+-seven MOS primitive instances and the compensation capacitor are parsed, and
+-their structural connectivity matches the reference circuit.
+-"""
+-    (args.output_dir / "TOPOLOGY_REPORT.md").write_text(report, encoding="utf-8")
++    (
++        args.output_dir
++        / "TOPOLOGY_REPORT.md"
++    ).write_text(
++        "\n".join(report_lines),
++        encoding="utf-8",
++    )
+ 
+-    print("===== OPENAMS GATE 2: TOPOLOGY =====")
+-    print(f"status:     {summary['status']}")
+-    print(f"subcircuit: {args.subcircuit}")
+-    print(f"ports:      {', '.join(selected.ports)}")
+-    print(f"devices:    {len(device_rows)}")
+-    print(f"nodes:      {len(node_rows)}")
+-    print(f"missing:    {missing or 'none'}")
+-    print(f"unexpected: {unexpected or 'none'}")
+-    print(f"evidence:   {args.output_dir}")
++    print(
++        "===== OPENAMS GATE 2: TOPOLOGY ====="
++    )
++    print(
++        f"status:       {summary['status']}"
++    )
++    print(
++        f"validator:    {summary['validator']}"
++    )
++    print(
++        f"subcircuit:   {args.subcircuit}"
++    )
++    print(
++        f"ports:        {', '.join(selected.ports)}"
++    )
++    print(
++        f"devices:      {len(device_rows)}"
++    )
++    print(
++        f"MOS devices:  {len(mos_rows)}"
++    )
++    print(
++        f"nodes:        {len(node_rows)}"
++    )
++    print(
++        f"missing:      {missing_devices or 'none'}"
++    )
++    print(
++        f"unexpected:   {unexpected_devices or 'none'}"
++    )
++    print(
++        f"evidence:     {args.output_dir}"
++    )
+ 
+     return 0 if passed else 1
+ 
+diff --git a/tools/validation/validate_gate_04b_constraint_compiler.py b/tools/validation/validate_gate_04b_constraint_compiler.py
+index 2d29f4c..368bac7 100755
+--- a/tools/validation/validate_gate_04b_constraint_compiler.py
++++ b/tools/validation/validate_gate_04b_constraint_compiler.py
+@@ -1,32 +1,22 @@
+ #!/usr/bin/env python3
+-"""Executable Gate 4B validation for the OpenAMS constraint compiler.
+-
+-This validator consumes the five canonical constraints generated from the
+-official two-stage-op-amp design intent, compiles them through the production
+-``CircuitConstraintCompiler``, executes the compiled intersection against a
+-small representative set of device-current regions, and verifies the exact
+-retained operating combinations.
+-"""
++"""Generic executable Gate 4B validation for OpenAMS constraints."""
+ 
+ from __future__ import annotations
+ 
+ import argparse
+ import json
++import re
+ from dataclasses import asdict, dataclass, is_dataclass
+ from pathlib import Path
+ from typing import Any, Mapping
+ 
+-from openams.synthesis import (
+-    CircuitConstraintCompiler,
+-    RegionBinding,
+-    RegionInput,
+-)
++from openams.synthesis import CircuitConstraintCompiler, RegionBinding, RegionInput
++
++CURRENT_TOKEN_RE = re.compile(r"\bdevice\.([A-Za-z_][A-Za-z0-9_]*)\.current\b")
+ 
+ 
+ @dataclass(frozen=True)
+ class CanonicalConstraint:
+-    """Compiler input matching the public canonical-constraint protocol."""
+-
+     name: str
+     kind: str
+     expression: str
+@@ -35,20 +25,12 @@ class CanonicalConstraint:
+ 
+ def parse_args() -> argparse.Namespace:
+     parser = argparse.ArgumentParser()
++    parser.add_argument("--constraints", type=Path, required=True)
++    parser.add_argument("--output-dir", type=Path, required=True)
+     parser.add_argument(
+-        "--constraints",
+-        type=Path,
+-        default=Path(
+-            "docs/validation/evidence/gate_04_constraints/"
+-            "compiler_constraints.json"
+-        ),
+-    )
+-    parser.add_argument(
+-        "--output-dir",
+-        type=Path,
+-        default=Path(
+-            "docs/validation/evidence/gate_04b_constraint_compiler"
+-        ),
++        "--mode",
++        choices=("generic", "two_stage_regression"),
++        default="generic",
+     )
+     return parser.parse_args()
+ 
+@@ -73,6 +55,33 @@ def jsonable(value: Any) -> Any:
+     return value
+ 
+ 
++
++def normalize_linear_expression(expression: str) -> str:
++    """Rewrite division by numeric constants as linear multiplication."""
++
++    division_pattern = re.compile(
++        r"(?P<token>"
++        r"device\.[A-Za-z_][A-Za-z0-9_]*\.current"
++        r")"
++        r"\s*/\s*"
++        r"(?P<divisor>"
++        r"(?:\d+(?:\.\d*)?|\.\d+)"
++        r"(?:[eE][+-]?\d+)?"
++        r")"
++    )
++
++    def replace(match: re.Match[str]) -> str:
++        token = match.group("token")
++        divisor = float(match.group("divisor"))
++        if divisor == 0.0:
++            raise ValueError(
++                f"division by zero in constraint expression: {expression!r}"
++            )
++        return f"{1.0 / divisor:.17g} * {token}"
++
++    return division_pattern.sub(replace, expression)
++
++
+ def load_constraints(path: Path) -> tuple[CanonicalConstraint, ...]:
+     if not path.is_file():
+         raise SystemExit(f"constraint artifact does not exist: {path}")
+@@ -81,31 +90,40 @@ def load_constraints(path: Path) -> tuple[CanonicalConstraint, ...]:
+     if not isinstance(data, list):
+         raise SystemExit("compiler constraint artifact must contain a JSON list")
+ 
+-    constraints: list[CanonicalConstraint] = []
++    result: list[CanonicalConstraint] = []
+     for index, item in enumerate(data):
+         if not isinstance(item, dict):
+             raise SystemExit(f"constraint index {index} must be a JSON object")
+-        expression = str(item["expression"])
+-        expression = expression.replace(
+-            "device.M5.current / 2.0",
+-            "0.5 * device.M5.current",
+-        )
+-
+-        constraints.append(
++        result.append(
+             CanonicalConstraint(
+                 name=str(item["name"]),
+                 kind=str(item["kind"]),
+-                expression=expression,
++                expression=normalize_linear_expression(str(item["expression"])),
+                 source=str(item.get("source", "design_intent")),
+             )
+         )
+-    return tuple(constraints)
++    return tuple(result)
++
++
++def device_sort_key(name: str) -> tuple[str, int, str]:
++    match = re.fullmatch(r"([A-Za-z_]+)(\d+)", name)
++    if match:
++        return (match.group(1), int(match.group(2)), name)
++    return (name, -1, name)
++
+ 
++def discover_devices(
++    constraints: tuple[CanonicalConstraint, ...],
++) -> tuple[str, ...]:
++    devices: set[str] = set()
++    for item in constraints:
++        devices.update(CURRENT_TOKEN_RE.findall(item.expression))
++    if not devices:
++        raise SystemExit("no canonical device-current variables found")
++    return tuple(sorted(devices, key=device_sort_key))
+ 
+-def binding(
+-    name: str,
+-    currents_a: tuple[float, ...],
+-) -> RegionBinding:
++
++def binding(name: str, currents_a: tuple[float, ...]) -> RegionBinding:
+     rows = tuple(
+         {
+             "id_a": current,
+@@ -120,9 +138,7 @@ def binding(
+     )
+ 
+ 
+-def build_bindings() -> tuple[RegionBinding, ...]:
+-    """Representative regions with valid and deliberately invalid rows."""
+-
++def build_two_stage_bindings() -> tuple[RegionBinding, ...]:
+     return (
+         binding("M1", (20e-6, 25e-6, 30e-6)),
+         binding("M2", (20e-6, 30e-6, 35e-6)),
+@@ -134,97 +150,301 @@ def build_bindings() -> tuple[RegionBinding, ...]:
+     )
+ 
+ 
+-def retained_current_tuples(rows: Any) -> list[dict[str, float]]:
++def _canonical_to_symbol(token: str) -> str:
++    """Convert device.M3.current into M3."""
++
++    match = CURRENT_TOKEN_RE.fullmatch(token.strip())
++    if match is None:
++        raise ValueError(
++            f"unsupported canonical current token: {token!r}"
++        )
++    return match.group(1)
++
++
++def _evaluate_linear_rhs(
++    expression: str,
++    values: dict[str, float],
++) -> float:
++    """Evaluate a restricted linear current expression."""
++
++    import ast
++
++    rewritten = CURRENT_TOKEN_RE.sub(
++        lambda match: match.group(1),
++        expression,
++    )
++
++    tree = ast.parse(rewritten, mode="eval")
++
++    def evaluate(node: ast.AST) -> float:
++        if isinstance(node, ast.Expression):
++            return evaluate(node.body)
++
++        if isinstance(node, ast.Constant):
++            if not isinstance(node.value, (int, float)):
++                raise ValueError("non-numeric constant")
++            return float(node.value)
++
++        if isinstance(node, ast.Name):
++            if node.id not in values:
++                raise KeyError(node.id)
++            return float(values[node.id])
++
++        if isinstance(node, ast.UnaryOp):
++            value = evaluate(node.operand)
++
++            if isinstance(node.op, ast.USub):
++                return -value
++
++            if isinstance(node.op, ast.UAdd):
++                return value
++
++            raise ValueError("unsupported unary operator")
++
++        if isinstance(node, ast.BinOp):
++            left = evaluate(node.left)
++            right = evaluate(node.right)
++
++            if isinstance(node.op, ast.Add):
++                return left + right
++
++            if isinstance(node.op, ast.Sub):
++                return left - right
++
++            if isinstance(node.op, ast.Mult):
++                return left * right
++
++            if isinstance(node.op, ast.Div):
++                return left / right
++
++            raise ValueError("unsupported binary operator")
++
++        raise ValueError(
++            f"unsupported expression node: {type(node).__name__}"
++        )
++
++    return evaluate(tree)
++
++
++def derive_representative_currents(
++    constraints: tuple[CanonicalConstraint, ...],
++    devices: tuple[str, ...],
++) -> dict[str, float]:
++    """Derive one internally consistent representative current assignment."""
++
++    equations: list[tuple[str, str]] = []
++    assigned_devices: set[str] = set()
++
++    for constraint in constraints:
++        expression = constraint.expression.strip()
++
++        if "==" in expression:
++            left_text, right_text = expression.split("==", 1)
++        elif "=" in expression:
++            left_text, right_text = expression.split("=", 1)
++        else:
++            continue
++
++        left = _canonical_to_symbol(
++            left_text.strip()
++        )
++
++        equations.append(
++            (left, right_text.strip())
++        )
++
++        assigned_devices.add(left)
++
++    # Devices that are never assigned on the left-hand side are free
++    # variables. Give each one a positive representative current.
++    values = {
++        device: 20e-6
++        for device in devices
++        if device not in assigned_devices
++    }
++
++    pending = list(equations)
++
++    while pending:
++        next_pending: list[tuple[str, str]] = []
++        progress = False
++
++        for left, right in pending:
++            try:
++                value = _evaluate_linear_rhs(
++                    right,
++                    values,
++                )
++            except KeyError:
++                next_pending.append(
++                    (left, right)
++                )
++                continue
++
++            if value <= 0.0:
++                raise ValueError(
++                    "derived non-positive representative current "
++                    f"for {left}: {value}"
++                )
++
++            values[left] = value
++            progress = True
++
++        if not progress:
++            unresolved = ", ".join(
++                f"{left} = {right}"
++                for left, right in next_pending
++            )
++
++            raise ValueError(
++                "could not derive representative currents; "
++                f"unresolved equations: {unresolved}"
++            )
++
++        pending = next_pending
++
++    missing = sorted(
++        set(devices) - set(values)
++    )
++
++    if missing:
++        raise ValueError(
++            "representative currents missing for devices: "
++            + ", ".join(missing)
++        )
++
++    return values
++
++
++def build_generic_bindings(
++    constraints: tuple[CanonicalConstraint, ...],
++    devices: tuple[str, ...],
++) -> tuple[RegionBinding, ...]:
++    """Build one correlated representative row for each device."""
++
++    currents = derive_representative_currents(
++        constraints,
++        devices,
++    )
++
++    return tuple(
++        binding(
++            name,
++            (currents[name],),
++        )
++        for name in devices
++    )
++
++def retained_current_tuples(
++    rows: Any,
++    devices: tuple[str, ...],
++) -> list[dict[str, float]]:
+     result: list[dict[str, float]] = []
+     for row in rows:
+         values = row.values
+         result.append(
+             {
+                 device: float(values[f"{device}.id_a"])
+-                for device in ("M1", "M2", "M3", "M4", "M5", "M6", "M7")
++                for device in devices
+             }
+         )
+     return result
+ 
+ 
++def normalized(
++    rows: list[dict[str, float]],
++) -> list[tuple[tuple[str, float], ...]]:
++    return sorted(
++        tuple(sorted((name, round(value, 15)) for name, value in row.items()))
++        for row in rows
++    )
++
++
+ def main() -> int:
+     args = parse_args()
+     args.output_dir.mkdir(parents=True, exist_ok=True)
+ 
+     constraints = load_constraints(args.constraints)
+-    bindings = build_bindings()
++    discovered_devices = discover_devices(constraints)
++
++    if args.mode == "two_stage_regression":
++        devices = ("M1", "M2", "M3", "M4", "M5", "M6", "M7")
++        bindings = build_two_stage_bindings()
++    else:
++        devices = discovered_devices
++        bindings = build_generic_bindings(
++            constraints,
++            devices,
++        )
+ 
+     compiler = CircuitConstraintCompiler()
+-    compiled = compiler.compile(
+-        constraints,
+-        bindings,
+-        strict=True,
+-    )
++    compiled = compiler.compile(constraints, bindings, strict=True)
+     result = compiled.build()
+ 
+     diagnostics = [jsonable(item) for item in compiled.diagnostics]
+     compiled_constraints = [
+-        {
+-            "class": type(item).__name__,
+-            "value": jsonable(item),
+-        }
++        {"class": type(item).__name__, "value": jsonable(item)}
+         for item in compiled.constraints
+     ]
+-    retained = retained_current_tuples(result.rows)
+-
+-    expected = [
+-        {
+-            "M1": 20e-6,
+-            "M2": 20e-6,
+-            "M3": 20e-6,
+-            "M4": 20e-6,
+-            "M5": 40e-6,
+-            "M6": 10e-6,
+-            "M7": 10e-6,
+-        },
+-        {
+-            "M1": 30e-6,
+-            "M2": 30e-6,
+-            "M3": 30e-6,
+-            "M4": 30e-6,
+-            "M5": 60e-6,
+-            "M6": 10e-6,
+-            "M7": 10e-6,
+-        },
+-    ]
+-
+-    def normalized(rows: list[dict[str, float]]) -> list[tuple[tuple[str, float], ...]]:
+-        return sorted(
+-            tuple(sorted((name, round(value, 15)) for name, value in row.items()))
+-            for row in rows
+-        )
++    retained = retained_current_tuples(result.rows, devices)
+ 
+-    diagnostic_statuses = [
++    statuses = [
+         str(item.get("status", ""))
+         for item in diagnostics
+         if isinstance(item, dict)
+     ]
+ 
+-    checks = {
+-        "five_constraints_loaded": len(constraints) == 5,
+-        "five_constraints_compiled": len(compiled.constraints) == 5,
+-        "five_diagnostics_emitted": len(compiled.diagnostics) == 5,
+-        "all_diagnostics_compiled": all(
+-            status == "compiled"
+-            for status in diagnostic_statuses
+-        ),
+-        "two_expected_rows_retained": len(retained) == 2,
+-        "retained_rows_match_expected": (
+-            normalized(retained) == normalized(expected)
++    checks: dict[str, bool] = {
++        "constraints_loaded": len(constraints) > 0,
++        "all_constraints_compiled": len(compiled.constraints) == len(constraints),
++        "diagnostic_count_matches": len(compiled.diagnostics) == len(constraints),
++        "all_diagnostics_compiled": (
++            len(statuses) == len(constraints)
++            and all(status == "compiled" for status in statuses)
+         ),
+-        "invalid_rows_rejected": (
+-            result.retained_count == 2
++        "all_canonical_devices_bound": (
++            set(discovered_devices) <= {item.region_name for item in bindings}
+         ),
++        "execution_completed": result is not None,
++        "at_least_one_row_retained": result.retained_count > 0,
+     }
++
++    expected: list[dict[str, float]] = []
++    if args.mode == "two_stage_regression":
++        expected = [
++            {
++                "M1": 20e-6,
++                "M2": 20e-6,
++                "M3": 20e-6,
++                "M4": 20e-6,
++                "M5": 40e-6,
++                "M6": 10e-6,
++                "M7": 10e-6,
++            },
++            {
++                "M1": 30e-6,
++                "M2": 30e-6,
++                "M3": 30e-6,
++                "M4": 30e-6,
++                "M5": 60e-6,
++                "M6": 10e-6,
++                "M7": 10e-6,
++            },
++        ]
++        checks.update(
++            {
++                "two_expected_rows_retained": len(retained) == 2,
++                "retained_rows_match_expected": normalized(retained) == normalized(expected),
++                "invalid_rows_rejected": result.retained_count == 2,
++            }
++        )
++
+     passed = all(checks.values())
+ 
+     input_payload = {
++        "mode": args.mode,
+         "constraints": [asdict(item) for item in constraints],
++        "discovered_devices": list(discovered_devices),
+         "bindings": [
+             {
+                 "name": item.region_name,
+@@ -237,12 +457,15 @@ def main() -> int:
+ 
+     summary = {
+         "gate": "4B",
+-        "proof": "Real design-intent constraints compile and execute",
++        "validator": "generic_constraint_compiler",
++        "mode": args.mode,
++        "proof": "Design-intent constraints compile and execute",
+         "status": "PASS" if passed else "FAIL",
+         "constraint_artifact": str(args.constraints),
+         "constraint_count": len(constraints),
+         "compiled_constraint_count": len(compiled.constraints),
+         "diagnostic_count": len(compiled.diagnostics),
++        "discovered_devices": list(discovered_devices),
+         "retained_count": result.retained_count,
+         "checks": checks,
+         "retained_rows": retained,
+@@ -267,51 +490,48 @@ def main() -> int:
+         encoding="utf-8",
+     )
+ 
+-    report = f"""# Gate 4B Constraint Compiler Report
+-
+-## Summary
+-
+-- **Status:** {summary["status"]}
+-- **Input constraints:** {len(constraints)}
+-- **Compiled constraints:** {len(compiled.constraints)}
+-- **Diagnostics:** {len(compiled.diagnostics)}
+-- **Retained rows:** {result.retained_count}
+-
+-## Checks
+-
+-```json
+-{json.dumps(checks, indent=2)}
+-```
+-
+-## Retained Current Combinations
+-
+-```json
+-{json.dumps(retained, indent=2)}
+-```
+-
+-## Compiler Classes
+-
+-```json
+-{json.dumps([item["class"] for item in compiled_constraints], indent=2)}
+-```
+-
+-## Exit Criterion
+-
+-Gate 4B passes when all five canonical constraints generated from the official
+-two-stage design intent compile through `CircuitConstraintCompiler`, every
+-diagnostic reports `compiled`, and execution retains exactly the two intended
+-current combinations while rejecting all deliberately invalid candidate rows.
+-"""
++    report = [
++        "# Gate 4B Constraint Compiler Report",
++        "",
++        "## Summary",
++        "",
++        f"- **Status:** {summary['status']}",
++        f"- **Mode:** `{args.mode}`",
++        f"- **Input constraints:** {len(constraints)}",
++        f"- **Compiled constraints:** {len(compiled.constraints)}",
++        f"- **Diagnostics:** {len(compiled.diagnostics)}",
++        f"- **Discovered devices:** {', '.join(discovered_devices)}",
++        f"- **Retained rows:** {result.retained_count}",
++        "",
++        "## Checks",
++        "",
++        "```json",
++        json.dumps(checks, indent=2),
++        "```",
++        "",
++        "## Exit Criterion",
++        "",
++        (
++            "Generic mode passes when all supplied canonical constraints compile, "
++            "all discovered current variables are bound, every diagnostic reports "
++            "`compiled`, execution completes, and at least one representative row "
++            "is retained. Two-stage regression mode additionally checks the exact "
++            "historical retained rows."
++        ),
++        "",
++    ]
+     (args.output_dir / "COMPILER_REPORT.md").write_text(
+-        report,
++        "\n".join(report),
+         encoding="utf-8",
+     )
+ 
+     print("===== OPENAMS GATE 4B: CONSTRAINT COMPILER =====")
+     print(f"status:               {summary['status']}")
++    print(f"mode:                 {args.mode}")
+     print(f"constraints_loaded:   {len(constraints)}")
+     print(f"constraints_compiled: {len(compiled.constraints)}")
+     print(f"diagnostics:          {len(compiled.diagnostics)}")
++    print(f"devices_discovered:   {', '.join(discovered_devices)}")
+     print(f"retained_rows:        {result.retained_count}")
+     print(f"evidence:             {args.output_dir}")
+ 

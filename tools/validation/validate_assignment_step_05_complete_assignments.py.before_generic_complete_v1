@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+"""Validate legacy or topology-generic Step 5 assignment construction."""
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+from openams.synthesis.complete_assignments import (
+    write_complete_assignments,
+    write_complete_assignments_generic,
+)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--compiled-model", type=Path, required=True)
+    parser.add_argument("--independent-regions", type=Path, required=True)
+    parser.add_argument("--dependent-regions", type=Path, required=True)
+    parser.add_argument("--output-json", type=Path, required=True)
+    parser.add_argument("--output-csv", type=Path, required=True)
+    parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--mode", choices=("generic", "legacy"), default="generic")
+    args = parser.parse_args()
+
+    writer = write_complete_assignments_generic if args.mode == "generic" else write_complete_assignments
+    artifact = writer(
+        args.compiled_model,
+        args.independent_regions,
+        args.dependent_regions,
+        args.output_json,
+        args.output_csv,
+    )
+    assignments = artifact["assignments"]
+
+    if args.mode == "generic":
+        checks = {
+            "status_pass": artifact["status"] == "PASS",
+            "candidate_exists": artifact["complete_assignment_count"] > 0,
+            "route_requires_dc_confirmation": artifact["recommended_route"] == "ngspice_dc_confirmation",
+            "not_falsely_claimed_physical": artifact["physical_proof_level"] == "candidate_not_yet_simulator_confirmed",
+            "all_declared_values_populated": all(
+                row.get("physical_correlation_status") == "REQUIRES_NGSPICE_DC_CONFIRMATION"
+                for row in assignments
+            ),
+            "technology_provenance_present": all(bool(row.get("device_technology_provenance")) for row in assignments),
+        }
+    else:
+        checks = {
+            "status_pass": artifact["status"] == "PASS",
+            "complete_assignments_exist": artifact["complete_assignment_count"] > 0,
+            "direct_simulation_route": artifact["recommended_route"] == "direct_simulation",
+        }
+
+    passed = all(checks.values())
+    args.report.parent.mkdir(parents=True, exist_ok=True)
+    args.report.write_text(
+        "# Assignment Synthesis Step 5 Report\n\n"
+        f"**Status:** {'PASS' if passed else 'FAIL'}\n\n"
+        f"- Mode: `{args.mode}`\n"
+        f"- Algorithm: `{artifact['algorithm']}`\n"
+        f"- Assignments/candidates: {artifact['complete_assignment_count']}\n"
+        f"- Route: `{artifact['recommended_route']}`\n\n"
+        "## Checks\n\n```json\n" + json.dumps(checks, indent=2) + "\n```\n",
+        encoding="utf-8",
+    )
+
+    print("===== OPENAMS ASSIGNMENT STEP 5: COMPLETE DC ASSIGNMENTS =====")
+    print(f"status:      {'PASS' if passed else 'FAIL'}")
+    print(f"mode:        {args.mode}")
+    print(f"algorithm:   {artifact['algorithm']}")
+    print(f"assignments: {artifact['complete_assignment_count']}")
+    print(f"route:       {artifact['recommended_route']}")
+    print(f"json:        {args.output_json}")
+    print(f"csv:         {args.output_csv}")
+    if not passed:
+        for name, value in checks.items():
+            if not value:
+                print(f"[FAIL] {name}")
+    return 0 if passed else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -365,6 +365,162 @@ def _technology_point_domain(
     }
 
 
+
+def _bias_voltage_domain(
+    variable_id: str,
+    definition: Mapping[str, Any],
+    model: Mapping[str, Any],
+    device: Mapping[str, Any],
+    rows: Sequence[TechnologyRow],
+    filters: Mapping[str, Any],
+    minimum: float,
+    maximum: float,
+) -> dict[str, Any]:
+    """Build an absolute gate-voltage domain from technology VGS rows."""
+
+    terminal = str(
+        definition.get("terminal", "gate")
+    ).strip().lower()
+
+    if terminal != "gate":
+        raise IndependentDomainError(
+            f"{variable_id!r}: bias_voltage currently supports "
+            f"only terminal='gate', got {terminal!r}"
+        )
+
+    terminals = device.get("terminals", {})
+    source_node = str(
+        terminals.get("source", "")
+    ).strip()
+
+    if not source_node:
+        raise IndependentDomainError(
+            f"{variable_id!r}: device has no source terminal"
+        )
+
+    rules = (
+        model.get("project_inputs", {})
+        .get("design_rules", {})
+    )
+    operating = rules.get(
+        "operating_conditions",
+        {}
+    )
+
+    source_voltage = _source_voltage(
+        source_node,
+        operating,
+    )
+
+    if source_voltage is None:
+        raise IndependentDomainError(
+            f"{variable_id!r}: cannot resolve source-node voltage "
+            f"for {source_node!r}"
+        )
+
+    polarity = str(
+        filters.get("polarity", "")
+    ).lower()
+
+    if polarity not in {"nmos", "pmos"}:
+        raise IndependentDomainError(
+            f"{variable_id!r}: unsupported polarity {polarity!r}"
+        )
+
+    records: list[dict[str, Any]] = []
+
+    for item in rows:
+        if not _row_matches(
+            item.values,
+            filters,
+        ):
+            continue
+
+        vgs_abs = _optional_number(
+            item.values,
+            "vgs_v",
+            "vgs_abs_v",
+        )
+
+        if vgs_abs is None:
+            continue
+
+        gate_voltage = (
+            source_voltage + vgs_abs
+            if polarity == "nmos"
+            else source_voltage - vgs_abs
+        )
+
+        if not minimum <= gate_voltage <= maximum:
+            continue
+
+        records.append(
+            {
+                "value": gate_voltage,
+                "technology_row_index": item.index,
+                "model": item.values.get("model"),
+                "polarity": item.values.get("polarity"),
+                "source_node": source_node,
+                "source_voltage_v": source_voltage,
+                "vgs_abs_v": vgs_abs,
+                "length_um": _optional_number(
+                    item.values,
+                    "length_um",
+                ),
+                "width_um": _optional_number(
+                    item.values,
+                    "width_um",
+                ),
+                "vds_v": _optional_number(
+                    item.values,
+                    "vds_v",
+                    "vds_abs_v",
+                ),
+                "vbs_v": _optional_number(
+                    item.values,
+                    "vbs_v",
+                    "vbs_abs_v",
+                ),
+                "id_abs_a": _optional_number(
+                    item.values,
+                    "id_abs_a",
+                    "id_a",
+                    "id",
+                ),
+            }
+        )
+
+    values = _unique(
+        record["value"]
+        for record in records
+    )
+
+    if not values:
+        raise IndependentDomainError(
+            f"technology filtering produced no gate-bias values "
+            f"for {variable_id!r}"
+        )
+
+    return {
+        "domain_type": "technology_supported_gate_voltage_set",
+        "candidate_values": values,
+        "candidate_count": len(values),
+        "supporting_row_count": len(records),
+        "technology_records": records,
+        "technology_quantity_fields": [
+            "vgs_v",
+            "vgs_abs_v",
+        ],
+        "technology_minimum": min(values),
+        "technology_maximum": max(values),
+        "device_terminal": terminal,
+        "source_node": source_node,
+        "source_voltage_v": source_voltage,
+        "polarity": polarity,
+    }
+
+
+
 def _finger_width_interval(
     rows: Sequence[TechnologyRow],
     filters: Mapping[str, Any],
@@ -643,8 +799,24 @@ def build_independent_domains(
             model, variable_id, definition
         )
         kind = str(definition.get("kind", "")).lower()
-        device_name = _device_from_variable(variable_id)
+
+        explicit_device = definition.get("device")
+        if explicit_device is not None:
+            explicit_device = str(explicit_device).strip()
+            if not explicit_device:
+                explicit_device = None
+
+        device_name = (
+            explicit_device
+            or _device_from_variable(variable_id)
+        )
         device = devices.get(device_name) if device_name else None
+
+        if explicit_device is not None and device is None:
+            raise IndependentDomainError(
+                f"{variable_id!r} declares unknown device "
+                f"{explicit_device!r}"
+            )
 
         if kind == "node_voltage":
             domain = _node_voltage_domain(
@@ -663,6 +835,17 @@ def build_independent_domains(
                     rows,
                     filters,
                     rules,
+                    minimum,
+                    maximum,
+                )
+            elif kind == "bias_voltage":
+                domain = _bias_voltage_domain(
+                    variable_id,
+                    definition,
+                    model,
+                    device,
+                    rows,
+                    filters,
                     minimum,
                     maximum,
                 )

@@ -1,0 +1,520 @@
+#!/usr/bin/env python3
+"""Generic executable Gate 4B validation for OpenAMS constraints."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from dataclasses import asdict, dataclass, is_dataclass
+from pathlib import Path
+from typing import Any, Mapping
+
+from openams.synthesis import CircuitConstraintCompiler, RegionBinding, RegionInput
+
+CURRENT_TOKEN_RE = re.compile(r"\bdevice\.([A-Za-z_][A-Za-z0-9_]*)\.current\b")
+
+
+@dataclass(frozen=True)
+class CanonicalConstraint:
+    name: str
+    kind: str
+    expression: str
+    source: str = "design_intent"
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--constraints", type=Path, required=True)
+    parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument(
+        "--mode",
+        choices=("generic", "two_stage_regression"),
+        default="generic",
+    )
+    return parser.parse_args()
+
+
+def jsonable(value: Any) -> Any:
+    if is_dataclass(value):
+        return jsonable(asdict(value))
+    if isinstance(value, Mapping):
+        return {str(key): jsonable(item) for key, item in value.items()}
+    if isinstance(value, (tuple, list)):
+        return [jsonable(item) for item in value]
+    if isinstance(value, (set, frozenset)):
+        return sorted((jsonable(item) for item in value), key=repr)
+    if hasattr(value, "value") and not isinstance(value, (str, bytes)):
+        return jsonable(value.value)
+    if hasattr(value, "__dict__"):
+        return {
+            str(key): jsonable(item)
+            for key, item in vars(value).items()
+            if not str(key).startswith("_")
+        }
+    return value
+
+
+def load_constraints(path: Path) -> tuple[CanonicalConstraint, ...]:
+    if not path.is_file():
+        raise SystemExit(f"constraint artifact does not exist: {path}")
+
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise SystemExit("compiler constraint artifact must contain a JSON list")
+
+    result: list[CanonicalConstraint] = []
+    for index, item in enumerate(data):
+        if not isinstance(item, dict):
+            raise SystemExit(f"constraint index {index} must be a JSON object")
+        result.append(
+            CanonicalConstraint(
+                name=str(item["name"]),
+                kind=str(item["kind"]),
+                expression=str(item["expression"]),
+                source=str(item.get("source", "design_intent")),
+            )
+        )
+    return tuple(result)
+
+
+def device_sort_key(name: str) -> tuple[str, int, str]:
+    match = re.fullmatch(r"([A-Za-z_]+)(\d+)", name)
+    if match:
+        return (match.group(1), int(match.group(2)), name)
+    return (name, -1, name)
+
+
+def discover_devices(
+    constraints: tuple[CanonicalConstraint, ...],
+) -> tuple[str, ...]:
+    devices: set[str] = set()
+    for item in constraints:
+        devices.update(CURRENT_TOKEN_RE.findall(item.expression))
+    if not devices:
+        raise SystemExit("no canonical device-current variables found")
+    return tuple(sorted(devices, key=device_sort_key))
+
+
+def binding(name: str, currents_a: tuple[float, ...]) -> RegionBinding:
+    rows = tuple(
+        {
+            "id_a": current,
+            "candidate_label": f"{name}_{index}",
+        }
+        for index, current in enumerate(currents_a)
+    )
+    return RegionBinding(
+        name,
+        RegionInput(name, rows),
+        {f"device.{name}.current": "id_a"},
+    )
+
+
+def build_two_stage_bindings() -> tuple[RegionBinding, ...]:
+    return (
+        binding("M1", (20e-6, 25e-6, 30e-6)),
+        binding("M2", (20e-6, 30e-6, 35e-6)),
+        binding("M3", (20e-6, 30e-6, 99e-6)),
+        binding("M4", (20e-6, 30e-6, 88e-6)),
+        binding("M5", (40e-6, 50e-6, 60e-6)),
+        binding("M6", (10e-6, 15e-6)),
+        binding("M7", (10e-6, 20e-6)),
+    )
+
+
+def _canonical_to_symbol(token: str) -> str:
+    """Convert device.M3.current into M3."""
+
+    match = CURRENT_TOKEN_RE.fullmatch(token.strip())
+    if match is None:
+        raise ValueError(
+            f"unsupported canonical current token: {token!r}"
+        )
+    return match.group(1)
+
+
+def _evaluate_linear_rhs(
+    expression: str,
+    values: dict[str, float],
+) -> float:
+    """Evaluate a restricted linear current expression."""
+
+    import ast
+
+    rewritten = CURRENT_TOKEN_RE.sub(
+        lambda match: match.group(1),
+        expression,
+    )
+
+    tree = ast.parse(rewritten, mode="eval")
+
+    def evaluate(node: ast.AST) -> float:
+        if isinstance(node, ast.Expression):
+            return evaluate(node.body)
+
+        if isinstance(node, ast.Constant):
+            if not isinstance(node.value, (int, float)):
+                raise ValueError("non-numeric constant")
+            return float(node.value)
+
+        if isinstance(node, ast.Name):
+            if node.id not in values:
+                raise KeyError(node.id)
+            return float(values[node.id])
+
+        if isinstance(node, ast.UnaryOp):
+            value = evaluate(node.operand)
+
+            if isinstance(node.op, ast.USub):
+                return -value
+
+            if isinstance(node.op, ast.UAdd):
+                return value
+
+            raise ValueError("unsupported unary operator")
+
+        if isinstance(node, ast.BinOp):
+            left = evaluate(node.left)
+            right = evaluate(node.right)
+
+            if isinstance(node.op, ast.Add):
+                return left + right
+
+            if isinstance(node.op, ast.Sub):
+                return left - right
+
+            if isinstance(node.op, ast.Mult):
+                return left * right
+
+            if isinstance(node.op, ast.Div):
+                return left / right
+
+            raise ValueError("unsupported binary operator")
+
+        raise ValueError(
+            f"unsupported expression node: {type(node).__name__}"
+        )
+
+    return evaluate(tree)
+
+
+def derive_representative_currents(
+    constraints: tuple[CanonicalConstraint, ...],
+    devices: tuple[str, ...],
+) -> dict[str, float]:
+    """Derive one internally consistent representative current assignment."""
+
+    equations: list[tuple[str, str]] = []
+    assigned_devices: set[str] = set()
+
+    for constraint in constraints:
+        expression = constraint.expression.strip()
+
+        if "==" in expression:
+            left_text, right_text = expression.split("==", 1)
+        elif "=" in expression:
+            left_text, right_text = expression.split("=", 1)
+        else:
+            continue
+
+        left = _canonical_to_symbol(
+            left_text.strip()
+        )
+
+        equations.append(
+            (left, right_text.strip())
+        )
+
+        assigned_devices.add(left)
+
+    # Devices that are never assigned on the left-hand side are free
+    # variables. Give each one a positive representative current.
+    values = {
+        device: 20e-6
+        for device in devices
+        if device not in assigned_devices
+    }
+
+    pending = list(equations)
+
+    while pending:
+        next_pending: list[tuple[str, str]] = []
+        progress = False
+
+        for left, right in pending:
+            try:
+                value = _evaluate_linear_rhs(
+                    right,
+                    values,
+                )
+            except KeyError:
+                next_pending.append(
+                    (left, right)
+                )
+                continue
+
+            if value <= 0.0:
+                raise ValueError(
+                    "derived non-positive representative current "
+                    f"for {left}: {value}"
+                )
+
+            values[left] = value
+            progress = True
+
+        if not progress:
+            unresolved = ", ".join(
+                f"{left} = {right}"
+                for left, right in next_pending
+            )
+
+            raise ValueError(
+                "could not derive representative currents; "
+                f"unresolved equations: {unresolved}"
+            )
+
+        pending = next_pending
+
+    missing = sorted(
+        set(devices) - set(values)
+    )
+
+    if missing:
+        raise ValueError(
+            "representative currents missing for devices: "
+            + ", ".join(missing)
+        )
+
+    return values
+
+
+def build_generic_bindings(
+    constraints: tuple[CanonicalConstraint, ...],
+    devices: tuple[str, ...],
+) -> tuple[RegionBinding, ...]:
+    """Build one correlated representative row for each device."""
+
+    currents = derive_representative_currents(
+        constraints,
+        devices,
+    )
+
+    return tuple(
+        binding(
+            name,
+            (currents[name],),
+        )
+        for name in devices
+    )
+
+def retained_current_tuples(
+    rows: Any,
+    devices: tuple[str, ...],
+) -> list[dict[str, float]]:
+    result: list[dict[str, float]] = []
+    for row in rows:
+        values = row.values
+        result.append(
+            {
+                device: float(values[f"{device}.id_a"])
+                for device in devices
+            }
+        )
+    return result
+
+
+def normalized(
+    rows: list[dict[str, float]],
+) -> list[tuple[tuple[str, float], ...]]:
+    return sorted(
+        tuple(sorted((name, round(value, 15)) for name, value in row.items()))
+        for row in rows
+    )
+
+
+def main() -> int:
+    args = parse_args()
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+
+    constraints = load_constraints(args.constraints)
+    discovered_devices = discover_devices(constraints)
+
+    if args.mode == "two_stage_regression":
+        devices = ("M1", "M2", "M3", "M4", "M5", "M6", "M7")
+        bindings = build_two_stage_bindings()
+    else:
+        devices = discovered_devices
+        bindings = build_generic_bindings(
+            constraints,
+            devices,
+        )
+
+    compiler = CircuitConstraintCompiler()
+    compiled = compiler.compile(constraints, bindings, strict=True)
+    result = compiled.build()
+
+    diagnostics = [jsonable(item) for item in compiled.diagnostics]
+    compiled_constraints = [
+        {"class": type(item).__name__, "value": jsonable(item)}
+        for item in compiled.constraints
+    ]
+    retained = retained_current_tuples(result.rows, devices)
+
+    statuses = [
+        str(item.get("status", ""))
+        for item in diagnostics
+        if isinstance(item, dict)
+    ]
+
+    checks: dict[str, bool] = {
+        "constraints_loaded": len(constraints) > 0,
+        "all_constraints_compiled": len(compiled.constraints) == len(constraints),
+        "diagnostic_count_matches": len(compiled.diagnostics) == len(constraints),
+        "all_diagnostics_compiled": (
+            len(statuses) == len(constraints)
+            and all(status == "compiled" for status in statuses)
+        ),
+        "all_canonical_devices_bound": (
+            set(discovered_devices) <= {item.region_name for item in bindings}
+        ),
+        "execution_completed": result is not None,
+        "at_least_one_row_retained": result.retained_count > 0,
+    }
+
+    expected: list[dict[str, float]] = []
+    if args.mode == "two_stage_regression":
+        expected = [
+            {
+                "M1": 20e-6,
+                "M2": 20e-6,
+                "M3": 20e-6,
+                "M4": 20e-6,
+                "M5": 40e-6,
+                "M6": 10e-6,
+                "M7": 10e-6,
+            },
+            {
+                "M1": 30e-6,
+                "M2": 30e-6,
+                "M3": 30e-6,
+                "M4": 30e-6,
+                "M5": 60e-6,
+                "M6": 10e-6,
+                "M7": 10e-6,
+            },
+        ]
+        checks.update(
+            {
+                "two_expected_rows_retained": len(retained) == 2,
+                "retained_rows_match_expected": normalized(retained) == normalized(expected),
+                "invalid_rows_rejected": result.retained_count == 2,
+            }
+        )
+
+    passed = all(checks.values())
+
+    input_payload = {
+        "mode": args.mode,
+        "constraints": [asdict(item) for item in constraints],
+        "discovered_devices": list(discovered_devices),
+        "bindings": [
+            {
+                "name": item.region_name,
+                "rows": jsonable(item.region.rows),
+                "canonical_fields": jsonable(item.field_map),
+            }
+            for item in bindings
+        ],
+    }
+
+    summary = {
+        "gate": "4B",
+        "validator": "generic_constraint_compiler",
+        "mode": args.mode,
+        "proof": "Design-intent constraints compile and execute",
+        "status": "PASS" if passed else "FAIL",
+        "constraint_artifact": str(args.constraints),
+        "constraint_count": len(constraints),
+        "compiled_constraint_count": len(compiled.constraints),
+        "diagnostic_count": len(compiled.diagnostics),
+        "discovered_devices": list(discovered_devices),
+        "retained_count": result.retained_count,
+        "checks": checks,
+        "retained_rows": retained,
+        "expected_rows": expected,
+        "intersection_metadata": jsonable(result.metadata),
+    }
+
+    (args.output_dir / "compiler_input.json").write_text(
+        json.dumps(input_payload, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    (args.output_dir / "compiled_constraints.json").write_text(
+        json.dumps(compiled_constraints, indent=2, default=str) + "\n",
+        encoding="utf-8",
+    )
+    (args.output_dir / "compiler_diagnostics.json").write_text(
+        json.dumps(diagnostics, indent=2, default=str) + "\n",
+        encoding="utf-8",
+    )
+    (args.output_dir / "execution_results.json").write_text(
+        json.dumps(summary, indent=2, default=str) + "\n",
+        encoding="utf-8",
+    )
+
+    report = [
+        "# Gate 4B Constraint Compiler Report",
+        "",
+        "## Summary",
+        "",
+        f"- **Status:** {summary['status']}",
+        f"- **Mode:** `{args.mode}`",
+        f"- **Input constraints:** {len(constraints)}",
+        f"- **Compiled constraints:** {len(compiled.constraints)}",
+        f"- **Diagnostics:** {len(compiled.diagnostics)}",
+        f"- **Discovered devices:** {', '.join(discovered_devices)}",
+        f"- **Retained rows:** {result.retained_count}",
+        "",
+        "## Checks",
+        "",
+        "```json",
+        json.dumps(checks, indent=2),
+        "```",
+        "",
+        "## Exit Criterion",
+        "",
+        (
+            "Generic mode passes when all supplied canonical constraints compile, "
+            "all discovered current variables are bound, every diagnostic reports "
+            "`compiled`, execution completes, and at least one representative row "
+            "is retained. Two-stage regression mode additionally checks the exact "
+            "historical retained rows."
+        ),
+        "",
+    ]
+    (args.output_dir / "COMPILER_REPORT.md").write_text(
+        "\n".join(report),
+        encoding="utf-8",
+    )
+
+    print("===== OPENAMS GATE 4B: CONSTRAINT COMPILER =====")
+    print(f"status:               {summary['status']}")
+    print(f"mode:                 {args.mode}")
+    print(f"constraints_loaded:   {len(constraints)}")
+    print(f"constraints_compiled: {len(compiled.constraints)}")
+    print(f"diagnostics:          {len(compiled.diagnostics)}")
+    print(f"devices_discovered:   {', '.join(discovered_devices)}")
+    print(f"retained_rows:        {result.retained_count}")
+    print(f"evidence:             {args.output_dir}")
+
+    if not passed:
+        for name, value in checks.items():
+            if not value:
+                print(f"[FAIL] {name}")
+
+    return 0 if passed else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,62 @@
+[
+  {
+    "name": "balanced_input_left",
+    "kind": "equality",
+    "expression": "device.M1.current == 0.5 * device.M3.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "balanced_input_right",
+    "kind": "equality",
+    "expression": "device.M2.current == 0.5 * device.M3.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "upper_source_left",
+    "kind": "equality",
+    "expression": "device.M4.current == 1.5 * device.M3.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "upper_source_right",
+    "kind": "equality",
+    "expression": "device.M5.current == 1.5 * device.M3.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "folded_branch_left",
+    "kind": "equality",
+    "expression": "device.M6.current == device.M4.current - device.M1.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "folded_branch_right",
+    "kind": "equality",
+    "expression": "device.M7.current == device.M5.current - device.M2.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "lower_cascode_left",
+    "kind": "equality",
+    "expression": "device.M8.current == device.M6.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "lower_cascode_right",
+    "kind": "equality",
+    "expression": "device.M9.current == device.M7.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "lower_sink_left",
+    "kind": "equality",
+    "expression": "device.M10.current == device.M8.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "lower_sink_right",
+    "kind": "equality",
+    "expression": "device.M11.current == device.M9.current",
+    "source": "design_intent"
+  }
+]
