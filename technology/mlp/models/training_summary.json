@@ -1,0 +1,109 @@
+{
+  "table": "/home/yhanafy/AMS-Tutorial/openams/technology/sky130_tt_27c_mlp_dense_training_clean.csv",
+  "models": {
+    "nmos": {
+      "checkpoint": "runtime/mlp_dense_validation/sky130_nmos_mlp.pt",
+      "rows": 177321,
+      "train_rows": 123984,
+      "validation_rows": 26381,
+      "test_rows": 26956,
+      "best_epoch": 166,
+      "best_validation_loss": 7.217035999929067e-06,
+      "metrics": {
+        "id_abs_a": {
+          "mae": 3.2672938872507984e-06,
+          "median_relative_error": 0.006440726214810025,
+          "p95_relative_error": 0.022740724381346215,
+          "max_relative_error": 0.09462424493403343,
+          "rmse": 1.784922884205919e-05,
+          "median_log10_error": 0.002793116669210338,
+          "p95_log10_error": 0.009873822884279071
+        },
+        "gm_s": {
+          "mae": 7.690792999812394e-06,
+          "median_relative_error": 0.008251450285524067,
+          "p95_relative_error": 0.027767933635210997,
+          "max_relative_error": 0.10117481733625948,
+          "rmse": 2.6495549491698104e-05,
+          "median_log10_error": 0.0035843445010170782,
+          "p95_log10_error": 0.01207327336477837
+        },
+        "gds_s": {
+          "mae": 1.2648982345555315e-05,
+          "median_relative_error": 0.011852193670978606,
+          "p95_relative_error": 0.0463852514131017,
+          "max_relative_error": 0.1469006455767322,
+          "rmse": 8.57644946213161e-05,
+          "median_log10_error": 0.005137271748270722,
+          "p95_log10_error": 0.02004022745817169
+        },
+        "vdsat_abs_v": {
+          "mae": 0.00029109712061122574,
+          "median_relative_error": 0.0019641697355759565,
+          "p95_relative_error": 0.012247770774226079,
+          "max_relative_error": 0.03873190292062334,
+          "rmse": 0.00038620026714491145
+        },
+        "vth_abs_v": {
+          "mae": 5.464276633538039e-05,
+          "median_relative_error": 6.792624228972477e-05,
+          "p95_relative_error": 0.00021656573367738482,
+          "max_relative_error": 0.0005604835554276235,
+          "rmse": 7.141678890293748e-05
+        }
+      }
+    },
+    "pmos": {
+      "checkpoint": "runtime/mlp_dense_validation/sky130_pmos_mlp.pt",
+      "rows": 177320,
+      "train_rows": 124091,
+      "validation_rows": 26587,
+      "test_rows": 26642,
+      "best_epoch": 200,
+      "best_validation_loss": 6.917545761098154e-06,
+      "metrics": {
+        "id_abs_a": {
+          "mae": 1.0710157385949086e-06,
+          "median_relative_error": 0.013531678462969609,
+          "p95_relative_error": 0.03918817040628895,
+          "max_relative_error": 0.1273350239358278,
+          "rmse": 6.742496507502102e-06,
+          "median_log10_error": 0.005864463470348413,
+          "p95_log10_error": 0.01719281911569208
+        },
+        "gm_s": {
+          "mae": 1.9768511246674935e-06,
+          "median_relative_error": 0.011399296588651856,
+          "p95_relative_error": 0.03366446297166815,
+          "max_relative_error": 0.14022944144816432,
+          "rmse": 1.0685009685120084e-05,
+          "median_log10_error": 0.004947614643967313,
+          "p95_log10_error": 0.014716783972056377
+        },
+        "gds_s": {
+          "mae": 3.2732232192762716e-06,
+          "median_relative_error": 0.016197372228061918,
+          "p95_relative_error": 0.0680614856754265,
+          "max_relative_error": 0.15324516535452082,
+          "rmse": 3.084756614736184e-05,
+          "median_log10_error": 0.007030192843941574,
+          "p95_log10_error": 0.030047524330304515
+        },
+        "vdsat_abs_v": {
+          "mae": 0.00021969783003252785,
+          "median_relative_error": 0.002326435504313666,
+          "p95_relative_error": 0.008365974962741213,
+          "max_relative_error": 0.027949210826262557,
+          "rmse": 0.00032525158463046045
+        },
+        "vth_abs_v": {
+          "mae": 5.16362609100227e-05,
+          "median_relative_error": 3.8962452503808096e-05,
+          "p95_relative_error": 0.0001473216695482097,
+          "max_relative_error": 0.0006059792940194509,
+          "rmse": 7.049061339619064e-05
+        }
+      }
+    }
+  }
+}

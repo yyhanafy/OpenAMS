@@ -29,12 +29,9 @@ examples/*/generated/
 *.dat
 
 # Large technology datasets
-technology/*.csv
 technology/*.csv.gz
 
 # Trained model checkpoints
-*.pt
-*.pth
 
 # Archives
 *.tar

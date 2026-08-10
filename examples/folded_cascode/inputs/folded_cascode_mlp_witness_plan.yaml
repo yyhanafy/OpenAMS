@@ -5,8 +5,8 @@ output_csv: examples/folded_cascode/generated/witnesses.csv
 witnesses_per_point: 5
 sat_margin_v: 0.05
 mlp:
-  nmos_checkpoint: runtime/mlp_models/sky130_nmos_mlp.pt
-  pmos_checkpoint: runtime/mlp_models/sky130_pmos_mlp.pt
+  nmos_checkpoint: technology/mlp/models/sky130_nmos_mlp.pt
+  pmos_checkpoint: technology/mlp/models/sky130_pmos_mlp.pt
   length_um: 0.5
 constants:
   vdd: 1.8
