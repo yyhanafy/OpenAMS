@@ -1,0 +1,602 @@
+schema_version: 3
+circuit_intent:
+  topology: folded_cascode_cmos_operational_transconductance_amplifier
+  device_roles:
+    M1: differential_input_left
+    M2: differential_input_right
+    M3: differential_pair_tail_current_source
+    M4: upper_pmos_current_source_left
+    M5: upper_pmos_current_source_right
+    M6: folded_pmos_cascode_left
+    M7: folded_pmos_cascode_right
+    M8: lower_nmos_cascode_left
+    M9: lower_nmos_cascode_right
+    M10: lower_nmos_current_sink_left
+    M11: lower_nmos_current_sink_right
+  confirmed_patterns:
+    differential_pairs:
+    - - M1
+      - M2
+    matched_width_groups:
+    - - M1
+      - M2
+    - - M4
+      - M5
+    - - M6
+      - M7
+    - - M8
+      - M9
+      - M10
+      - M11
+    balanced_branches:
+      left:
+        devices:
+        - M1
+        - M4
+        - M6
+        - M8
+        - M10
+      right:
+        devices:
+        - M2
+        - M5
+        - M7
+        - M9
+        - M11
+  current_relations:
+  - id: balanced_input_left
+    equation: i_m1 = 0.5 * i_m3
+  - id: balanced_input_right
+    equation: i_m2 = 0.5 * i_m3
+  - id: upper_source_left
+    equation: i_m4 = 1.5 * i_m3
+  - id: upper_source_right
+    equation: i_m5 = 1.5 * i_m3
+  - id: folded_branch_left
+    equation: i_m6 = i_m4 - i_m1
+  - id: folded_branch_right
+    equation: i_m7 = i_m5 - i_m2
+  - id: lower_cascode_left
+    equation: i_m8 = i_m6
+  - id: lower_cascode_right
+    equation: i_m9 = i_m7
+  - id: lower_sink_left
+    equation: i_m10 = i_m8
+  - id: lower_sink_right
+    equation: i_m11 = i_m9
+  size_relations:
+  - id: input_pair_width_match
+    equation: w_m2 = w_m1
+  - id: upper_current_source_width_match
+    equation: w_m5 = w_m4
+  - id: folded_pmos_width_match
+    equation: w_m7 = w_m6
+  - id: lower_nmos_width_match
+    equation: w_m9 = w_m8 and w_m10 = w_m8 and w_m11 = w_m8
+  voltage_relations:
+  - id: output_headroom_lower
+    equation: vout > vss + vdsat_m9 + vdsat_m11
+  - id: output_headroom_upper
+    equation: vout < vdd - vdsat_m5 - vdsat_m7
+  dc_propagation:
+    schema_version: 1
+    execution: ordered
+    status: reviewable_not_executed
+    operations:
+    - id: lookup_input_pair
+      type: technology_lookup
+      target: matched_group.M1_M2
+      target_current: 0.5 * i_m3_a
+      fixed_width: w_m1_um
+      known:
+        gate_voltage: vin_cm_v
+        bulk_voltage: vss_v
+      require:
+        region: saturation
+        matched_devices:
+        - M1
+        - M2
+        equal_vgs: true
+        equal_width: true
+      produces:
+      - vgs_m1_v
+      - vgs_m2_v
+      - vdsat_m1_v
+      - vdsat_m2_v
+      - input_pair_candidate_count
+    - id: derive_tail
+      type: equation
+      target: tail_v
+      expression: vin_cm_v - vgs_m1_v
+      depends_on:
+      - lookup_input_pair
+    - id: lookup_m3
+      type: technology_lookup
+      target: device.M3
+      target_current: i_m3_a
+      variable_width: w_m3_um
+      known:
+        source_voltage: vss_v
+        drain_voltage_range: tail_v
+      require:
+        region: saturation
+        condition: tail_v - vss_v >= vdsat_m3_v
+      produces:
+      - w_m3_um
+      - vgs_m3_v
+      - vdsat_m3_v
+      - m3_candidate_count
+      depends_on:
+      - derive_tail
+    - id: derive_vnb1
+      type: equation
+      target: vnb1_node_v
+      expression: vss_v + vgs_m3_v
+      depends_on:
+      - lookup_m3
+    - id: lookup_upper_current_pair
+      type: technology_lookup
+      target: matched_group.M4_M5
+      target_current: 1.5 * i_m3_a
+      variable_width: w_m4_um
+      known:
+        source_voltage: vdd_v
+        bulk_voltage: vdd_v
+      require:
+        region: saturation
+        matched_devices:
+        - M4
+        - M5
+        equal_vsg: true
+        equal_width: true
+      produces:
+      - w_m4_um
+      - vsg_m4_v
+      - vsg_m5_v
+      - vdsat_m4_v
+      - vdsat_m5_v
+      - upper_pair_candidate_count
+      depends_on:
+      - derive_vnb1
+    - id: derive_vpb1
+      type: equation
+      target: vpb1_node_v
+      expression: vdd_v - vsg_m4_v
+      depends_on:
+      - lookup_upper_current_pair
+    - id: psrc_left_lower
+      type: lower_bound
+      target: psrc_left_v
+      expression: tail_v + vdsat_m1_v
+      depends_on:
+      - derive_tail
+      - lookup_input_pair
+    - id: psrc_left_upper
+      type: upper_bound
+      target: psrc_left_v
+      expression: vdd_v - vdsat_m4_v
+      depends_on:
+      - lookup_upper_current_pair
+    - id: psrc_right_lower
+      type: lower_bound
+      target: psrc_right_v
+      expression: tail_v + vdsat_m2_v
+      depends_on:
+      - derive_tail
+      - lookup_input_pair
+    - id: psrc_right_upper
+      type: upper_bound
+      target: psrc_right_v
+      expression: vdd_v - vdsat_m5_v
+      depends_on:
+      - lookup_upper_current_pair
+    - id: lookup_lower_sink_pair
+      type: technology_lookup
+      target: matched_group.M10_M11
+      target_current: i_m3_a
+      variable_width: w_m8_um
+      known:
+        source_voltage: vss_v
+        bulk_voltage: vss_v
+      require:
+        region: saturation
+        matched_devices:
+        - M10
+        - M11
+        equal_vgs: true
+        equal_width: true
+      produces:
+      - w_m8_um
+      - vgs_m10_v
+      - vgs_m11_v
+      - vdsat_m10_v
+      - vdsat_m11_v
+      - lower_sink_candidate_count
+      depends_on:
+      - derive_vnb1
+    - id: derive_x
+      type: equation
+      target: x_v
+      expression: vss_v + vgs_m10_v
+      depends_on:
+      - lookup_lower_sink_pair
+    - id: nsink_left_lower
+      type: lower_bound
+      target: nsink_left_v
+      expression: vss_v + vdsat_m10_v
+      depends_on:
+      - lookup_lower_sink_pair
+    - id: nsink_right_lower
+      type: lower_bound
+      target: nsink_right_v
+      expression: vss_v + vdsat_m11_v
+      depends_on:
+      - lookup_lower_sink_pair
+    - id: lookup_nmos_cascode_pair
+      type: technology_lookup
+      target: matched_group.M8_M9
+      target_current: i_m3_a
+      fixed_width: w_m8_um
+      known:
+        m8_drain_voltage: x_v
+        m8_source_voltage_range: nsink_left_v
+        m9_source_voltage_range: nsink_right_v
+        bulk_voltage: vss_v
+      require:
+        region: saturation
+        matched_devices:
+        - M8
+        - M9
+        equal_vgs: true
+        equal_width: true
+        shared_gate_bias: vnb2_node_v
+      produces:
+      - vgs_m8_v
+      - vgs_m9_v
+      - vdsat_m8_v
+      - vdsat_m9_v
+      - nmos_cascode_candidate_count
+      depends_on:
+      - derive_x
+      - nsink_left_lower
+      - nsink_right_lower
+      - lookup_lower_sink_pair
+    - id: nsink_shared_lower
+      type: lower_bound
+      target: nsink_shared_v
+      expression: max(nsink_left_min_v, nsink_right_min_v)
+      depends_on:
+      - nsink_left_lower
+      - nsink_right_lower
+    - id: nsink_shared_upper
+      type: upper_bound
+      target: nsink_shared_v
+      expression: x_v - vdsat_m8_v
+      depends_on:
+      - lookup_nmos_cascode_pair
+      - derive_x
+    - id: bind_nsink_left
+      type: interval_alias
+      target: nsink_left_v
+      source: nsink_shared_v
+      depends_on:
+      - nsink_shared_lower
+      - nsink_shared_upper
+    - id: bind_nsink_right
+      type: interval_alias
+      target: nsink_right_v
+      source: nsink_shared_v
+      depends_on:
+      - nsink_shared_lower
+      - nsink_shared_upper
+    - id: vnb2_lower
+      type: lower_bound
+      target: vnb2_node_v
+      expression: nsink_shared_min_v + vgs_m8_v
+      depends_on:
+      - nsink_shared_lower
+      - lookup_nmos_cascode_pair
+    - id: vnb2_upper
+      type: upper_bound
+      target: vnb2_node_v
+      expression: nsink_shared_max_v + vgs_m8_v
+      depends_on:
+      - nsink_shared_upper
+      - lookup_nmos_cascode_pair
+    - id: vout_lower_from_m9
+      type: lower_bound
+      target: vout_v
+      expression: nsink_shared_min_v + vdsat_m9_v
+      depends_on:
+      - nsink_shared_lower
+      - lookup_nmos_cascode_pair
+    - id: lookup_folded_pmos_pair
+      type: technology_lookup
+      target: matched_group.M6_M7
+      target_current: i_m3_a
+      variable_width: w_m6_um
+      known:
+        m6_drain_voltage: x_v
+        source_voltage_range: psrc_shared_v
+        bulk_voltage: vdd_v
+      require:
+        region: saturation
+        matched_devices:
+        - M6
+        - M7
+        equal_vsg: true
+        equal_width: true
+        shared_gate_bias: vpb2_node_v
+      produces:
+      - w_m6_um
+      - vsg_m6_v
+      - vsg_m7_v
+      - vdsat_m6_v
+      - vdsat_m7_v
+      - folded_pmos_candidate_count
+      depends_on:
+      - derive_x
+      - psrc_left_lower
+      - psrc_left_upper
+      - psrc_right_lower
+      - psrc_right_upper
+    - id: psrc_shared_lower
+      type: lower_bound
+      target: psrc_shared_v
+      expression: max(psrc_left_min_v, psrc_right_min_v, x_v + vdsat_m6_v)
+      depends_on:
+      - psrc_left_lower
+      - psrc_right_lower
+      - derive_x
+      - lookup_folded_pmos_pair
+    - id: psrc_shared_upper
+      type: upper_bound
+      target: psrc_shared_v
+      expression: min(psrc_left_max_v, psrc_right_max_v)
+      depends_on:
+      - psrc_left_upper
+      - psrc_right_upper
+    - id: bind_psrc_left
+      type: interval_alias
+      target: psrc_left_v
+      source: psrc_shared_v
+      depends_on:
+      - psrc_shared_lower
+      - psrc_shared_upper
+    - id: bind_psrc_right
+      type: interval_alias
+      target: psrc_right_v
+      source: psrc_shared_v
+      depends_on:
+      - psrc_shared_lower
+      - psrc_shared_upper
+    - id: vpb2_lower
+      type: lower_bound
+      target: vpb2_node_v
+      expression: psrc_shared_min_v - vsg_m6_v
+      depends_on:
+      - psrc_shared_lower
+      - lookup_folded_pmos_pair
+    - id: vpb2_upper
+      type: upper_bound
+      target: vpb2_node_v
+      expression: psrc_shared_max_v - vsg_m6_v
+      depends_on:
+      - psrc_shared_upper
+      - lookup_folded_pmos_pair
+    - id: vout_upper_from_m7
+      type: upper_bound
+      target: vout_v
+      expression: psrc_shared_max_v - vdsat_m7_v
+      depends_on:
+      - psrc_shared_upper
+      - lookup_folded_pmos_pair
+  bias_semantics:
+    vnb1_v:
+      role: dependent_tail_bias
+      drives:
+      - M3
+      selected_from: technology_supported_m3_realizations
+      selection_inputs:
+      - i_m3_a
+      - tail_v
+      selection_outputs:
+      - w_m3_um
+      - vgs_m3_v
+      - vdsat_m3_v
+      - vnb1_node_v
+      saturation_condition: tail_v - vss_v >= vdsat_m3_v
+    vpb1_v:
+      role: dependent_upper_pmos_bias
+      drives:
+      - M4
+      - M5
+      selection_policy: maximize_minimum_saturation_margin
+    vpb2_v:
+      role: dependent_folded_pmos_bias
+      drives:
+      - M6
+      - M7
+      selection_policy: maximize_minimum_saturation_margin
+    vnb2_v:
+      role: dependent_lower_nmos_cascode_bias
+      drives:
+      - M8
+      - M9
+      selection_policy: maximize_minimum_saturation_margin
+    x_v:
+      role: self_biased_lower_sink_gate_voltage
+      drives:
+      - M10
+      - M11
+synthesis_parameterization:
+  independent_variables:
+    w_m1_um:
+      kind: total_width
+      minimum: 1.0
+      maximum: 100.0
+      sampling: continuous_total_width_with_integer_nf
+      role: m1_operating_point_width
+      finger_realization:
+        enabled: true
+        finger_width_min_um: 0.42
+        finger_width_max_um: 100.0
+        nf_min: 1
+        nf_max: 1
+        scaling_model: linear_current_scaling
+    i_m3_a:
+      kind: current
+      minimum: 1.0e-05
+      maximum: 0.0001
+      sampling: characterized_current_grid
+      role: tail_current
+  dependent_quantities:
+  - i_m1_a
+  - i_m2_a
+  - i_m4_a
+  - i_m5_a
+  - i_m6_a
+  - i_m7_a
+  - i_m8_a
+  - i_m9_a
+  - i_m10_a
+  - i_m11_a
+  - w_m2_um
+  - w_m3_um
+  - w_m4_um
+  - w_m5_um
+  - w_m6_um
+  - w_m7_um
+  - w_m8_um
+  - w_m9_um
+  - w_m10_um
+  - w_m11_um
+  - vtail_v
+  - psrc_left_v
+  - psrc_right_v
+  - x_v
+  - nsink_left_v
+  - nsink_right_v
+  - vout_v
+  - vpb1_v
+  - vpb2_v
+  - vnb2_v
+  dependent_width_realization:
+    total_width_min_um: 0.42
+    total_width_max_um: 100.0
+    finger_width_min_um: 0.42
+    finger_width_max_um: 100.0
+    nf_min: 1
+    nf_max: 1
+    scaling_model: linear_current_scaling
+  dependent_variables:
+    vnb1_v:
+      kind: bias_voltage
+      device: M3
+      terminal: gate
+      role: technology_derived_tail_bias
+      derivation:
+        method: inverse_feasible_device_realization
+        current: i_m3_a
+        relation: source_voltage_plus_vgs
+assignment_synthesis:
+  strategy: intent_declared_dependency_groups
+  groups:
+  - id: input_tail_network
+    devices:
+    - M1
+    - M2
+    - M3
+    synthesis_variables:
+    - w_m1_um
+    - vnb1_v
+    - i_m3_a
+    constraints:
+    - balanced_input_left
+    - balanced_input_right
+    - input_pair_width_match
+    solver_type: generic_dependency_graph
+  - id: upper_folded_network
+    devices:
+    - M4
+    - M5
+    - M6
+    - M7
+    depends_on:
+    - input_tail_network
+    constraints:
+    - upper_source_left
+    - upper_source_right
+    - folded_branch_left
+    - folded_branch_right
+    - upper_current_source_width_match
+    - folded_pmos_width_match
+    solver_type: generic_dependency_graph
+  - id: lower_output_network
+    devices:
+    - M8
+    - M9
+    - M10
+    - M11
+    depends_on:
+    - upper_folded_network
+    constraints:
+    - lower_cascode_left
+    - lower_cascode_right
+    - lower_sink_left
+    - lower_sink_right
+    - lower_nmos_width_match
+    - output_headroom_lower
+    - output_headroom_upper
+    solver_type: generic_dependency_graph
+  classification:
+    fixed_assignments: direct_simulation
+    ranged_assignments: extract_optimization_variables_and_build_contract
+dependent_derivation_contract:
+  semantics: group_ordered_technology_backed_regions
+  technology_interpolation: linear_total_width_scaling
+  groups:
+    input_tail_network:
+      derives:
+      - i_m1_a
+      - i_m2_a
+      - w_m2_um
+      - w_m3_um
+      - vtail_v
+    upper_folded_network:
+      depends_on:
+      - input_tail_network
+      derives:
+      - i_m4_a
+      - i_m5_a
+      - i_m6_a
+      - i_m7_a
+      - w_m4_um
+      - w_m5_um
+      - w_m6_um
+      - w_m7_um
+      - psrc_left_v
+      - psrc_right_v
+      - vpb1_v
+      - vpb2_v
+    lower_output_network:
+      depends_on:
+      - upper_folded_network
+      derives:
+      - i_m8_a
+      - i_m9_a
+      - i_m10_a
+      - i_m11_a
+      - w_m8_um
+      - w_m9_um
+      - w_m10_um
+      - w_m11_um
+      - x_v
+      - nsink_left_v
+      - nsink_right_v
+      - vout_v
+      - vnb2_v
+      deferred_constraints:
+      - output_headroom_lower
+      - output_headroom_upper
+      - complete_assignment_intersection

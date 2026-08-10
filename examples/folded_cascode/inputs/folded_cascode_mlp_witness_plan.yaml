@@ -1,0 +1,501 @@
+schema_version: 1
+name: folded_cascode_balanced_dc_mlp_v1
+coverage_csv: examples/folded_cascode/generated/assignment_synthesis/folded_cascode_design_space.csv
+output_csv: examples/folded_cascode/generated/witnesses.csv
+witnesses_per_point: 5
+sat_margin_v: 0.05
+mlp:
+  nmos_checkpoint: runtime/mlp_models/sky130_nmos_mlp.pt
+  pmos_checkpoint: runtime/mlp_models/sky130_pmos_mlp.pt
+  length_um: 0.5
+constants:
+  vdd: 1.8
+  vss: 0.0
+  vin: 0.9
+  sat_margin_v: 0.05
+  current_rel_tol: 0.1
+point_bindings:
+  w1:
+    column: w_m1_um
+  i3_target:
+    column: i_m3_a
+derived_bindings:
+  i_input: 0.5 * i3_target
+  i_upper: 1.5 * i3_target
+stages:
+- id: input_pair
+  selection_mode: all_feasible
+  sweeps:
+    tail:
+      source: row_interval
+      prefix: tail
+      unit: v
+      default_lo: 0.001
+      default_hi: 0.899
+      count: 81
+      spacing: linear
+    psrc:
+      source: row_interval
+      prefix: psrc_left
+      unit: v
+      default_lo: 0.001
+      default_hi: 1.799
+      count: 121
+      spacing: linear
+  derived:
+    psrc_left: psrc
+    psrc_right: psrc
+  devices:
+  - name: M1
+    polarity: nmos
+    width: w1
+    vgs: vin - tail
+    vds: psrc_left - tail
+    vbs: tail - vss
+  - name: M2
+    polarity: nmos
+    width: w1
+    vgs: vin - tail
+    vds: psrc_right - tail
+    vbs: tail - vss
+  constraints:
+  - M1_domain & M2_domain
+  - (psrc_left-tail) >= M1_vdsat + sat_margin_v
+  - (psrc_right-tail) >= M2_vdsat + sat_margin_v
+  - relerr(M1_id, i_input) <= current_rel_tol
+  - relerr(M2_id, i_input) <= current_rel_tol
+  score: max(relerr(M1_id,i_input), relerr(M2_id,i_input))
+  outputs:
+    tail: tail
+    psrc_left: psrc_left
+    psrc_right: psrc_right
+  selection_coordinates:
+  - tail
+  - psrc
+  per_parent_keep: 3
+  global_cap: 64
+  diversity_keys:
+  - tail
+  - psrc_left
+- id: tail_source
+  sweeps:
+    vnb1:
+      source: row_interval
+      prefix: vnb1_node
+      unit: v
+      default_lo: 0.5
+      default_hi: 1.2
+      count: 81
+      spacing: linear
+    w3:
+      source: model_width_interval
+      polarity: nmos
+      row_interval:
+        prefix: w_m3
+        unit: um
+        default_lo: 0.42
+        default_hi: 100.0
+      count: 120
+      spacing: geom
+  devices:
+  - name: M3
+    polarity: nmos
+    width: w3
+    vgs: vnb1-vss
+    vds: tail-vss
+    vbs: '0.0'
+  constraints:
+  - M3_domain
+  - (tail-vss) >= M3_vdsat + sat_margin_v
+  - relerr(M3_id, i3_target) <= current_rel_tol
+  score: relerr(M3_id,i3_target)
+  outputs:
+    vnb1: vnb1
+    w3: w3
+  selection_coordinates:
+  - vnb1
+  - w3
+  per_parent_keep: 3
+  global_cap: 64
+  diversity_keys:
+  - tail
+  - psrc_left
+  - vnb1
+  - w3
+- id: upper_sources
+  sweeps:
+    vpb1:
+      source: row_interval
+      prefix: vpb1_node
+      unit: v
+      default_lo: 0.1
+      default_hi: 1.7
+      count: 81
+      spacing: linear
+    w4:
+      source: model_width_interval
+      polarity: pmos
+      row_interval:
+        prefix: w_m4
+        unit: um
+        default_lo: 0.42
+        default_hi: 100.0
+      count: 120
+      spacing: geom
+  devices:
+  - name: M4
+    polarity: pmos
+    width: w4
+    vgs: vdd-vpb1
+    vds: vdd-psrc_left
+    vbs: '0.0'
+  - name: M5
+    polarity: pmos
+    width: w4
+    vgs: vdd-vpb1
+    vds: vdd-psrc_right
+    vbs: '0.0'
+  constraints:
+  - M4_domain & M5_domain
+  - (vdd-psrc_left) >= M4_vdsat + sat_margin_v
+  - (vdd-psrc_right) >= M5_vdsat + sat_margin_v
+  - relerr(M4_id, i_upper) <= current_rel_tol
+  - relerr(M5_id, i_upper) <= current_rel_tol
+  score: max(relerr(M4_id,i_upper), relerr(M5_id,i_upper))
+  outputs:
+    vpb1: vpb1
+    w4: w4
+  selection_coordinates:
+  - vpb1
+  - w4
+  per_parent_keep: 3
+  global_cap: 64
+  diversity_keys:
+  - tail
+  - psrc_left
+  - vnb1
+  - vpb1
+  - w4
+- id: lower_sink
+  sweeps:
+    x:
+      source: row_interval
+      prefix: x
+      unit: v
+      default_lo: 0.05
+      default_hi: 1.75
+      count: 31
+      spacing: linear
+    nsink:
+      source: row_interval
+      prefix: nsink_left
+      unit: v
+      default_lo: 0.01
+      default_hi: 1.6
+      count: 31
+      spacing: linear
+    w8:
+      source: model_width_interval
+      polarity: nmos
+      row_interval:
+        prefix: w_m8
+        unit: um
+        default_lo: 0.42
+        default_hi: 100.0
+      count: 80
+      spacing: geom
+  derived:
+    nsink_left: nsink
+    nsink_right: nsink
+  devices:
+  - name: M10
+    polarity: nmos
+    width: w8
+    vgs: x-vss
+    vds: nsink_left-vss
+    vbs: '0.0'
+  - name: M11
+    polarity: nmos
+    width: w8
+    vgs: x-vss
+    vds: nsink_right-vss
+    vbs: '0.0'
+  constraints:
+  - M10_domain & M11_domain
+  - (nsink_left-vss) >= M10_vdsat + sat_margin_v
+  - (nsink_right-vss) >= M11_vdsat + sat_margin_v
+  - relerr(M10_id, i3_target) <= current_rel_tol
+  - relerr(M11_id, i3_target) <= current_rel_tol
+  score: max(relerr(M10_id,i3_target), relerr(M11_id,i3_target))
+  outputs:
+    x: x
+    nsink_left: nsink_left
+    nsink_right: nsink_right
+    w8: w8
+  selection_coordinates:
+  - x
+  - nsink
+  - w8
+  per_parent_keep: 3
+  global_cap: 64
+  diversity_keys:
+  - x
+  - nsink_left
+  - w8
+- id: lower_cascode_left
+  sweeps:
+    vnb2:
+      source: row_interval
+      prefix: vnb2_node
+      unit: v
+      default_lo: 0.1
+      default_hi: 1.7
+      count: 81
+      spacing: linear
+  devices:
+  - name: M8
+    polarity: nmos
+    width: w8
+    vgs: vnb2-nsink_left
+    vds: x-nsink_left
+    vbs: nsink_left-vss
+  constraints:
+  - M8_domain
+  - (x-nsink_left) >= M8_vdsat + sat_margin_v
+  - relerr(M8_id, i3_target) <= current_rel_tol
+  score: relerr(M8_id,i3_target)
+  outputs:
+    vnb2: vnb2
+  selection_coordinates:
+  - vnb2
+  per_parent_keep: 3
+  global_cap: 64
+  diversity_keys:
+  - x
+  - nsink_left
+  - w8
+  - vnb2
+- id: folded_pmos_left
+  sweeps:
+    vpb2:
+      source: row_interval
+      prefix: vpb2_node
+      unit: v
+      default_lo: 0.1
+      default_hi: 1.7
+      count: 81
+      spacing: linear
+    w6:
+      source: model_width_interval
+      polarity: pmos
+      row_interval:
+        prefix: w_m6
+        unit: um
+        default_lo: 0.42
+        default_hi: 100.0
+      count: 120
+      spacing: geom
+  devices:
+  - name: M6
+    polarity: pmos
+    width: w6
+    vgs: psrc_left-vpb2
+    vds: psrc_left-x
+    vbs: vdd-psrc_left
+  constraints:
+  - M6_domain
+  - (psrc_left-x) >= M6_vdsat + sat_margin_v
+  - relerr(M6_id, i3_target) <= current_rel_tol
+  score: relerr(M6_id,i3_target)
+  outputs:
+    vpb2: vpb2
+    w6: w6
+  selection_coordinates:
+  - vpb2
+  - w6
+  per_parent_keep: 3
+  global_cap: 64
+  diversity_keys:
+  - psrc_left
+  - x
+  - vpb2
+  - w6
+- id: output_branch
+  sweeps:
+    vout:
+      source: row_interval
+      prefix: vout
+      unit: v
+      default_lo: 0.05
+      default_hi: 1.75
+      count: 161
+      spacing: linear
+  devices:
+  - name: M5H
+    polarity: pmos
+    width: w4
+    vgs: vdd-vpb1
+    vds: vdd-psrc_right
+    vbs: '0.0'
+  - name: M7
+    polarity: pmos
+    width: w6
+    vgs: psrc_right-vpb2
+    vds: psrc_right-vout
+    vbs: vdd-psrc_right
+  - name: M9
+    polarity: nmos
+    width: w8
+    vgs: vnb2-nsink_right
+    vds: vout-nsink_right
+    vbs: nsink_right-vss
+  - name: M11H
+    polarity: nmos
+    width: w8
+    vgs: x-vss
+    vds: nsink_right-vss
+    vbs: '0.0'
+  constraints:
+  - M7_domain & M9_domain
+  - (psrc_right-vout) >= M7_vdsat + sat_margin_v
+  - (vout-nsink_right) >= M9_vdsat + sat_margin_v
+  - relerr(M7_id, i3_target) <= current_rel_tol
+  - relerr(M9_id, i3_target) <= current_rel_tol
+  - vout > vss + M9_vdsat + M11H_vdsat
+  - vout < vdd - M5H_vdsat - M7_vdsat
+  score: max(relerr(M7_id,i3_target), relerr(M9_id,i3_target))
+  outputs:
+    vout: vout
+  selection_coordinates:
+  - vout
+  per_parent_keep: 3
+  global_cap: 0
+final:
+  devices:
+  - name: M1
+    polarity: nmos
+    width: w1
+    vgs: vin-tail
+    vds: psrc_left-tail
+    vbs: tail-vss
+  - name: M2
+    polarity: nmos
+    width: w1
+    vgs: vin-tail
+    vds: psrc_right-tail
+    vbs: tail-vss
+  - name: M3
+    polarity: nmos
+    width: w3
+    vgs: vnb1-vss
+    vds: tail-vss
+    vbs: '0.0'
+  - name: M4
+    polarity: pmos
+    width: w4
+    vgs: vdd-vpb1
+    vds: vdd-psrc_left
+    vbs: '0.0'
+  - name: M5
+    polarity: pmos
+    width: w4
+    vgs: vdd-vpb1
+    vds: vdd-psrc_right
+    vbs: '0.0'
+  - name: M6
+    polarity: pmos
+    width: w6
+    vgs: psrc_left-vpb2
+    vds: psrc_left-x
+    vbs: vdd-psrc_left
+  - name: M7
+    polarity: pmos
+    width: w6
+    vgs: psrc_right-vpb2
+    vds: psrc_right-vout
+    vbs: vdd-psrc_right
+  - name: M8
+    polarity: nmos
+    width: w8
+    vgs: vnb2-nsink_left
+    vds: x-nsink_left
+    vbs: nsink_left-vss
+  - name: M9
+    polarity: nmos
+    width: w8
+    vgs: vnb2-nsink_right
+    vds: vout-nsink_right
+    vbs: nsink_right-vss
+  - name: M10
+    polarity: nmos
+    width: w8
+    vgs: x-vss
+    vds: nsink_left-vss
+    vbs: '0.0'
+  - name: M11
+    polarity: nmos
+    width: w8
+    vgs: x-vss
+    vds: nsink_right-vss
+    vbs: '0.0'
+  residuals:
+    tail_kcl: (M3_id-M1_id-M2_id) / max(abs(i3_target),1e-12)
+    psrc_left_kcl: (M4_id-M1_id-M6_id) / max(abs(i_upper),1e-12)
+    psrc_right_kcl: (M5_id-M2_id-M7_id) / max(abs(i_upper),1e-12)
+    x_kcl: (M6_id-M8_id) / max(abs(i3_target),1e-12)
+    nsink_left_kcl: (M8_id-M10_id) / max(abs(i3_target),1e-12)
+    output_kcl: (M7_id-M9_id) / max(abs(i3_target),1e-12)
+    nsink_right_kcl: (M9_id-M11_id) / max(abs(i3_target),1e-12)
+    m3_target: (M3_id-i3_target) / max(abs(i3_target),1e-12)
+  saturation_headroom:
+    M1: (psrc_left-tail)-M1_vdsat
+    M2: (psrc_right-tail)-M2_vdsat
+    M3: (tail-vss)-M3_vdsat
+    M4: (vdd-psrc_left)-M4_vdsat
+    M5: (vdd-psrc_right)-M5_vdsat
+    M6: (psrc_left-x)-M6_vdsat
+    M7: (psrc_right-vout)-M7_vdsat
+    M8: (x-nsink_left)-M8_vdsat
+    M9: (vout-nsink_right)-M9_vdsat
+    M10: (nsink_left-vss)-M10_vdsat
+    M11: (nsink_right-vss)-M11_vdsat
+  constraints:
+  - M1_domain & M2_domain & M3_domain & M4_domain & M5_domain & M6_domain & M7_domain
+    & M8_domain & M9_domain & M10_domain & M11_domain
+  - ((psrc_left-tail)-M1_vdsat) >= sat_margin_v
+  - ((psrc_right-tail)-M2_vdsat) >= sat_margin_v
+  - ((tail-vss)-M3_vdsat) >= sat_margin_v
+  - ((vdd-psrc_left)-M4_vdsat) >= sat_margin_v
+  - ((vdd-psrc_right)-M5_vdsat) >= sat_margin_v
+  - ((psrc_left-x)-M6_vdsat) >= sat_margin_v
+  - ((psrc_right-vout)-M7_vdsat) >= sat_margin_v
+  - ((x-nsink_left)-M8_vdsat) >= sat_margin_v
+  - ((vout-nsink_right)-M9_vdsat) >= sat_margin_v
+  - ((nsink_left-vss)-M10_vdsat) >= sat_margin_v
+  - ((nsink_right-vss)-M11_vdsat) >= sat_margin_v
+  - vout > vss + M9_vdsat + M11_vdsat
+  - vout < vdd - M5_vdsat - M7_vdsat
+csv_aliases:
+  w_m1_um: w1
+  i_m3_a: i3_target
+  vnb1_v: vnb1
+  vpb1_v: vpb1
+  vpb2_v: vpb2
+  vnb2_v: vnb2
+  tail_v: tail
+  psrc_left_v: psrc_left
+  psrc_right_v: psrc_right
+  x_v: x
+  nsink_left_v: nsink_left
+  nsink_right_v: nsink_right
+  vout_v: vout
+  w_m2_um: w1
+  w_m3_um: w3
+  w_m4_um: w4
+  w_m5_um: w4
+  w_m6_um: w6
+  w_m7_um: w6
+  w_m8_um: w8
+  w_m9_um: w8
+  w_m10_um: w8
+  w_m11_um: w8

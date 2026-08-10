@@ -1,0 +1,323 @@
+schema_version: 1
+name: two_stage_opamp_balanced_dc_mlp_v1
+coverage_csv: examples/two_stage_opamp/generated/assignment_synthesis/two_stage_coverage_plan.csv
+output_csv: examples/two_stage_opamp/generated/witnesses.csv
+witnesses_per_point: 5
+sat_margin_v: 0.05
+mlp:
+  nmos_checkpoint: runtime/mlp_models/sky130_nmos_mlp.pt
+  pmos_checkpoint: runtime/mlp_models/sky130_pmos_mlp.pt
+  length_um: 0.5
+constants:
+  vdd: 1.8
+  vss: 0.0
+  vin: 0.9
+  sat_margin_v: 0.05
+  current_rel_tol: 0.1
+  output_kcl_rel_tol: 0.1
+point_bindings:
+  w1:
+    column: w_m1_um
+  i5_target:
+    column: i_m5_a
+  vy_allowed_lo:
+    column: n2_min_v
+    default: 0.001
+  vy_allowed_hi:
+    column: n2_max_v
+    default: 1.799
+  w6_allowed_lo:
+    column: w_m6_min_um
+    default: 0.42
+  w6_allowed_hi:
+    column: w_m6_max_um
+    default: 100.0
+derived_bindings:
+  ib: 0.5*i5_target
+stages:
+- id: m1_input
+  sweeps:
+    vtail:
+      source: row_interval
+      prefix: ntail
+      unit: v
+      default_lo: 0.0
+      default_hi: 0.899
+      count: 81
+    vx:
+      source: row_interval
+      prefix: n1
+      unit: v
+      default_lo: 0.001
+      default_hi: 1.799
+      count: 121
+  devices:
+  - name: M1
+    polarity: nmos
+    width: w1
+    vgs: vin-vtail
+    vds: vx-vtail
+    vbs: vtail-vss
+  constraints:
+  - M1_domain
+  - (vx-vtail)>=M1_vdsat+sat_margin_v
+  - relerr(M1_id,ib)<=current_rel_tol
+  score: relerr(M1_id,ib)
+  outputs:
+    vtail: vtail
+    vx: vx
+  selection_coordinates:
+  - vtail
+  - vx
+  per_parent_keep: 3
+  global_cap: 64
+  diversity_keys:
+  - vtail
+  - vx
+  selection_mode: all_feasible
+- id: m5_bias
+  sweeps:
+    vbias:
+      source: row_interval
+      prefix: vbias
+      unit: v
+      default_lo: 0.001
+      default_hi: 1.799
+      count: 161
+    w5:
+      source: model_width_interval
+      polarity: nmos
+      row_interval:
+        prefix: w_m5
+        unit: um
+        default_lo: 0.42
+        default_hi: 100.0
+      count: 160
+      spacing: geom
+  devices:
+  - name: M5
+    polarity: nmos
+    width: w5
+    vgs: vbias-vss
+    vds: vtail-vss
+    vbs: '0.0'
+  constraints:
+  - M5_domain
+  - (vtail-vss)>=M5_vdsat+sat_margin_v
+  - relerr(M5_id,i5_target)<=current_rel_tol
+  score: relerr(M5_id,i5_target)
+  outputs:
+    vbias: vbias
+    w5: w5
+  selection_coordinates:
+  - vbias
+  - w5
+  per_parent_keep: 3
+  global_cap: 64
+  diversity_keys:
+  - vtail
+  - vx
+  - vbias
+  - w5
+- id: m3_load
+  sweeps:
+    w3:
+      source: model_width_interval
+      polarity: pmos
+      row_interval:
+        prefix: w_m3
+        unit: um
+        default_lo: 0.42
+        default_hi: 100.0
+      count: 160
+      spacing: geom
+  devices:
+  - name: M3
+    polarity: pmos
+    width: w3
+    vgs: vdd-vx
+    vds: vdd-vx
+    vbs: '0.0'
+  constraints:
+  - M3_domain
+  - (vdd-vx)>=M3_vdsat+sat_margin_v
+  - relerr(M3_id,ib)<=current_rel_tol
+  score: relerr(M3_id,ib)
+  outputs:
+    w3: w3
+  selection_coordinates:
+  - w3
+  per_parent_keep: 3
+  global_cap: 64
+  diversity_keys:
+  - vtail
+  - vx
+  - vbias
+  - w3
+- id: balanced_m2_m4
+  derived:
+    vy: vx
+  devices:
+  - name: M2
+    polarity: nmos
+    width: w1
+    vgs: vin-vtail
+    vds: vy-vtail
+    vbs: vtail-vss
+  - name: M4
+    polarity: pmos
+    width: w3
+    vgs: vdd-vx
+    vds: vdd-vy
+    vbs: '0.0'
+  constraints:
+  - M2_domain & M4_domain
+  - (vy>=vy_allowed_lo) & (vy<=vy_allowed_hi)
+  - (vy-vtail)>=M2_vdsat+sat_margin_v
+  - (vdd-vy)>=M4_vdsat+sat_margin_v
+  - relerr(M2_id,ib)<=current_rel_tol
+  - relerr(M4_id,ib)<=current_rel_tol
+  score: max(relerr(M2_id,ib),relerr(M4_id,ib))
+  outputs:
+    vy: vy
+  selection_coordinates:
+  - vy
+  per_parent_keep: 1
+  global_cap: 64
+  diversity_keys:
+  - vtail
+  - vx
+  - vbias
+  - w3
+  - w5
+- id: output_m6_m7
+  sweeps:
+    w7:
+      source: model_width_interval
+      polarity: nmos
+      row_interval:
+        prefix: w_m7
+        unit: um
+        default_lo: 0.42
+        default_hi: 100.0
+      count: 160
+      spacing: geom
+    vout:
+      source: row_interval
+      prefix: vout
+      unit: v
+      default_lo: 0.001
+      default_hi: 1.799
+      count: 161
+  derived:
+    w6: 2.0*w3*w7/w5
+  devices:
+  - name: M6
+    polarity: pmos
+    width: w6
+    vgs: vdd-vy
+    vds: vdd-vout
+    vbs: '0.0'
+  - name: M7
+    polarity: nmos
+    width: w7
+    vgs: vbias-vss
+    vds: vout-vss
+    vbs: '0.0'
+  constraints:
+  - M6_domain & M7_domain
+  - (w6>=w6_allowed_lo) & (w6<=w6_allowed_hi)
+  - (vdd-vout)>=M6_vdsat+sat_margin_v
+  - (vout-vss)>=M7_vdsat+sat_margin_v
+  - relerr(M6_id,M7_id)<=output_kcl_rel_tol
+  score: relerr(M6_id,M7_id)
+  outputs:
+    w7: w7
+    w6: w6
+    vout: vout
+  selection_coordinates:
+  - vout
+  - w7
+  per_parent_keep: 3
+  global_cap: 0
+final:
+  devices:
+  - name: M1
+    polarity: nmos
+    width: w1
+    vgs: vin-vtail
+    vds: vx-vtail
+    vbs: vtail-vss
+  - name: M2
+    polarity: nmos
+    width: w1
+    vgs: vin-vtail
+    vds: vy-vtail
+    vbs: vtail-vss
+  - name: M3
+    polarity: pmos
+    width: w3
+    vgs: vdd-vx
+    vds: vdd-vx
+    vbs: '0.0'
+  - name: M4
+    polarity: pmos
+    width: w3
+    vgs: vdd-vx
+    vds: vdd-vy
+    vbs: '0.0'
+  - name: M5
+    polarity: nmos
+    width: w5
+    vgs: vbias-vss
+    vds: vtail-vss
+    vbs: '0.0'
+  - name: M6
+    polarity: pmos
+    width: w6
+    vgs: vdd-vy
+    vds: vdd-vout
+    vbs: '0.0'
+  - name: M7
+    polarity: nmos
+    width: w7
+    vgs: vbias-vss
+    vds: vout-vss
+    vbs: '0.0'
+  residuals:
+    tail_kcl: (M5_id-M1_id-M2_id)/max(max(abs(M5_id),abs(M1_id+M2_id)),1e-12)
+    x_kcl: (M3_id-M1_id)/max(max(abs(M3_id),abs(M1_id)),1e-12)
+    y_kcl: (M4_id-M2_id)/max(max(abs(M4_id),abs(M2_id)),1e-12)
+    mirror_balance: (M3_id-M4_id)/max(max(abs(M3_id),abs(M4_id)),1e-12)
+    output_kcl: (M6_id-M7_id)/max(max(abs(M6_id),abs(M7_id)),1e-12)
+    i5_target: (M5_id-i5_target)/max(max(abs(M5_id),abs(i5_target)),1e-12)
+  saturation_headroom:
+    M1: (vx-vtail)-M1_vdsat
+    M2: (vy-vtail)-M2_vdsat
+    M3: (vdd-vx)-M3_vdsat
+    M4: (vdd-vy)-M4_vdsat
+    M5: (vtail-vss)-M5_vdsat
+    M6: (vdd-vout)-M6_vdsat
+    M7: (vout-vss)-M7_vdsat
+  constraints:
+  - M1_domain & M2_domain & M3_domain & M4_domain & M5_domain & M6_domain & M7_domain
+  - ((vx-vtail)-M1_vdsat)>=sat_margin_v
+  - ((vy-vtail)-M2_vdsat)>=sat_margin_v
+  - ((vdd-vx)-M3_vdsat)>=sat_margin_v
+  - ((vdd-vy)-M4_vdsat)>=sat_margin_v
+  - ((vtail-vss)-M5_vdsat)>=sat_margin_v
+  - ((vdd-vout)-M6_vdsat)>=sat_margin_v
+  - ((vout-vss)-M7_vdsat)>=sat_margin_v
+csv_aliases:
+  w_m1_um: w1
+  i_m5_target_a: i5_target
+  i_half_target_a: ib
+  vbias_v: vbias
+  vtail_v: vtail
+  vx_v: vx
+  vy_v: vy
+  vout_v: vout
+  w_m3_um: w3
+  w_m5_um: w5
+  w_m6_um: w6
+  w_m7_um: w7

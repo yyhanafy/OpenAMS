@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+.venv-openams/
+venv/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+*~
+
+# Runtime/generated outputs
+runtime/*
+!runtime/README.md
+
+examples/*/generated/
+
+# Temporary files
+/tmp/
+*.log
+*.dat
+
+# Large technology datasets
+technology/*.csv
+technology/*.csv.gz
+
+# Trained model checkpoints
+*.pt
+*.pth
+
+# Archives
+*.tar
+*.tar.gz
+*.tgz
+*.zip

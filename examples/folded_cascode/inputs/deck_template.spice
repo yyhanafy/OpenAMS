@@ -1,0 +1,24 @@
+* OpenAMS simulation deck template — folded-cascode OTA
+
+.option savecurrents
+.temp {temperature_c}
+
+.lib {technology_library} {corner}
+
+* Supplies.
+VDD_SUPPLY vdd 0 {vdd_v}
+VSS_SUPPLY vss 0 {vss_v}
+
+* Balanced differential input around the declared common-mode voltage.
+* The AC magnitudes produce a 1 V differential small-signal input.
+VIP_SOURCE vip 0 DC {vin_cm_v} AC 0.5 0
+VIN_SOURCE vin 0 DC {vin_cm_v} AC 0.5 180
+
+* DUT definition and instance.
+.include "folded_cascode.spice"
+XOTA vip vin vout vdd vss folded_cascode_ota
+
+* OpenAMS inserts the requested .op/.dc/.ac control statements here.
+{analysis_block}
+
+.end
