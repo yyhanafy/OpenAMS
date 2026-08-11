@@ -1,0 +1,33 @@
+{
+  "artifact": "openams.folded_cascode.native_1500_parallel",
+  "witnesses": "/home/yhanafy/AMS-Tutorial/openams/examples/folded_cascode/generated/assignment_synthesis/folded_cascode_design_space_witnesses.jsonl",
+  "runner": "/home/yhanafy/AMS-Tutorial/openams/tools/validation/run_folded_cascode_native_witness_ngspice.py",
+  "available_pass_witnesses": 1944,
+  "selected_witnesses": 1500,
+  "selection_dimensions": [
+    "w_m1_um",
+    "w_m4_um",
+    "w_m6_um"
+  ],
+  "workers": 12,
+  "coverage": {
+    "mean_nearest_selected_distance": 0.0,
+    "p95_nearest_selected_distance": 0.0,
+    "worst_nearest_selected_distance": 0.0
+  },
+  "width_min_um": {
+    "w_m1_um": 1.0,
+    "w_m4_um": 63.0,
+    "w_m6_um": 40.0
+  },
+  "width_max_um": {
+    "w_m1_um": 50.0,
+    "w_m4_um": 100.0,
+    "w_m6_um": 100.0
+  },
+  "worker_failures": 0,
+  "merged_summary_rows": 1500,
+  "merged_ac_rows": 1500,
+  "mlp_dataset_rows": 1500,
+  "pm_definition": "180 deg + absolute continuous unwrapped phase of Vout/(Vip-Vin) at first descending 0 dB crossing"
+}

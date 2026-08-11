@@ -1,0 +1,2 @@
+point,point_index,status,gain_db,gain_v_v,peak_gain_db,peak_gain_frequency_hz,frequency_start_hz,frequency_stop_hz,ac_rows,phase_low_frequency_raw_deg,phase_low_frequency_unwrapped_deg,bandwidth_3db_hz,ugb_hz,phase_at_ugb_raw_deg,phase_at_ugb_unwrapped_deg,phase_at_ugb_deg,phase_margin_deg
+point_000000,0,PASS,55.6154619,603.6331679177384,55.6154619,1.0,1.0,10000000000.0,1001,-0.03673753420836398,-0.03673753420836398,1555.867485079628,941418.0326436517,-90.64979423582389,-90.6497942358239,-90.6497942358239,89.3502057641761

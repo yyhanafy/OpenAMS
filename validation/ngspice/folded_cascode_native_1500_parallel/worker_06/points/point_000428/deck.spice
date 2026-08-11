@@ -1,0 +1,42 @@
+* OpenAMS folded-cascode native-witness validation
+* point_index=428
+* source=ordered_dc_propagation_native_witness
+.option savecurrents
+.temp 27
+.lib "/home/yhanafy/pdks/open_pdks/sky130/sky130A/libs.tech/ngspice/sky130.lib.spice" tt
+
+VDD_SUPPLY vdd 0 1.8
+VSS_SUPPLY vss 0 0
+
+* 1-V differential AC excitation, 0.9-V DC common mode.
+VIP_SOURCE vip 0 DC 0.9 AC 0.5 0
+VIN_SOURCE vin 0 DC 0.9 AC 0.5 180
+
+.include "folded_cascode.spice"
+XOTA vip vin vout vdd vss folded_cascode_ota
+
+.control
+set noaskquit
+set filetype=ascii
+op
+echo OPENAMS_OP_BEGIN
+print v(vdd) v(vss) v(vip) v(vin) v(xota.tail) v(xota.psrc_left) v(xota.psrc_right) v(xota.x) v(xota.nsink_left) v(xota.nsink_right) v(xota.vnb1_node) v(xota.vpb1_node) v(xota.vnb2_node) v(xota.vpb2_node) v(vout)
+echo OPENAMS_OP_END
+echo OPENAMS_DEVICE_BEGIN
+show @m.xota.xm1[id] @m.xota.xm1[gm] @m.xota.xm1[gds] @m.xota.xm1[vgs] @m.xota.xm1[vds] @m.xota.xm1[vbs] @m.xota.xm1[vdsat]
+show @m.xota.xm2[id] @m.xota.xm2[gm] @m.xota.xm2[gds] @m.xota.xm2[vgs] @m.xota.xm2[vds] @m.xota.xm2[vbs] @m.xota.xm2[vdsat]
+show @m.xota.xm3[id] @m.xota.xm3[gm] @m.xota.xm3[gds] @m.xota.xm3[vgs] @m.xota.xm3[vds] @m.xota.xm3[vbs] @m.xota.xm3[vdsat]
+show @m.xota.xm4[id] @m.xota.xm4[gm] @m.xota.xm4[gds] @m.xota.xm4[vgs] @m.xota.xm4[vds] @m.xota.xm4[vbs] @m.xota.xm4[vdsat]
+show @m.xota.xm5[id] @m.xota.xm5[gm] @m.xota.xm5[gds] @m.xota.xm5[vgs] @m.xota.xm5[vds] @m.xota.xm5[vbs] @m.xota.xm5[vdsat]
+show @m.xota.xm6[id] @m.xota.xm6[gm] @m.xota.xm6[gds] @m.xota.xm6[vgs] @m.xota.xm6[vds] @m.xota.xm6[vbs] @m.xota.xm6[vdsat]
+show @m.xota.xm7[id] @m.xota.xm7[gm] @m.xota.xm7[gds] @m.xota.xm7[vgs] @m.xota.xm7[vds] @m.xota.xm7[vbs] @m.xota.xm7[vdsat]
+show @m.xota.xm8[id] @m.xota.xm8[gm] @m.xota.xm8[gds] @m.xota.xm8[vgs] @m.xota.xm8[vds] @m.xota.xm8[vbs] @m.xota.xm8[vdsat]
+show @m.xota.xm9[id] @m.xota.xm9[gm] @m.xota.xm9[gds] @m.xota.xm9[vgs] @m.xota.xm9[vds] @m.xota.xm9[vbs] @m.xota.xm9[vdsat]
+show @m.xota.xm10[id] @m.xota.xm10[gm] @m.xota.xm10[gds] @m.xota.xm10[vgs] @m.xota.xm10[vds] @m.xota.xm10[vbs] @m.xota.xm10[vdsat]
+show @m.xota.xm11[id] @m.xota.xm11[gm] @m.xota.xm11[gds] @m.xota.xm11[vgs] @m.xota.xm11[vds] @m.xota.xm11[vbs] @m.xota.xm11[vdsat]
+echo OPENAMS_DEVICE_END
+ac dec 100 1 1e+10
+wrdata openams_ac.dat frequency vdb(vout) vp(vout)
+quit
+.endc
+.end

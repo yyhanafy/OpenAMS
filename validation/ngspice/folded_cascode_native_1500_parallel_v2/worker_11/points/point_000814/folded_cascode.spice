@@ -1,0 +1,131 @@
+* OpenAMS folded-cascode OTA — flat MOS-level topology
+*
+* Independent assignment variables:
+*   w_m1_um
+*   i_m3_a
+*
+* M3-dependent realization:
+*   Select a technology-supported (W3, VGS3, VDSAT3)
+*   tuple for I3 and derive VNB1 while maintaining
+*   M3 saturation.
+*
+* Balanced-current relationships:
+*   I1 = I2 = I3/2
+*   I4 = I5 = 1.5*I3
+*   I6 = I7 = I8 = I9 = I10 = I11 = I3
+*
+* Width relationships:
+*   W1 = W2
+*   W4 = W5
+*   W6 = W7
+*   W8 = W9 = W10 = W11
+*
+* All M1-M11 must operate in saturation.
+
+.param vdd=1.8
+.param vss=0
+.param vicm=0.9
+.param c_load=10p
+
+.param l_default_um=0.5
+.param nf_default=1
+
+* Independent assignment variables
+.param w_m1_um=21.416666666666664
+.param i_m3_a=1.36231e-05
+
+* Dependent bias voltages
+.param vnb1=0.64
+.param vpb1=0.8
+.param vpb2=0.7250000000000001
+.param vnb2=0.96
+
+* Dependent and matched device widths
+.param w_m2_um=21.416666666666664
+.param w_m3_um=16.0
+
+.param w_m4_um=63.0
+.param w_m5_um=63.0
+
+.param w_m6_um=63.0
+.param w_m7_um=63.0
+
+.param w_m8_um=25.0
+.param w_m9_um=25.0
+.param w_m10_um=25.0
+.param w_m11_um=25.0
+
+* Generated finger counts
+.param nf_m1=1
+.param nf_m3=1
+.param nf_m4=1
+.param nf_m6=1
+.param nf_m8=1
+.param nf_m10=1
+
+* Convert micrometer parameters to SPICE dimensions
+.param l_default=0.5
+
+.param w_m1=21.4166666667
+.param w_m2=21.4166666667
+.param w_m3=16
+.param w_m4=63
+.param w_m5=63
+.param w_m6=63
+.param w_m7=63
+.param w_m8=25
+.param w_m9=25
+.param w_m10=25
+.param w_m11=25
+
+.subckt folded_cascode_ota vip vin vout vdd vss
+
+* Dependent and independent bias sources
+VNB1BIAS vnb1_node vss {vnb1}
+VPB1BIAS vpb1_node vss {vpb1}
+VPB2BIAS vpb2_node vss {vpb2}
+VNB2BIAS vnb2_node vss {vnb2}
+
+* M1-M2: NMOS differential input pair
+XM1 psrc_left vip tail vss sky130_fd_pr__nfet_01v8
++ w={w_m1} l={l_default} nf=1
+
+XM2 psrc_right vin tail vss sky130_fd_pr__nfet_01v8
++ w={w_m2} l={l_default} nf=1
+
+* M3: NMOS tail-current source
+XM3 tail vnb1_node vss vss sky130_fd_pr__nfet_01v8
++ w={w_m3} l={l_default} nf=1
+
+* M4-M5: PMOS upper current-source pair
+XM4 psrc_left vpb1_node vdd vdd sky130_fd_pr__pfet_01v8
++ w={w_m4} l={l_default} nf=1
+
+XM5 psrc_right vpb1_node vdd vdd sky130_fd_pr__pfet_01v8
++ w={w_m5} l={l_default} nf=1
+
+* M6-M7: PMOS folded-cascode pair
+XM6 x vpb2_node psrc_left vdd sky130_fd_pr__pfet_01v8
++ w={w_m6} l={l_default} nf=1
+
+XM7 vout vpb2_node psrc_right vdd sky130_fd_pr__pfet_01v8
++ w={w_m7} l={l_default} nf=1
+
+* M8-M9: NMOS cascode pair
+XM8 x vnb2_node nsink_left vss sky130_fd_pr__nfet_01v8
++ w={w_m8} l={l_default} nf=1
+
+XM9 vout vnb2_node nsink_right vss sky130_fd_pr__nfet_01v8
++ w={w_m9} l={l_default} nf=1
+
+* M10-M11: NMOS lower current-sink pair
+* Their common gate is self-biased by node x.
+XM10 nsink_left x vss vss sky130_fd_pr__nfet_01v8
++ w={w_m10} l={l_default} nf=1
+
+XM11 nsink_right x vss vss sky130_fd_pr__nfet_01v8
++ w={w_m11} l={l_default} nf=1
+
+CLOAD vout vss {c_load}
+
+.ends folded_cascode_ota

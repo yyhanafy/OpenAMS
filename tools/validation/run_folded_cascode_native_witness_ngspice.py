@@ -314,12 +314,17 @@ def build_deck(
         "echo OPENAMS_DEVICE_BEGIN",
     ]
 
-    # Same ngspice hierarchy convention already used by OpenAMS validation:
-    # @m.xota.xmN[metric]
+    # XM1...XM11 are SKY130 wrapper subcircuits; query the internal MOS.
+    # Example: @m.xota.xm1.msky130_fd_pr__nfet_01v8[vdsat]
+    nmos_devices = {1, 2, 3, 8, 9, 10, 11}
     for idx in range(1, 12):
-        inst = f"@m.xota.xm{idx}"
+        mos = "nfet" if idx in nmos_devices else "pfet"
+        inst = (
+            f"@m.xota.xm{idx}."
+            f"msky130_fd_pr__{mos}_01v8"
+        )
         control.append(
-            f"show {inst}[id] {inst}[gm] {inst}[gds] "
+            f"print {inst}[id] {inst}[gm] {inst}[gds] "
             f"{inst}[vgs] {inst}[vds] {inst}[vbs] {inst}[vdsat]"
         )
 
@@ -382,7 +387,8 @@ def parse_nodes(log_text: str) -> dict[str, float]:
 
 
 DEVICE_VALUE_RE = re.compile(
-    r"@m\.[^\[]*xm(?P<device>1[01]|[1-9])"
+    r"@m\.[^\[]*?xm(?P<device>1[01]|[1-9])"
+    r"(?:\.[^\[]+)?"
     r"\[(?P<metric>id|gm|gds|vgs|vds|vbs|vdsat)\]"
     r"\s*=\s*(?P<value>[+\-0-9.eE]+)",
     re.IGNORECASE,

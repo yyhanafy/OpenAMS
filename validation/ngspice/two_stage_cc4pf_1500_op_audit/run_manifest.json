@@ -1,0 +1,13 @@
+{
+  "source_plan": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/ngspice_validation_op_audit.yaml",
+  "source_witness_csv": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_cc4pf_1500_parallel/selected_witnesses_1500.csv",
+  "selected_count": 1500,
+  "workers": 12,
+  "coverage_columns": [
+    "w_m1_um",
+    "w_m3_um",
+    "w_m6_um"
+  ],
+  "validation_csv": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_cc4pf_1500_op_audit/ngspice_validation_1500.csv",
+  "mlp_dataset_csv": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_cc4pf_1500_op_audit/mlp_dataset_1500.csv"
+}

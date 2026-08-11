@@ -1,0 +1,20 @@
+{
+  "ac_model_comparison": false,
+  "artifact": "openams.folded_cascode.native_witness_ngspice_validation",
+  "available_pass_witnesses": 125,
+  "current_absolute_tolerance_a": 1e-06,
+  "current_relative_tolerance": 0.1,
+  "dc_pass_count": 10,
+  "dc_reference": "native witness scalar nodes + output feasibility window + circuit-derived device terminal voltages; M7/M9 VDS excluded because Vout is free",
+  "device_voltage_tolerance_v": 0.025,
+  "dry_run": false,
+  "node_tolerance_v": 0.025,
+  "selected_witnesses": 125,
+  "selection_axes": [
+    "w_m1_um",
+    "i_m3_a"
+  ],
+  "sky130_library": "/home/yhanafy/pdks/open_pdks/sky130/sky130A/libs.tech/ngspice/sky130.lib.spice",
+  "vdsat_tolerance_v": 0.05,
+  "witness_jsonl": "/home/yhanafy/AMS-Tutorial/openams/validation/ngspice/folded_cascode_native_1500_parallel/shards/worker_01.jsonl"
+}

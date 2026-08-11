@@ -1,0 +1,42 @@
+* OpenAMS folded-cascode native-witness validation
+* point_index=201
+* source=ordered_dc_propagation_native_witness
+.option savecurrents
+.temp 27
+.lib "/home/yhanafy/pdks/open_pdks/sky130/sky130A/libs.tech/ngspice/sky130.lib.spice" tt
+
+VDD_SUPPLY vdd 0 1.8
+VSS_SUPPLY vss 0 0
+
+* 1-V differential AC excitation, 0.9-V DC common mode.
+VIP_SOURCE vip 0 DC 0.9 AC 0.5 0
+VIN_SOURCE vin 0 DC 0.9 AC 0.5 180
+
+.include "folded_cascode.spice"
+XOTA vip vin vout vdd vss folded_cascode_ota
+
+.control
+set noaskquit
+set filetype=ascii
+op
+echo OPENAMS_OP_BEGIN
+print v(vdd) v(vss) v(vip) v(vin) v(xota.tail) v(xota.psrc_left) v(xota.psrc_right) v(xota.x) v(xota.nsink_left) v(xota.nsink_right) v(xota.vnb1_node) v(xota.vpb1_node) v(xota.vnb2_node) v(xota.vpb2_node) v(vout)
+echo OPENAMS_OP_END
+echo OPENAMS_DEVICE_BEGIN
+print @m.xota.xm1.msky130_fd_pr__nfet_01v8[id] @m.xota.xm1.msky130_fd_pr__nfet_01v8[gm] @m.xota.xm1.msky130_fd_pr__nfet_01v8[gds] @m.xota.xm1.msky130_fd_pr__nfet_01v8[vgs] @m.xota.xm1.msky130_fd_pr__nfet_01v8[vds] @m.xota.xm1.msky130_fd_pr__nfet_01v8[vbs] @m.xota.xm1.msky130_fd_pr__nfet_01v8[vdsat]
+print @m.xota.xm2.msky130_fd_pr__nfet_01v8[id] @m.xota.xm2.msky130_fd_pr__nfet_01v8[gm] @m.xota.xm2.msky130_fd_pr__nfet_01v8[gds] @m.xota.xm2.msky130_fd_pr__nfet_01v8[vgs] @m.xota.xm2.msky130_fd_pr__nfet_01v8[vds] @m.xota.xm2.msky130_fd_pr__nfet_01v8[vbs] @m.xota.xm2.msky130_fd_pr__nfet_01v8[vdsat]
+print @m.xota.xm3.msky130_fd_pr__nfet_01v8[id] @m.xota.xm3.msky130_fd_pr__nfet_01v8[gm] @m.xota.xm3.msky130_fd_pr__nfet_01v8[gds] @m.xota.xm3.msky130_fd_pr__nfet_01v8[vgs] @m.xota.xm3.msky130_fd_pr__nfet_01v8[vds] @m.xota.xm3.msky130_fd_pr__nfet_01v8[vbs] @m.xota.xm3.msky130_fd_pr__nfet_01v8[vdsat]
+print @m.xota.xm4.msky130_fd_pr__pfet_01v8[id] @m.xota.xm4.msky130_fd_pr__pfet_01v8[gm] @m.xota.xm4.msky130_fd_pr__pfet_01v8[gds] @m.xota.xm4.msky130_fd_pr__pfet_01v8[vgs] @m.xota.xm4.msky130_fd_pr__pfet_01v8[vds] @m.xota.xm4.msky130_fd_pr__pfet_01v8[vbs] @m.xota.xm4.msky130_fd_pr__pfet_01v8[vdsat]
+print @m.xota.xm5.msky130_fd_pr__pfet_01v8[id] @m.xota.xm5.msky130_fd_pr__pfet_01v8[gm] @m.xota.xm5.msky130_fd_pr__pfet_01v8[gds] @m.xota.xm5.msky130_fd_pr__pfet_01v8[vgs] @m.xota.xm5.msky130_fd_pr__pfet_01v8[vds] @m.xota.xm5.msky130_fd_pr__pfet_01v8[vbs] @m.xota.xm5.msky130_fd_pr__pfet_01v8[vdsat]
+print @m.xota.xm6.msky130_fd_pr__pfet_01v8[id] @m.xota.xm6.msky130_fd_pr__pfet_01v8[gm] @m.xota.xm6.msky130_fd_pr__pfet_01v8[gds] @m.xota.xm6.msky130_fd_pr__pfet_01v8[vgs] @m.xota.xm6.msky130_fd_pr__pfet_01v8[vds] @m.xota.xm6.msky130_fd_pr__pfet_01v8[vbs] @m.xota.xm6.msky130_fd_pr__pfet_01v8[vdsat]
+print @m.xota.xm7.msky130_fd_pr__pfet_01v8[id] @m.xota.xm7.msky130_fd_pr__pfet_01v8[gm] @m.xota.xm7.msky130_fd_pr__pfet_01v8[gds] @m.xota.xm7.msky130_fd_pr__pfet_01v8[vgs] @m.xota.xm7.msky130_fd_pr__pfet_01v8[vds] @m.xota.xm7.msky130_fd_pr__pfet_01v8[vbs] @m.xota.xm7.msky130_fd_pr__pfet_01v8[vdsat]
+print @m.xota.xm8.msky130_fd_pr__nfet_01v8[id] @m.xota.xm8.msky130_fd_pr__nfet_01v8[gm] @m.xota.xm8.msky130_fd_pr__nfet_01v8[gds] @m.xota.xm8.msky130_fd_pr__nfet_01v8[vgs] @m.xota.xm8.msky130_fd_pr__nfet_01v8[vds] @m.xota.xm8.msky130_fd_pr__nfet_01v8[vbs] @m.xota.xm8.msky130_fd_pr__nfet_01v8[vdsat]
+print @m.xota.xm9.msky130_fd_pr__nfet_01v8[id] @m.xota.xm9.msky130_fd_pr__nfet_01v8[gm] @m.xota.xm9.msky130_fd_pr__nfet_01v8[gds] @m.xota.xm9.msky130_fd_pr__nfet_01v8[vgs] @m.xota.xm9.msky130_fd_pr__nfet_01v8[vds] @m.xota.xm9.msky130_fd_pr__nfet_01v8[vbs] @m.xota.xm9.msky130_fd_pr__nfet_01v8[vdsat]
+print @m.xota.xm10.msky130_fd_pr__nfet_01v8[id] @m.xota.xm10.msky130_fd_pr__nfet_01v8[gm] @m.xota.xm10.msky130_fd_pr__nfet_01v8[gds] @m.xota.xm10.msky130_fd_pr__nfet_01v8[vgs] @m.xota.xm10.msky130_fd_pr__nfet_01v8[vds] @m.xota.xm10.msky130_fd_pr__nfet_01v8[vbs] @m.xota.xm10.msky130_fd_pr__nfet_01v8[vdsat]
+print @m.xota.xm11.msky130_fd_pr__nfet_01v8[id] @m.xota.xm11.msky130_fd_pr__nfet_01v8[gm] @m.xota.xm11.msky130_fd_pr__nfet_01v8[gds] @m.xota.xm11.msky130_fd_pr__nfet_01v8[vgs] @m.xota.xm11.msky130_fd_pr__nfet_01v8[vds] @m.xota.xm11.msky130_fd_pr__nfet_01v8[vbs] @m.xota.xm11.msky130_fd_pr__nfet_01v8[vdsat]
+echo OPENAMS_DEVICE_END
+ac dec 100 1 1e+10
+wrdata openams_ac.dat frequency vdb(vout) vp(vout)
+quit
+.endc
+.end

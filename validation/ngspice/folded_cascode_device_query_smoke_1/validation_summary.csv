@@ -1,0 +1,2 @@
+point,point_index,w_m1_um,i_m3_a,status,ngspice_returncode,node_matches,node_comparisons,device_matches,device_comparisons,ac_status,gain_db_ngspice,ugb_hz_ngspice,phase_margin_deg_ngspice,bandwidth_3db_hz_ngspice
+point_000000,0,1.0,1.00164e-05,DC_NODE_MISMATCH,0,14,15,39,53,PASS,55.6154619,941418.0326436517,89.3502057641761,1555.867485079628

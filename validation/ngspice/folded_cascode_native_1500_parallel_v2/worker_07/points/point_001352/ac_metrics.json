@@ -1,0 +1,22 @@
+{
+  "metrics": {
+    "ac_rows": 1001,
+    "bandwidth_3db_hz": 8859.498842718329,
+    "frequency_start_hz": 1.0,
+    "frequency_stop_hz": 10000000000.0,
+    "gain_db": 58.6769263,
+    "gain_v_v": 858.7095937729271,
+    "peak_gain_db": 58.6769263,
+    "peak_gain_frequency_hz": 1.0,
+    "phase_at_ugb_deg": -92.4885770219016,
+    "phase_at_ugb_raw_deg": -92.4885770219016,
+    "phase_at_ugb_unwrapped_deg": -92.4885770219016,
+    "phase_low_frequency_raw_deg": -0.006451826259791917,
+    "phase_low_frequency_unwrapped_deg": -0.006451826259791917,
+    "phase_margin_deg": 87.5114229780984,
+    "ugb_hz": 7623616.272985336
+  },
+  "model_ac_comparison_performed": false,
+  "source": "ngspice_only",
+  "status": "PASS"
+}

@@ -1,0 +1,78 @@
+schema_version: 1
+name: two_stage_opamp_witness_validation
+input_csv: /home/yhanafy/AMS-Tutorial/openams/validation/ngspice/two_stage_cc4pf_1500_parallel/shards/selected_worker_10.csv
+output_csv: examples/two_stage_opamp/generated/ngspice_validation.csv
+source_netlist: examples/two_stage_opamp/inputs/netlist.spice
+status_column: generation_status
+status_value: WITNESS
+rank_by:
+- max_abs_residual
+- rms_residual
+top_n: 125
+dc_tolerance_v: 0.05
+temperature_c: 27
+pdk:
+  library: AUTO
+  corner: tt
+constants:
+  vdd: 1.8
+  vss: 0.0
+  vin: 0.9
+  c_miller: 4.0e-12
+  c_load: 1.0e-11
+source_bindings:
+  l_default_um: '0.5'
+  w_m1_um: w_m1_um
+  w_m2_um: w_m1_um
+  w_m3_um: w_m3_um
+  w_m4_um: w_m3_um
+  w_m5_um: w_m5_um
+  w_m6_um: w_m6_um
+  w_m7_um: w_m7_um
+  c_miller: c_miller
+circuit: 'VDD_SRC vdd 0 1.8
+
+  VSS_SRC vss 0 0
+
+  VBIAS_SRC vbias 0 {vbias_v}
+
+  VINP inp 0 dc 0.9 ac 0.5
+
+  VINN inn 0 dc 0.9 ac 0.5 180
+
+  XU1 inp inn out vdd vss vbias two_stage_opamp
+
+  CL out 0 10e-12
+
+  '
+nodes:
+  vbias:
+    ngspice: v(vbias)
+    witness_column: vbias_v
+  vtail:
+    ngspice: v(xu1.ntail)
+    witness_column: vtail_v
+  vx:
+    ngspice: v(xu1.n1)
+    witness_column: vx_v
+  vy:
+    ngspice: v(xu1.n2)
+    witness_column: vy_v
+  vout:
+    ngspice: v(out)
+    witness_column: vout_v
+ac:
+  enabled: true
+  output: v(out)
+  sweep:
+    points_per_decade: 100
+    start_hz: 1.0
+    stop_hz: 1.0e9
+  transfer_sign: -1
+measurements:
+  supply_current_a:
+    ngspice: vdd_src#branch
+    absolute: true
+power:
+  supply_voltage_v: 1.8
+  current_measurement: supply_current_a
