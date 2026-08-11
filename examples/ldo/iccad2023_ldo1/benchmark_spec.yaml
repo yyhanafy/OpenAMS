@@ -1,0 +1,48 @@
+source:
+  title: "Design and Optimization of Low-Dropout Voltage Regulator Using Relational Graph Neural Network and Reinforcement Learning in Open-Source SKY130 Process"
+  venue: "IEEE/ACM ICCAD 2023"
+  circuit: "LDO1"
+  technology: "SKY130 CMOS"
+
+nominal:
+  vdd_v: 2.0
+  vref_v: 1.8
+  load_current_a:
+    min: 10e-6
+    max: 10e-3
+
+published_targets:
+  dropout_mv_max: 200
+  psrr_db_max:
+    "<=10kHz": -30
+    "<=1MHz": -20
+    ">=1MHz": -5
+  phase_margin_deg_min: 60
+  quiescent_current_ua_max: 200
+  delta_vreg_mv_max: 36
+  cdec: "minimize after hard specifications are met"
+
+published_optimized_LDO1:
+  reward: -0.39
+  devices:
+    M1_M2: {w_um: 13.0, l_um: 2.0, m: 1}
+    M3_M4: {w_um: 80.0, l_um: 0.5, m: 1}
+    M5: {w_um: 14.27, l_um: 1.22, m: 1}
+    MP: {w_um: 63.65, l_um: 0.5, m: 142}
+    Rfb: {w_um: 0.35, l_um: 1.0, m: 1}
+    Cfb: {w_um: 10.0, l_um: 10.0, m: 4}
+    Cdec: {w_um: 30.0, l_um: 30.0, m: 262}
+    Vb_v: 1.37
+  measured:
+    dropout_mv_at_max_load: 203
+    psrr_db_le_10khz: {min_load: -29.3, max_load: -34.0}
+    psrr_db_le_1mhz: {min_load: -22.0, max_load: -23.2}
+    psrr_db_ge_1mhz: {min_load: -25.75, max_load: -0.32}
+    phase_margin_deg: {min_load: 54.4, max_load: 61.0}
+    quiescent_current_ua: 175.32
+    delta_vreg_mv: 40.0
+    cdec_pf: 476.78
+
+notes:
+  - "The paper explicitly states that not all target specifications were met by optimized LDO1."
+  - "Use the published measured values above as reproduction/reference values, not as universal acceptance limits."
