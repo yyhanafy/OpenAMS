@@ -38,3 +38,20 @@ technology/*.csv.gz
 *.tar.gz
 *.tgz
 *.zip
+
+# OpenAMS generated runtime data
+runtime/
+
+# Generated characterization / simulation artifacts
+*.raw
+*.log
+*.jsonl
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Virtual environments
+.venv/
+.venv-*/
