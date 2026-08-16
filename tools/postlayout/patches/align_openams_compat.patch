@@ -1,0 +1,13 @@
+diff --git a/align/primitive/main.py b/align/primitive/main.py
+index 703a292f..a2888a56 100644
+--- a/align/primitive/main.py
++++ b/align/primitive/main.py
+@@ -226,7 +226,7 @@ def generate_primitive(block_name, primitive, height=28, x_cells=1, y_cells=1, p
+         uc.computeBbox()
+     
+         with open(outputdir / (block_name + '.json'), "wt") as fp:
+-            uc.writeJSON(fp)
++            uc.writeJSON(fp, run_pex=False)
+     
+         blockM = 1 if 'cap' in primitive else 0
+         positive_coord.json_pos(outputdir / (block_name + '.json'))
