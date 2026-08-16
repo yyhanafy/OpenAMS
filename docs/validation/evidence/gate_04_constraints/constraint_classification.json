@@ -1,0 +1,518 @@
+{
+  "gate": "4A",
+  "proof": "Design-intent declarations classified by owning subsystem",
+  "status": "PASS",
+  "design_intent": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/design_intent.yaml",
+  "design_rules": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/design_rules.yaml",
+  "classification_count": 32,
+  "category_counts": {
+    "dependency_group": 2,
+    "dependent_quantity_declaration": 17,
+    "linear_compiler_constraint": 5,
+    "operating_or_assignment_policy": 2,
+    "simulation_constraint": 1,
+    "synthesis_parameter": 2,
+    "technology_region_constraint": 2,
+    "topology_heuristic": 1
+  },
+  "compiler_constraint_count": 5,
+  "dc_propagation_operation_count": 0,
+  "dc_propagation": {},
+  "unsupported_for_linear_compiler": [
+    "second_stage_size_relation"
+  ],
+  "compiler_constraints": [
+    {
+      "name": "balanced_input_left",
+      "kind": "equality",
+      "expression": "device.M1.current == device.M5.current / 2.0",
+      "source": "design_intent"
+    },
+    {
+      "name": "balanced_input_right",
+      "kind": "equality",
+      "expression": "device.M2.current == device.M5.current / 2.0",
+      "source": "design_intent"
+    },
+    {
+      "name": "active_load_left",
+      "kind": "equality",
+      "expression": "device.M3.current == device.M1.current",
+      "source": "design_intent"
+    },
+    {
+      "name": "active_load_right",
+      "kind": "equality",
+      "expression": "device.M4.current == device.M2.current",
+      "source": "design_intent"
+    },
+    {
+      "name": "output_node_kcl",
+      "kind": "topology_derived",
+      "expression": "device.M6.current == device.M7.current",
+      "source": "design_intent"
+    }
+  ],
+  "classified_items": [
+    {
+      "id": "balanced_input_left",
+      "source_path": "circuit_intent.current_relations",
+      "original": "i_m1 = i_m5 / 2.0",
+      "category": "linear_compiler_constraint",
+      "owner": "synthesis.constraint_compiler",
+      "reason": "linear equality or KCL-compatible relation",
+      "canonical_expression": "device.M1.current == device.M5.current / 2.0",
+      "compiler_kind": "equality"
+    },
+    {
+      "id": "balanced_input_right",
+      "source_path": "circuit_intent.current_relations",
+      "original": "i_m2 = i_m5 / 2.0",
+      "category": "linear_compiler_constraint",
+      "owner": "synthesis.constraint_compiler",
+      "reason": "linear equality or KCL-compatible relation",
+      "canonical_expression": "device.M2.current == device.M5.current / 2.0",
+      "compiler_kind": "equality"
+    },
+    {
+      "id": "active_load_left",
+      "source_path": "circuit_intent.current_relations",
+      "original": "i_m3 = i_m1",
+      "category": "linear_compiler_constraint",
+      "owner": "synthesis.constraint_compiler",
+      "reason": "linear equality or KCL-compatible relation",
+      "canonical_expression": "device.M3.current == device.M1.current",
+      "compiler_kind": "equality"
+    },
+    {
+      "id": "active_load_right",
+      "source_path": "circuit_intent.current_relations",
+      "original": "i_m4 = i_m2",
+      "category": "linear_compiler_constraint",
+      "owner": "synthesis.constraint_compiler",
+      "reason": "linear equality or KCL-compatible relation",
+      "canonical_expression": "device.M4.current == device.M2.current",
+      "compiler_kind": "equality"
+    },
+    {
+      "id": "output_node_kcl",
+      "source_path": "circuit_intent.current_relations",
+      "original": "i_m6 = i_m7",
+      "category": "linear_compiler_constraint",
+      "owner": "synthesis.constraint_compiler",
+      "reason": "linear equality or KCL-compatible relation",
+      "canonical_expression": "device.M6.current == device.M7.current",
+      "compiler_kind": "topology_derived"
+    },
+    {
+      "id": "second_stage_size_relation",
+      "source_path": "circuit_intent.size_relations",
+      "original": "s_m6 / s_m4 = 2.0 * s_m7 / s_m5",
+      "fixed_length_equivalent": "w_m6 / w_m4 = 2.0 * w_m7 / w_m5",
+      "category": "topology_heuristic",
+      "owner": "topology_specific_synthesis_adapter",
+      "reason": "contains ratios/products and is intentionally outside the linear compiler",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "i_m5_a",
+      "source_path": "synthesis_parameterization.independent_variables",
+      "original": {
+        "kind": "current",
+        "minimum": 1e-05,
+        "maximum": 0.0001,
+        "sampling": "characterized_current_grid",
+        "role": "tail_branch_current"
+      },
+      "category": "synthesis_parameter",
+      "owner": "synthesis_parameterization",
+      "reason": "declares scan dimensions rather than an executable equality",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "w_m1_um",
+      "source_path": "synthesis_parameterization.independent_variables",
+      "original": {
+        "kind": "total_width",
+        "minimum": 1.0,
+        "maximum": 100.0,
+        "sampling": "continuous_total_width_with_integer_nf",
+        "role": "input_pair_width",
+        "finger_realization": {
+          "enabled": true,
+          "finger_width_min_um": 0.42,
+          "finger_width_max_um": 100.0,
+          "nf_min": 1,
+          "scaling_model": "linear_current_scaling",
+          "nf_max": 1
+        }
+      },
+      "category": "synthesis_parameter",
+      "owner": "synthesis_parameterization",
+      "reason": "declares scan dimensions rather than an executable equality",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "i_m1_a",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "i_m1_a",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "i_m2_a",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "i_m2_a",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "i_m3_a",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "i_m3_a",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "i_m4_a",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "i_m4_a",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "i_m6_a",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "i_m6_a",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "i_m7_a",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "i_m7_a",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "w_m2_um",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "w_m2_um",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "w_m3_um",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "w_m3_um",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "w_m4_um",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "w_m4_um",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "w_m5_um",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "w_m5_um",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "w_m6_um",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "w_m6_um",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "w_m7_um",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "w_m7_um",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "vtail_v",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "vtail_v",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "n1_v",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "n1_v",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "n2_v",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "n2_v",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "vbias_v",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "vbias_v",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "vout_v",
+      "source_path": "synthesis_parameterization.dependent_quantities",
+      "original": "vout_v",
+      "category": "dependent_quantity_declaration",
+      "owner": "synthesis_adapter_or_emitter",
+      "reason": "declares expected derived outputs rather than a join predicate",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "input_bias_network",
+      "source_path": "assignment_synthesis.groups",
+      "original": {
+        "id": "input_bias_network",
+        "devices": [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5"
+        ],
+        "synthesis_variables": [
+          "i_m5_a",
+          "w_m1_um"
+        ],
+        "constraints": [
+          "balanced_input_left",
+          "balanced_input_right",
+          "active_load_left",
+          "active_load_right"
+        ],
+        "solver_type": "matched_input_network",
+        "solver_config": {
+          "devices": {
+            "input_left": "M1",
+            "input_right": "M2",
+            "load_diode": "M3",
+            "load_mirror": "M4",
+            "tail": "M5"
+          },
+          "variables": {
+            "seed_current": "i_m5_a",
+            "seed_width": "w_m1_um",
+            "input_left_current": "i_m1_a",
+            "input_right_current": "i_m2_a",
+            "load_diode_current": "i_m3_a",
+            "load_mirror_current": "i_m4_a",
+            "input_right_width": "w_m2_um",
+            "load_diode_width": "w_m3_um",
+            "load_mirror_width": "w_m4_um",
+            "tail_width": "w_m5_um",
+            "tail_node": "vtail_v",
+            "first_internal_node": "n1_v",
+            "second_internal_node": "n2_v",
+            "bias_node": "vbias_v"
+          },
+          "branch_current_scale": 0.5
+        }
+      },
+      "category": "dependency_group",
+      "owner": "hierarchical_synthesis_workflow",
+      "reason": "declares stage ordering, devices, variables, solver, and constraint references",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "output_stage",
+      "source_path": "assignment_synthesis.groups",
+      "original": {
+        "id": "output_stage",
+        "devices": [
+          "M6",
+          "M7"
+        ],
+        "depends_on": [
+          "input_bias_network"
+        ],
+        "synthesis_variables": [],
+        "constraints": [
+          "output_node_kcl",
+          "second_stage_size_relation",
+          "output_stage_headroom_window"
+        ],
+        "produces_ranged_variables": [
+          "vout_v"
+        ],
+        "solver_type": "correlated_output_pair",
+        "solver_config": {
+          "devices": {
+            "upper": "M6",
+            "lower": "M7"
+          },
+          "variables": {
+            "upper_gate_node": "n2_v",
+            "lower_gate_node": "vbias_v",
+            "upper_current": "i_m6_a",
+            "lower_current": "i_m7_a",
+            "upper_width": "w_m6_um",
+            "lower_width": "w_m7_um",
+            "output_range": "vout_v",
+            "output_min": "vout_min_v",
+            "output_max": "vout_max_v"
+          },
+          "deferred_to_step_5": [
+            "second_stage_size_relation",
+            "complete full-circuit assignment validation"
+          ]
+        }
+      },
+      "category": "dependency_group",
+      "owner": "hierarchical_synthesis_workflow",
+      "reason": "declares stage ordering, devices, variables, solver, and constraint references",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "operating_conditions",
+      "source_path": "design_rules.operating_conditions",
+      "original": {
+        "vdd_v": 1.8,
+        "vss_v": 0.0,
+        "vin_cm_v": 0.9,
+        "c_miller_f": 3e-12,
+        "c_load_f": 1e-11
+      },
+      "category": "operating_or_assignment_policy",
+      "owner": "orchestration",
+      "reason": "not a canonical linear equality",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "device_constraints",
+      "source_path": "design_rules.device_constraints",
+      "original": {
+        "all_mos": {
+          "required_region": "saturation",
+          "length_um": 0.15,
+          "width_min_um": 0.42,
+          "width_max_um": 100.0,
+          "body_voltage_abs_max_v": 1e-09
+        }
+      },
+      "category": "technology_region_constraint",
+      "owner": "technology",
+      "reason": "not a canonical linear equality",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "technology_intersection",
+      "source_path": "design_rules.technology_intersection",
+      "original": {
+        "require_saturated": true,
+        "current_relative_tolerance": 0.1,
+        "current_absolute_tolerance_a": 1e-06,
+        "node_voltage_tolerance_v": 0.025,
+        "diode_voltage_tolerance_v": 0.025,
+        "electrical_voltage_match_tolerance_v": 1e-09,
+        "width_relation_relative_tolerance": 1e-08,
+        "max_assignments": 100000
+      },
+      "category": "technology_region_constraint",
+      "owner": "technology",
+      "reason": "not a canonical linear equality",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "assignment_rules",
+      "source_path": "design_rules.assignment_rules",
+      "original": {
+        "assignment_semantics": "complete_correlated_circuit_assignment",
+        "representation": "normalized_point_cloud",
+        "cartesian_product_allowed": false,
+        "ranged_variable_semantics": "preserve_feasible_interval",
+        "dependent_range_cartesian_expansion_allowed": false
+      },
+      "category": "operating_or_assignment_policy",
+      "owner": "orchestration",
+      "reason": "not a canonical linear equality",
+      "canonical_expression": null,
+      "compiler_kind": null
+    },
+    {
+      "id": "simulation_constraints",
+      "source_path": "design_rules.simulation_constraints",
+      "original": {
+        "dc_convergence_required": true,
+        "enforce_device_regions": true,
+        "enforce_output_window_from_specs": true
+      },
+      "category": "simulation_constraint",
+      "owner": "simulation",
+      "reason": "not a canonical linear equality",
+      "canonical_expression": null,
+      "compiler_kind": null
+    }
+  ]
+}

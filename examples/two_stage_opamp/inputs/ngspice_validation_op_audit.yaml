@@ -21,7 +21,7 @@ constants:
   c_miller: 4.0e-12
   c_load: 1.0e-11
 source_bindings:
-  l_default_um: '0.5'
+  l_default_um: '0.15'
   w_m1_um: w_m1_um
   w_m2_um: w_m1_um
   w_m3_um: w_m3_um
@@ -74,40 +74,40 @@ measurements:
     ngspice: vdd_src#branch
     absolute: true
   M1_vds_v:
-    ngspice: '@m.xu1.xm1.msky130_fd_pr__nfet_01v8[vds]'
+    ngspice: '@m.xu1.xm1.msky130_fd_pr__nfet_01v8_lvt[vds]'
     absolute: true
   M1_vdsat_v:
-    ngspice: '@m.xu1.xm1.msky130_fd_pr__nfet_01v8[vdsat]'
+    ngspice: '@m.xu1.xm1.msky130_fd_pr__nfet_01v8_lvt[vdsat]'
     absolute: true
   M1_id_a:
-    ngspice: '@m.xu1.xm1.msky130_fd_pr__nfet_01v8[id]'
+    ngspice: '@m.xu1.xm1.msky130_fd_pr__nfet_01v8_lvt[id]'
     absolute: true
   M2_vds_v:
-    ngspice: '@m.xu1.xm2.msky130_fd_pr__nfet_01v8[vds]'
+    ngspice: '@m.xu1.xm2.msky130_fd_pr__nfet_01v8_lvt[vds]'
     absolute: true
   M2_vdsat_v:
-    ngspice: '@m.xu1.xm2.msky130_fd_pr__nfet_01v8[vdsat]'
+    ngspice: '@m.xu1.xm2.msky130_fd_pr__nfet_01v8_lvt[vdsat]'
     absolute: true
   M2_id_a:
-    ngspice: '@m.xu1.xm2.msky130_fd_pr__nfet_01v8[id]'
+    ngspice: '@m.xu1.xm2.msky130_fd_pr__nfet_01v8_lvt[id]'
     absolute: true
   M5_vds_v:
-    ngspice: '@m.xu1.xm5.msky130_fd_pr__nfet_01v8[vds]'
+    ngspice: '@m.xu1.xm5.msky130_fd_pr__nfet_01v8_lvt[vds]'
     absolute: true
   M5_vdsat_v:
-    ngspice: '@m.xu1.xm5.msky130_fd_pr__nfet_01v8[vdsat]'
+    ngspice: '@m.xu1.xm5.msky130_fd_pr__nfet_01v8_lvt[vdsat]'
     absolute: true
   M5_id_a:
-    ngspice: '@m.xu1.xm5.msky130_fd_pr__nfet_01v8[id]'
+    ngspice: '@m.xu1.xm5.msky130_fd_pr__nfet_01v8_lvt[id]'
     absolute: true
   M7_vds_v:
-    ngspice: '@m.xu1.xm7.msky130_fd_pr__nfet_01v8[vds]'
+    ngspice: '@m.xu1.xm7.msky130_fd_pr__nfet_01v8_lvt[vds]'
     absolute: true
   M7_vdsat_v:
-    ngspice: '@m.xu1.xm7.msky130_fd_pr__nfet_01v8[vdsat]'
+    ngspice: '@m.xu1.xm7.msky130_fd_pr__nfet_01v8_lvt[vdsat]'
     absolute: true
   M7_id_a:
-    ngspice: '@m.xu1.xm7.msky130_fd_pr__nfet_01v8[id]'
+    ngspice: '@m.xu1.xm7.msky130_fd_pr__nfet_01v8_lvt[id]'
     absolute: true
   M3_vds_v:
     ngspice: '@m.xu1.xm3.msky130_fd_pr__pfet_01v8[vds]'

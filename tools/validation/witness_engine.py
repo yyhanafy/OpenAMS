@@ -274,7 +274,10 @@ def _final_rank(final, candidates, base, oracle: MlpOracle):
         for key, expr in (final.get("saturation_headroom") or {}).items()
     }
 
-    residual_matrix = np.column_stack(list(residuals.values()))
+    if residuals:
+        residual_matrix = np.column_stack(list(residuals.values()))
+    else:
+        residual_matrix = np.zeros((len(next(iter(environment.values()))), 1), dtype=float)
     max_abs = np.max(np.abs(residual_matrix), axis=1)
     rms = np.sqrt(np.mean(residual_matrix * residual_matrix, axis=1))
     valid = np.ones(count, dtype=bool)

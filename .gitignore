@@ -55,3 +55,21 @@ __pycache__/
 # Virtual environments
 .venv/
 .venv-*/
+
+# OpenAMS caches
+technology/.openams_cache/
+
+# Local backup / migration snapshots
+*.bak
+*.pre_laygo2
+*.before_hierarchical*
+*.before_hierarchical_v2
+*.before_hierarchical_step5_v2
+
+# Root-level generated post-layout artifacts
+/netlist_post_layout.spice
+/netlist_post_layout.align_realization.json
+
+# Scratch files
+/koko.txt
+/toto.txt

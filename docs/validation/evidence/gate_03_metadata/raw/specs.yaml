@@ -1,0 +1,28 @@
+circuit:
+  name: two_stage_opamp
+  technology: sky130A
+
+conditions:
+  vdd: 1.8
+  vss: 0.0
+  input_common_mode: 0.9
+  load_capacitance: 1.0e-11
+  temperature_c: 27
+
+dc_validity:
+  require_convergence: true
+  output_voltage:
+    metric: vout_dc
+    min: 0.2
+    max: 1.6
+  # Mandatory device-region checks are derived from component metadata.
+
+metrics:
+  dc: [vout_dc, supply_current_a, power_w, device_regions, device_margins]
+  ac: [gain_db, ugb_hz, phase_margin_deg]
+
+reporting_targets:
+  gain_db: {min: 60.0}
+  ugb_hz: {min: 5.0e6}
+  phase_margin_deg: {min: 60.0}
+  power_w: {max: 2.0e-3}

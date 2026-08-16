@@ -1,0 +1,62 @@
+[
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M1.id_a",
+      "right": "M5.id_a",
+      "scale": 0.5,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "balanced_input_left"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M2.id_a",
+      "right": "M5.id_a",
+      "scale": 0.5,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "balanced_input_right"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M3.id_a",
+      "right": "M1.id_a",
+      "scale": 1.0,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "active_load_left"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M4.id_a",
+      "right": "M2.id_a",
+      "scale": 1.0,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "active_load_right"
+    }
+  },
+  {
+    "class": "FieldRelationConstraint",
+    "value": {
+      "left": "M6.id_a",
+      "right": "M7.id_a",
+      "scale": 1.0,
+      "offset": 0.0,
+      "absolute_tolerance": 0.0,
+      "relative_tolerance": 0.0,
+      "label": "output_node_kcl"
+    }
+  }
+]

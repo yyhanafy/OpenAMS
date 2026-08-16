@@ -39,7 +39,7 @@ Example:
         --profile dense \
         --workers 12 \
         --batch-size 128 \
-        --output technology/sky130_tt_27c_mlp_dense.csv \
+        --output technology/sky130_tt_27c_mos_characterization.csv \
         --resume
 """
 
@@ -124,7 +124,7 @@ DERIVED_COLUMNS = [
 OUTPUT_COLUMNS = LEGACY_COLUMNS + ADDED_RAW_COLUMNS + DERIVED_COLUMNS
 
 MODEL_BY_POLARITY = {
-    "nmos": "sky130_fd_pr__nfet_01v8",
+    "nmos": "sky130_fd_pr__nfet_01v8_lvt",
     "pmos": "sky130_fd_pr__pfet_01v8",
 }
 
@@ -162,16 +162,8 @@ VECTOR_CANDIDATES = {
 REQUIRED_METRICS = {
     "id_abs_a",
     "vdsat_abs_v",
-    "vth_abs_v",
     "gm_s",
     "gds_s",
-    "gmb_s",
-    "cgg_f",
-    "cgd_f",
-    "cgs_f",
-    "cgb_f",
-    "cdd_f",
-    "cdb_f",
 }
 
 
@@ -823,8 +815,8 @@ def main() -> int:
     probe_points = tuple(
         BiasPoint(
             polarity=p,
-            length_um=0.5,
-            width_um=2.0,
+            length_um=grids["lengths_um"][0],
+            width_um=grids["widths_um"][0],
             vgs_abs_v=0.8,
             vds_abs_v=0.8,
             vbs_abs_v=0.0,

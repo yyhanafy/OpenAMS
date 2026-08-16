@@ -43,12 +43,12 @@ Generate the canonical dense OpenAMS dataset:
         --profile dense \
         --workers 12 \
         --batch-size 128 \
-        --output technology/sky130_tt_27c_mlp_dense.csv \
+        --output technology/sky130_tt_27c_mos_characterization.csv \
         --resume
 
 The generator also writes:
 
-    technology/sky130_tt_27c_mlp_dense.csv.metadata.json
+    technology/sky130_tt_27c_mos_characterization.csv.metadata.json
 
 The dense CSV is stored in Git LFS.
 

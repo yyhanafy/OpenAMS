@@ -5,8 +5,8 @@ The production witness engine consumes trained NMOS/PMOS MLP checkpoints.  Repro
 Expected canonical assets:
 
 ```text
-technology/sky130_tt_27c_mlp_dense.csv
-technology/sky130_tt_27c_mlp_dense.csv.metadata.json
+technology/sky130_tt_27c_mos_characterization.csv
+technology/sky130_tt_27c_mos_characterization.csv.metadata.json
 technology/train_sky130_mos_mlp.py
 runtime/mlp_models/sky130_nmos_mlp.pt
 runtime/mlp_models/sky130_pmos_mlp.pt

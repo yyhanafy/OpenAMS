@@ -1,0 +1,32 @@
+* SKY130 PMOS-pass LDO.
+*
+* Node map:
+*   vdd      positive supply
+*   vss      ground
+*   vref     reference input at M2 gate
+*   vreg     regulated output and feedback input at M1 gate
+*   vbias    tail-current bias at M5 gate
+*   ntail    common source of M1/M2
+*   nmirror  M1/M3 diode-connected mirror node; gate of M4
+*   vgate    error-amplifier output and gate of MP
+*   ncomp    internal Rfb-Cfb compensation node
+*
+* DC feedback path:
+*   (vreg - vref) -> M1/M2 -> M3/M4 -> vgate -> MP -> vreg
+*
+* At DC CFB and CDEC are open circuits.  RFB therefore does not affect
+* the transistor DC operating-point witness.
+.subckt ldo vref vreg vdd vss vbias
+
+XM1  nmirror vreg    ntail vss sky130_fd_pr__nfet_01v8 L={l_default_um} W={w_m1_um} nf=1 mult=1
+XM2  vgate   vref    ntail vss sky130_fd_pr__nfet_01v8 L={l_default_um} W={w_m2_um} nf=1 mult=1
+XM3  nmirror nmirror vdd   vdd sky130_fd_pr__pfet_01v8 L={l_default_um} W={w_m3_um} nf=1 mult=1
+XM4  vgate   nmirror vdd   vdd sky130_fd_pr__pfet_01v8 L={l_default_um} W={w_m4_um} nf=1 mult=1
+XM5  ntail   vbias   vss   vss sky130_fd_pr__nfet_01v8 L={l_default_um} W={w_m5_um} nf=1 mult=1
+XMP  vreg    vgate   vdd   vdd sky130_fd_pr__pfet_01v8 L={l_default_um} W={w_mp_um} nf=1 mult=1
+
+RFB  vgate ncomp {r_fb}
+CFB  ncomp vreg  {c_fb}
+CDEC vreg  vss   {c_dec}
+
+.ends ldo

@@ -1,0 +1,113 @@
+schema_version: 3
+
+# LDO node naming used by the design intent and future netlist:
+#   vdd      : positive supply rail
+#   vss      : ground rail
+#   vref     : regulation reference input, applied to M2 gate
+#   vreg     : regulated output and feedback input, applied to M1 gate
+#   vbias    : bias voltage applied to M5 gate
+#   ntail    : common source node of M1/M2 and drain of M5
+#   nmirror  : M1/M3 drain node; M3 diode-connected node; M3/M4 mirror gate
+#   vgate    : error-amplifier output; M2/M4 drain node; MP gate
+#   ncomp    : node between Rfb and Cfb
+#
+# DC signal flow:
+#   (vreg, vref) -> M1/M2 -> M3/M4 -> vgate -> MP -> vreg
+#
+# At DC, Cfb and Cdec are open circuits.  Rfb therefore carries no DC current
+# through the compensation branch.  The initial correlated witness search is
+# transistor/DC focused.
+
+operating_conditions:
+  vdd_v: 1.8
+  vss_v: 0.0
+
+device_constraints:
+  all_mos:
+    length_um: 0.5
+    width_min_um: 0.42
+    width_max_um: 100.0
+    body_voltage_abs_max_v: 1.0e-09
+
+  # M1-M5 form the error amplifier and are intended to remain saturated
+  # in the nominal regulated operating point.
+  error_amplifier_mos:
+    devices: [M1, M2, M3, M4, M5]
+    required_region: saturation
+
+  # MP is the PMOS pass device.  It must supply the load current at the
+  # requested (vdd, vreg) operating point.  It is not globally forced into
+  # saturation because an LDO pass device may approach the linear region
+  # near dropout.
+  pass_device:
+    devices: [MP]
+    required_region: valid_conduction
+
+technology_intersection:
+  require_saturated:
+    devices: [M1, M2, M3, M4, M5]
+  current_relative_tolerance: 0.1
+  current_absolute_tolerance_a: 1.0e-06
+  node_voltage_tolerance_v: 0.025
+  diode_voltage_tolerance_v: 0.025
+  electrical_voltage_match_tolerance_v: 1.0e-09
+  width_relation_relative_tolerance: 1.0e-08
+  max_assignments: 100000
+
+assignment_rules:
+  assignment_semantics: complete_correlated_circuit_assignment
+  representation: normalized_point_cloud
+  cartesian_product_allowed: false
+  ranged_variable_semantics: preserve_feasible_interval
+  dependent_range_cartesian_expansion_allowed: false
+
+simulation_constraints:
+  dc_convergence_required: true
+  enforce_device_regions: true
+  enforce_regulation_condition: true
+  enforce_output_load_kcl: true
+
+active_technology_source: sky130_tt_27c
+
+technology_sources:
+  sky130_tt_27c:
+    provider: mos_inverse_table
+    source: ../../../technology/sky130_tt_27c_inverse_smoke.csv
+    corner: tt
+    temperature_c: 27.0
+    models:
+      nmos: sky130_fd_pr__nfet_01v8
+      pmos: sky130_fd_pr__pfet_01v8
+
+derived_node_domains:
+  ntail_v:
+    node: ntail
+    kind: dependent_ranged_variable
+    lower_bound:
+      rail: vss_v
+      headroom_terms:
+      - device: M5
+        quantity: vdsat_abs_v
+    upper_bound:
+      node: vreg
+      headroom_terms:
+      - device: M1
+        quantity: vgs_abs_v
+    margin_v: 0.0
+    require_nonempty_interval: true
+
+  vgate_v:
+    node: vgate
+    kind: dependent_ranged_variable
+    lower_bound:
+      rail: vss_v
+    upper_bound:
+      rail: vdd_v
+    margin_v: 0.0
+    require_nonempty_interval: true
+
+  vreg_v:
+    node: vreg
+    kind: regulated_output_variable
+    relation: approximately_equal_to_vref
+    tolerance_source: specification

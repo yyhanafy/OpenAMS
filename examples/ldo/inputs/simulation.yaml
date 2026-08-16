@@ -1,0 +1,99 @@
+deck_template: deck_template.spice
+
+pdk:
+  name: sky130A
+  library_file: AUTO
+  corner: tt
+
+backends:
+  mock:
+    description: deterministic synthetic backend for pipeline tests
+  ngspice:
+    dc:
+      command: [ngspice, -b, -o, "{log}", "{deck}"]
+      log_file: dc.log
+    ac:
+      command: [ngspice, -b, -o, "{log}", "{deck}"]
+      log_file: ac.log
+
+analyses:
+  dc:
+    type: dc_op
+    enabled: true
+
+  ac:
+    type: ac
+    enabled: true
+    sweep:
+      variation: dec
+      points: 40
+      start_hz: 1.0
+      stop_hz: 1.0e10
+    stimulus:
+      sources:
+        - name: VREF_SRC
+          positive_node: vref
+          negative_node: 0
+          magnitude: 1.0
+          phase_deg: 0.0
+    response:
+      output: vreg
+      input: vref
+      meaning: closed_loop_reference_to_output_transfer
+
+ngspice:
+  output_node: vreg
+  supply_source: VDD_SRC
+  load_source: ILOAD_SRC
+  reference_source: VREF_SRC
+  saturation_margin_v: 0.0
+
+  # Hierarchy-specific knowledge is metadata, following the two-stage format.
+  devices:
+    M1:
+      polarity: nmos
+      terminals:
+        drain: xu1.nmirror
+        gate: vreg
+        source: xu1.ntail
+      operating_point:
+        vth: '@m.xu1.xm1.msky130_fd_pr__nfet_01v8[vth]'
+        vdsat: '@m.xu1.xm1.msky130_fd_pr__nfet_01v8[vdsat]'
+
+    M2:
+      polarity: nmos
+      terminals:
+        drain: xu1.vgate
+        gate: vref
+        source: xu1.ntail
+      operating_point:
+        vth: '@m.xu1.xm2.msky130_fd_pr__nfet_01v8[vth]'
+        vdsat: '@m.xu1.xm2.msky130_fd_pr__nfet_01v8[vdsat]'
+
+    M3:
+      polarity: pmos
+      terminals: {drain: xu1.nmirror, gate: xu1.nmirror, source: vdd}
+      operating_point:
+        vth: '@m.xu1.xm3.msky130_fd_pr__pfet_01v8[vth]'
+        vdsat: '@m.xu1.xm3.msky130_fd_pr__pfet_01v8[vdsat]'
+
+    M4:
+      polarity: pmos
+      terminals: {drain: xu1.vgate, gate: xu1.nmirror, source: vdd}
+      operating_point:
+        vth: '@m.xu1.xm4.msky130_fd_pr__pfet_01v8[vth]'
+        vdsat: '@m.xu1.xm4.msky130_fd_pr__pfet_01v8[vdsat]'
+
+    M5:
+      polarity: nmos
+      terminals: {drain: xu1.ntail, gate: vbias, source: vss}
+      operating_point:
+        vth: '@m.xu1.xm5.msky130_fd_pr__nfet_01v8[vth]'
+        vdsat: '@m.xu1.xm5.msky130_fd_pr__nfet_01v8[vdsat]'
+
+    MP:
+      polarity: pmos
+      terminals: {drain: vreg, gate: xu1.vgate, source: vdd}
+      operating_point:
+        vth: '@m.xu1.xmp.msky130_fd_pr__pfet_01v8[vth]'
+        vdsat: '@m.xu1.xmp.msky130_fd_pr__pfet_01v8[vdsat]'

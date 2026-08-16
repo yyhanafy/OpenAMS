@@ -15,10 +15,10 @@ copy_if_present() {
   fi
 }
 
-copy_if_present "$SOURCE/technology/sky130_tt_27c_mlp_dense.csv" \
-                "$TARGET/technology/sky130_tt_27c_mlp_dense.csv"
-copy_if_present "$SOURCE/technology/sky130_tt_27c_mlp_dense.csv.metadata.json" \
-                "$TARGET/technology/sky130_tt_27c_mlp_dense.csv.metadata.json"
+copy_if_present "$SOURCE/technology/sky130_tt_27c_mos_characterization.csv" \
+                "$TARGET/technology/sky130_tt_27c_mos_characterization.csv"
+copy_if_present "$SOURCE/technology/sky130_tt_27c_mos_characterization.csv.metadata.json" \
+                "$TARGET/technology/sky130_tt_27c_mos_characterization.csv.metadata.json"
 copy_if_present "$SOURCE/technology/train_sky130_mos_mlp.py" \
                 "$TARGET/technology/train_sky130_mos_mlp.py"
 

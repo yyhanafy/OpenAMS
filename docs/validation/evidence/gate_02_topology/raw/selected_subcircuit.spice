@@ -1,0 +1,8 @@
+XM1 n1 inp ntail vss sky130_fd_pr__nfet_01v8_lvt L={l_default_um} W={w_m1_um} nf=1 mult=1
+XM2 n2 inn ntail vss sky130_fd_pr__nfet_01v8_lvt L={l_default_um} W={w_m2_um} nf=1 mult=1
+XM3 n1 n1 vdd vdd sky130_fd_pr__pfet_01v8 L={l_default_um} W={w_m3_um} nf=1 mult=1
+XM4 n2 n1 vdd vdd sky130_fd_pr__pfet_01v8 L={l_default_um} W={w_m4_um} nf=1 mult=1
+XM5 ntail vbias vss vss sky130_fd_pr__nfet_01v8_lvt L={l_default_um} W={w_m5_um} nf=1 mult=1
+XM6 out n2 vdd vdd sky130_fd_pr__pfet_01v8 L={l_default_um} W={w_m6_um} nf=1 mult=1
+XM7 out vbias vss vss sky130_fd_pr__nfet_01v8_lvt L={l_default_um} W={w_m7_um} nf=1 mult=1
+Cc n2 out {c_miller}

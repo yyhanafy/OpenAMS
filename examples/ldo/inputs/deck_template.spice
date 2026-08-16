@@ -1,0 +1,48 @@
+* Auto-rendered SKY130 LDO candidate deck
+.lib "{pdk_library}" {pdk_corner}
+
+.temp {temperature_c}
+.option savecurrents
+
+.param VDD={vdd}
+.param VSS={vss}
+.param VREF={vref}
+.param VBIAS={vbias}
+.param ILOAD={i_load}
+
+.param W_M1={w_m1}
+.param W_M2={w_m2}
+.param W_M3={w_m3}
+.param W_M4={w_m4}
+.param W_M5={w_m5}
+.param W_MP={w_mp}
+.param L_DEFAULT={l_default}
+
+.param W_M1_UM={w_m1_um}
+.param W_M2_UM={w_m2_um}
+.param W_M3_UM={w_m3_um}
+.param W_M4_UM={w_m4_um}
+.param W_M5_UM={w_m5_um}
+.param W_MP_UM={w_mp_um}
+.param L_DEFAULT_UM={l_default_um}
+
+.param R_FB={r_fb}
+.param C_FB={c_fb}
+.param C_DEC={c_dec}
+
+.include "{source_netlist}"
+
+VDD_SRC   vdd   0 {vdd}
+VSS_SRC   vss   0 {vss}
+VBIAS_SRC vbias 0 {vbias}
+
+* The reference is the small-signal excitation for reference-to-output AC.
+VREF_SRC  vref  0 dc {vref} ac 1.0
+
+* Positive current flows from VREG to ground.
+ILOAD_SRC vreg  0 dc {i_load}
+
+XU1 vref vreg vdd vss vbias ldo
+
+{analysis_block}
+.end

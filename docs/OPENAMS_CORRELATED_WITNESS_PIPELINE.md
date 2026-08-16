@@ -168,7 +168,7 @@ SKY130 / ngspice device characterization
 technology-table generation script(s)
                 │
                 ▼
-technology/sky130_tt_27c_mlp_dense.csv
+technology/sky130_tt_27c_mos_characterization.csv
                 │
                 ▼
 MOS MLP training script
@@ -187,8 +187,8 @@ Current dense technology dataset used by the recent pipeline:
 
 ``` text
 technology/
-    sky130_tt_27c_mlp_dense.csv
-    sky130_tt_27c_mlp_dense.csv.metadata.json
+    sky130_tt_27c_mos_characterization.csv
+    sky130_tt_27c_mos_characterization.csv.metadata.json
 ```
 
 The CSV is the characterized MOS dataset from which the MLP training
@@ -198,7 +198,7 @@ that dataset.
 The exact canonical technology-table generation script still needs to be
 frozen during cleanup. It should be kept alongside the technology
 preparation flow and documented as the reproducible producer of
-`sky130_tt_27c_mlp_dense.csv`.
+`sky130_tt_27c_mos_characterization.csv`.
 
 ------------------------------------------------------------------------
 
@@ -253,8 +253,8 @@ After cleanup, the important pipeline files should be easy to identify:
 ``` text
 technology/
     <technology_table_generator>.py
-    sky130_tt_27c_mlp_dense.csv
-    sky130_tt_27c_mlp_dense.csv.metadata.json
+    sky130_tt_27c_mos_characterization.csv
+    sky130_tt_27c_mos_characterization.csv.metadata.json
     train_sky130_mos_mlp.py
 
 runtime/

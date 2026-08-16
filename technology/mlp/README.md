@@ -14,11 +14,11 @@ The same trained device models are used by all circuit topologies.
 
 Training starts from:
 
-    technology/sky130_tt_27c_mlp_dense.csv
+    technology/sky130_tt_27c_mos_characterization.csv
 
 Dataset metadata:
 
-    technology/sky130_tt_27c_mlp_dense.csv.metadata.json
+    technology/sky130_tt_27c_mos_characterization.csv.metadata.json
 
 The dense CSV is stored using Git LFS.
 
@@ -67,7 +67,7 @@ Inspect the canonical trainer interface:
 
 Training starts from:
 
-    technology/sky130_tt_27c_mlp_dense.csv
+    technology/sky130_tt_27c_mos_characterization.csv
 
 The generated model checkpoints should be stored under:
 

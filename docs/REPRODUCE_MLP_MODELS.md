@@ -75,13 +75,13 @@ Set the SKY130 ngspice library path, for example:
       --profile dense \
       --workers 12 \
       --batch-size 128 \
-      --output technology/sky130_tt_27c_mlp_dense.csv \
+      --output technology/sky130_tt_27c_mos_characterization.csv \
       --resume
 
 Outputs:
 
-    technology/sky130_tt_27c_mlp_dense.csv
-    technology/sky130_tt_27c_mlp_dense.csv.metadata.json
+    technology/sky130_tt_27c_mos_characterization.csv
+    technology/sky130_tt_27c_mos_characterization.csv.metadata.json
 
 The large CSV is stored in Git LFS.
 
@@ -109,7 +109,7 @@ Inspect the training interface with:
 The required arguments are the technology CSV and output directory:
 
     python technology/mlp/train_sky130_mos_mlp.py train \
-      --csv technology/sky130_tt_27c_mlp_dense.csv \
+      --csv technology/sky130_tt_27c_mos_characterization.csv \
       --output-dir technology/mlp/models
 
 The trainer also supports explicit control of:

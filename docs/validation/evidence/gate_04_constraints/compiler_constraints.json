@@ -1,0 +1,32 @@
+[
+  {
+    "name": "balanced_input_left",
+    "kind": "equality",
+    "expression": "device.M1.current == device.M5.current / 2.0",
+    "source": "design_intent"
+  },
+  {
+    "name": "balanced_input_right",
+    "kind": "equality",
+    "expression": "device.M2.current == device.M5.current / 2.0",
+    "source": "design_intent"
+  },
+  {
+    "name": "active_load_left",
+    "kind": "equality",
+    "expression": "device.M3.current == device.M1.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "active_load_right",
+    "kind": "equality",
+    "expression": "device.M4.current == device.M2.current",
+    "source": "design_intent"
+  },
+  {
+    "name": "output_node_kcl",
+    "kind": "topology_derived",
+    "expression": "device.M6.current == device.M7.current",
+    "source": "design_intent"
+  }
+]

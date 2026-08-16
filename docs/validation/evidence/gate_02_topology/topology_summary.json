@@ -1,0 +1,44 @@
+{
+  "gate": 2,
+  "validator": "generic_flat_spice_topology",
+  "proof": "Named flat-SPICE subcircuit parsed into the canonical OpenAMS Circuit representation.",
+  "status": "PASS",
+  "source_netlist": "/home/yhanafy/AMS-Tutorial/openams/examples/two_stage_opamp/inputs/netlist.spice",
+  "subcircuit": "two_stage_opamp",
+  "ports": [
+    "inp",
+    "inn",
+    "out",
+    "vdd",
+    "vss",
+    "vbias"
+  ],
+  "device_count": 8,
+  "mos_device_count": 7,
+  "node_count": 9,
+  "device_kind_counts": {
+    "capacitor": 1,
+    "mos": 7
+  },
+  "expected_ports": [],
+  "expected_devices": [],
+  "missing_devices": [],
+  "unexpected_devices": [
+    "Cc",
+    "XM1",
+    "XM2",
+    "XM3",
+    "XM4",
+    "XM5",
+    "XM6",
+    "XM7"
+  ],
+  "checks": {
+    "parser_succeeded": true,
+    "subcircuit_name_matches": true,
+    "subcircuit_has_ports": true,
+    "subcircuit_has_devices": true,
+    "subcircuit_has_nodes": true,
+    "all_devices_have_terminals": true
+  }
+}
