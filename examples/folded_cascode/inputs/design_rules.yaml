@@ -9,7 +9,7 @@ operating_conditions:
 device_constraints:
   all_mos:
     required_region: saturation
-    length_um: 0.5
+    length_um: 0.15
     width_min_um: 0.42
     width_max_um: 100.0
     body_voltage_abs_max_v: 1.0e-09

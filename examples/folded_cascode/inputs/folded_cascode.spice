@@ -27,7 +27,7 @@
 .param vicm=0.9
 .param c_load=10p
 
-.param l_default_um=0.5
+.param l_default_um=0.15
 .param nf_default=1
 
 * Independent assignment variables
