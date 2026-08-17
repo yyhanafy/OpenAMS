@@ -386,3 +386,94 @@ hierarchical_feasibility:
       sat_M5_headroom_v: A_sat_M5_headroom_v
       sat_M6_headroom_v: B_sat_M6_headroom_v
       sat_M7_headroom_v: B_sat_M7_headroom_v
+pre_spice_metrics:
+  schema_version: 1
+  technology:
+    length_um: 0.15
+    neighbors: 8
+    nmos_model_contains: nfet
+    pmos_model_contains: pfet
+  constants:
+    vdd: 1.8
+    vss: 0.0
+    vicm: 0.9
+    cc_f: 2.0e-12
+    cl_f: 1.0e-11
+  devices:
+    M1:
+      polarity: nmos
+      width: w_m1_um
+      vgs: abs(vicm-vtail_v)
+      vds: abs(n1_v-vtail_v)
+      vbs: abs(vss-vtail_v)
+    M2:
+      polarity: nmos
+      width: w_m2_um
+      vgs: abs(vicm-vtail_v)
+      vds: abs(n2_v-vtail_v)
+      vbs: abs(vss-vtail_v)
+    M3:
+      polarity: pmos
+      width: w_m3_um
+      vgs: abs(vdd-n1_v)
+      vds: abs(vdd-n1_v)
+      vbs: '0'
+    M4:
+      polarity: pmos
+      width: w_m4_um
+      vgs: abs(vdd-n1_v)
+      vds: abs(vdd-n2_v)
+      vbs: '0'
+    M5:
+      polarity: nmos
+      width: w_m5_um
+      vgs: abs(vbias_v-vss)
+      vds: abs(vtail_v-vss)
+      vbs: '0'
+    M6:
+      polarity: pmos
+      width: w_m6_um
+      vgs: abs(vdd-n2_v)
+      vds: abs(vdd-vout_v)
+      vbs: '0'
+    M7:
+      polarity: nmos
+      width: w_m7_um
+      vgs: abs(vbias_v-vss)
+      vds: abs(vout_v-vss)
+      vbs: '0'
+  metrics:
+  - name: est_stage1_rout_ohm
+    expression: parallel(M2.ro, M4.ro)
+  - name: est_stage1_gain_vv
+    expression: M1.gm * est_stage1_rout_ohm
+  - name: est_stage2_rout_ohm
+    expression: parallel(M6.ro, M7.ro)
+  - name: est_stage2_gain_vv
+    expression: M6.gm * est_stage2_rout_ohm
+  - name: est_gain_vv
+    expression: est_stage1_gain_vv * est_stage2_gain_vv
+  - name: est_gain_db
+    expression: db20(est_gain_vv)
+  - name: est_ugb_hz
+    expression: M1.gm / (2*pi*cc_f)
+  - name: est_idd_a
+    expression: abs(i_m3_a) + abs(i_m4_a) + abs(i_m6_a)
+  - name: est_power_w
+    expression: vdd * est_idd_a
+  ranks:
+  - name: rank_est_gain
+    source: est_gain_db
+    ascending: false
+  - name: rank_est_ugb
+    source: est_ugb_hz
+    ascending: false
+  - name: rank_low_power
+    source: est_power_w
+    ascending: true
+  - name: rank_low_area
+    source: est_gate_area_um2
+    ascending: true
+  - name: rank_low_tech_distance
+    source: est_tech_distance_max_v
+    ascending: true

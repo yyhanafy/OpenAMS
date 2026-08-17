@@ -76,3 +76,6 @@ measurements:
 power:
   supply_voltage_v: 1.8
   current_measurement: supply_current_a
+witness_aliases:
+  vx_v: n1_v
+  vy_v: n2_v

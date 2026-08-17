@@ -768,3 +768,114 @@ hierarchical_feasibility:
       sat_M9_headroom_v: C_sat_M9_headroom_v
       sat_M10_headroom_v: C_sat_M10_headroom_v
       sat_M11_headroom_v: C_sat_M11_headroom_v
+pre_spice_metrics:
+  schema_version: 1
+  technology:
+    length_um: 0.15
+    neighbors: 8
+    nmos_model_contains: nfet
+    pmos_model_contains: pfet
+  constants:
+    vdd: 1.8
+    vicm: 0.9
+    cl_f: 1.0e-11
+  devices:
+    M1:
+      polarity: nmos
+      width: w_m1_um
+      vgs: abs(vicm-tail_v)
+      vds: abs(psrc_left_v-tail_v)
+      vbs: abs(0-tail_v)
+    M2:
+      polarity: nmos
+      width: w_m2_um
+      vgs: abs(vicm-tail_v)
+      vds: abs(psrc_right_v-tail_v)
+      vbs: abs(0-tail_v)
+    M3:
+      polarity: nmos
+      width: w_m3_um
+      vgs: abs(vnb1_v)
+      vds: abs(tail_v)
+      vbs: '0'
+    M4:
+      polarity: pmos
+      width: w_m4_um
+      vgs: abs(vdd-vpb1_v)
+      vds: abs(vdd-psrc_left_v)
+      vbs: '0'
+    M5:
+      polarity: pmos
+      width: w_m5_um
+      vgs: abs(vdd-vpb1_v)
+      vds: abs(vdd-psrc_right_v)
+      vbs: '0'
+    M6:
+      polarity: pmos
+      width: w_m6_um
+      vgs: abs(vdd-vpb2_v)
+      vds: abs(psrc_left_v-x_v)
+      vbs: abs(vdd-psrc_left_v)
+    M7:
+      polarity: pmos
+      width: w_m7_um
+      vgs: abs(vdd-vpb2_v)
+      vds: abs(psrc_right_v-vout_v)
+      vbs: abs(vdd-psrc_right_v)
+    M8:
+      polarity: nmos
+      width: w_m8_um
+      vgs: abs(vnb2_v-nsink_left_v)
+      vds: abs(x_v-nsink_left_v)
+      vbs: abs(nsink_left_v)
+    M9:
+      polarity: nmos
+      width: w_m9_um
+      vgs: abs(vnb2_v-nsink_right_v)
+      vds: abs(vout_v-nsink_right_v)
+      vbs: abs(nsink_right_v)
+    M10:
+      polarity: nmos
+      width: w_m10_um
+      vgs: abs(x_v)
+      vds: abs(nsink_left_v)
+      vbs: '0'
+    M11:
+      polarity: nmos
+      width: w_m11_um
+      vgs: abs(x_v)
+      vds: abs(nsink_right_v)
+      vbs: '0'
+  metrics:
+  - name: est_rout_p_ohm
+    expression: M7.ro
+  - name: est_rout_n_ohm
+    expression: M9.ro + M11.ro + M9.gm*M9.ro*M11.ro
+  - name: est_rout_ohm
+    expression: parallel(est_rout_p_ohm, est_rout_n_ohm)
+  - name: est_gain_vv
+    expression: M1.gm * est_rout_ohm
+  - name: est_gain_db
+    expression: db20(est_gain_vv)
+  - name: est_ugb_hz
+    expression: M1.gm / (2*pi*cl_f)
+  - name: est_idd_a
+    expression: abs(i_m4_a) + abs(i_m5_a)
+  - name: est_power_w
+    expression: vdd * est_idd_a
+  ranks:
+  - name: rank_est_gain
+    source: est_gain_db
+    ascending: false
+  - name: rank_est_ugb
+    source: est_ugb_hz
+    ascending: false
+  - name: rank_low_power
+    source: est_power_w
+    ascending: true
+  - name: rank_low_area
+    source: est_gate_area_um2
+    ascending: true
+  - name: rank_low_tech_distance
+    source: est_tech_distance_max_v
+    ascending: true

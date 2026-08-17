@@ -5,7 +5,9 @@ output_csv: examples/folded_cascode/generated/ngspice_validation.csv
 source_netlist: examples/folded_cascode/inputs/folded_cascode.spice
 status_column: generation_status
 status_value: WITNESS
-rank_by: [max_abs_residual, rms_residual]
+rank_by:
+- max_abs_residual
+- rms_residual
 top_n: 100
 dc_tolerance_v: 0.05
 temperature_c: 27
@@ -13,28 +15,57 @@ pdk:
   library: AUTO
   corner: tt
 source_bindings:
-  w_m1_um: "w_m1_um"
-  i_m3_a: "i_m3_a"
-  vnb1_v: "vnb1_v"
-  vpb1_v: "vpb1_v"
-  vpb2_v: "vpb2_v"
-  vnb2_v: "vnb2_v"
-  w_m3_um: "w_m3_um"
-  w_m4_um: "w_m4_um"
-  w_m6_um: "w_m6_um"
-  w_m8_um: "w_m8_um"
-  nf_m1: "1"
-  nf_m3: "1"
-  nf_m4: "1"
-  nf_m6: "1"
-  nf_m8: "1"
-  nf_m10: "1"
-circuit: |
-  VDD_SUPPLY vdd 0 1.8
+  l_default_um: '0.15'
+  l_default: '0.15'
+  i_m3_a: i_m3_a
+  vnb1_v: vnb1_v
+  vpb1_v: vpb1_v
+  vpb2_v: vpb2_v
+  vnb2_v: vnb2_v
+  vnb1: vnb1_v
+  vpb1: vpb1_v
+  vpb2: vpb2_v
+  vnb2: vnb2_v
+  w_m1_um: w_m1_um
+  w_m2_um: w_m2_um
+  w_m3_um: w_m3_um
+  w_m4_um: w_m4_um
+  w_m5_um: w_m5_um
+  w_m6_um: w_m6_um
+  w_m7_um: w_m7_um
+  w_m8_um: w_m8_um
+  w_m9_um: w_m9_um
+  w_m10_um: w_m10_um
+  w_m11_um: w_m11_um
+  w_m1: w_m1_um
+  w_m2: w_m2_um
+  w_m3: w_m3_um
+  w_m4: w_m4_um
+  w_m5: w_m5_um
+  w_m6: w_m6_um
+  w_m7: w_m7_um
+  w_m8: w_m8_um
+  w_m9: w_m9_um
+  w_m10: w_m10_um
+  w_m11: w_m11_um
+  nf_m1: '1'
+  nf_m3: '1'
+  nf_m4: '1'
+  nf_m6: '1'
+  nf_m8: '1'
+  nf_m10: '1'
+  c_load: 10e-12
+circuit: 'VDD_SUPPLY vdd 0 1.8
+
   VSS_SUPPLY vss 0 0
+
   VIP_SOURCE vip 0 dc 0.9 ac 0.5
+
   VIN_SOURCE vin 0 dc 0.9 ac -0.5
+
   XOTA vip vin vout vdd vss folded_cascode_ota
+
+  '
 nodes:
   vnb1:
     ngspice: v(xota.vnb1_node)
